@@ -6,10 +6,13 @@ import '../../core/theme/app_colors.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/prayer_provider.dart';
 import '../../providers/ayah_provider.dart';
-import '../../providers/surah_provider.dart';
 import '../../providers/reciter_provider.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/haptic_provider.dart';
+import '../../providers/surah_provider.dart';
+import '../../core/theme/app_typography.dart';
+import '../../data/models/surah.dart';
+import 'package:heroicons/heroicons.dart';
 import '../widgets/glass_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -87,11 +90,13 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: GlassAppBar(
         title: _translations['title'] ?? 'Home Dashboard',
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(top: kToolbarHeight + MediaQuery.of(context).padding.top + 20, left: 16, right: 16, bottom: 100),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(top: kToolbarHeight + MediaQuery.of(context).padding.top + 20, left: 16, right: 16, bottom: 100),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             _buildNextPrayerWidget(),
             const SizedBox(height: 24),
             
@@ -99,8 +104,11 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 12),
             _buildAyahCard(),
             const SizedBox(height: 24),
+            _buildQuickSurahsSection(),
+            const SizedBox(height: 24),
           ],
         ),
+      ),
       ),
     );
   }
@@ -465,6 +473,147 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickSurahsSection() {
+    final surahProvider = context.watch<SurahProvider>();
+    if (surahProvider.isLoading) {
+      return const SizedBox.shrink();
+    }
+    
+    // IDs for Quick Surahs: Al-Kahf (18), Yaseen (36), Al-Waqi'a (56), Al-Mulk (67)
+    final quickSurahIds = [18, 36, 56, 67];
+    final quickSurahs = surahProvider.surahs.where((s) => quickSurahIds.contains(s.id)).toList();
+
+    if (quickSurahs.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Text(
+            _translations['quick_surahs'] ?? 'Quick Surahs',
+            style: AppTypography.titleLarge,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Column(
+          children: quickSurahs.map((surah) => _buildQuickSurahTile(surah)).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickSurahTile(Surah surah) {
+    // Watch AudioProvider for playback state
+    final audioProvider = context.watch<AudioProvider>();
+    final isCurrentTrack = audioProvider.currentSurah?.id == surah.id;
+    final isPlaying = isCurrentTrack && audioProvider.isPlaying;
+    final isLoading = isCurrentTrack && audioProvider.isLoading;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.neutral200),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            context.read<HapticProvider>().lightImpact();
+            
+            // If current track, toggle play/pause
+            if (isCurrentTrack) {
+              if (isPlaying) {
+                audioProvider.pause();
+              } else {
+                audioProvider.resume();
+              }
+              return;
+            }
+
+            final reciterProvider = context.read<ReciterProvider>();
+            
+            if (reciterProvider.reciters.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Reciters not loaded yet. Please wait.')),
+              );
+              return;
+            }
+
+            final defaultReciter = reciterProvider.reciters.first;
+            if (defaultReciter.moshaf.isNotEmpty) {
+                final moshaf = defaultReciter.moshaf.first;
+                final url = '${moshaf.server}${surah.id.toString().padLeft(3, '0')}.mp3';
+                audioProvider.play(url, reciter: defaultReciter, surah: surah);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/icons/quran.png',
+                  width: 32,
+                  height: 32,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        surah.name,
+                        style: AppTypography.titleMedium.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Surah ${surah.id} • ${surah.isMakkia ? "Meccan" : "Medinan"}',
+                        style: AppTypography.bodySmall?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (isLoading)
+                  const SizedBox(
+                    width: 28,
+                    height: 28,
+                    child: Padding(
+                      padding: EdgeInsets.all(4.0),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryBlue),
+                      ),
+                    ),
+                  )
+                else if (isCurrentTrack)
+                  HeroIcon(
+                    isPlaying ? HeroIcons.pause : HeroIcons.play,
+                    color: AppColors.primaryBlue,
+                    style: HeroIconStyle.solid,
+                    size: 28,
+                  )
+                else
+                   HeroIcon(
+                     HeroIcons.playCircle,
+                     color: AppColors.textPrimary,
+                     style: HeroIconStyle.outline, 
+                     size: 32,
+                   ),
+              ],
+            ),
           ),
         ),
       ),

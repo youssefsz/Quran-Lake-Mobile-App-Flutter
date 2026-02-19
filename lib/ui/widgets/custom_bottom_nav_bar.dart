@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:provider/provider.dart';
+import '../../core/theme/app_colors.dart';
 import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 
@@ -98,9 +99,10 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
 
   Widget _buildNavItem(BuildContext context, int index, HeroIcons icon, String label) {
     final isSelected = widget.selectedIndex == index;
+    // High contrast black for unselected items as requested
     final color = isSelected 
         ? Theme.of(context).primaryColor 
-        : Theme.of(context).disabledColor;
+        : Colors.black;
 
     return GestureDetector(
       onTap: () {

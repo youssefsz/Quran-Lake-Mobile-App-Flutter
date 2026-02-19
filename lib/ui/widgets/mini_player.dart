@@ -53,13 +53,17 @@ class MiniPlayer extends StatelessWidget {
                     children: [
                       Text(
                         audioProvider.currentSurah?.name ?? 'Unknown Surah',
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Colors.black,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         audioProvider.currentReciter?.name ?? 'Unknown Reciter',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.black,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -74,7 +78,7 @@ class MiniPlayer extends StatelessWidget {
                   )
                 else
                   IconButton(
-                    icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
+                    icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.black),
                     onPressed: () {
                       context.read<HapticProvider>().lightImpact();
                       if (audioProvider.isPlaying) {

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/theme/app_typography.dart';
 import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/prayer_provider.dart';
@@ -82,7 +85,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: false,
       appBar: GlassAppBar(
         title: _translations['title'] ?? 'Prayer Times',
         actions: [
@@ -95,74 +98,79 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
           )
         ],
       ),
-      body: Consumer<PrayerProvider>(
-        builder: (context, prayerProvider, child) {
-          if (prayerProvider.isLoading) {
-             return const Center(child: CircularProgressIndicator());
-          }
-          if (prayerProvider.errorMessage != null) {
-             return Center(child: Padding(
-               padding: const EdgeInsets.all(16.0),
-               child: Column(
-                 mainAxisAlignment: MainAxisAlignment.center,
-                 children: [
-                   Text(prayerProvider.errorMessage!, textAlign: TextAlign.center),
-                   const SizedBox(height: 16),
-                   ElevatedButton(
-                    onPressed: () {
-                      context.read<HapticProvider>().lightImpact();
-                      prayerProvider.fetchPrayerTimes();
-                    }, 
-                    child: Text(_t('retry', 'Retry'))
-                   )
-                 ],
-               ),
-             ));
-          }
-          if (prayerProvider.prayerTime == null) {
-             return Center(child: Text(_t('no_prayer_times', 'No prayer times available.')));
-          }
+      body: SafeArea(
+        child: Consumer<PrayerProvider>(
+          builder: (context, prayerProvider, child) {
+            if (prayerProvider.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (prayerProvider.errorMessage != null) {
+              return Center(child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(prayerProvider.errorMessage!, textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<HapticProvider>().lightImpact();
+                        prayerProvider.fetchPrayerTimes();
+                      }, 
+                      child: Text(_t('retry', 'Retry'))
+                    )
+                  ],
+                ),
+              ));
+            }
+            if (prayerProvider.prayerTime == null) {
+              return Center(child: Text(_t('no_prayer_times', 'No prayer times available.')));
+            }
 
           final pt = prayerProvider.prayerTime!;
           final nextPrayer = prayerProvider.nextPrayerName;
           final timeLeft = prayerProvider.timeUntilNextPrayer;
           
-          final hours = timeLeft.inHours;
-          final minutes = timeLeft.inMinutes.remainder(60);
+          final hours = timeLeft.inHours.toString().padLeft(2, '0');
+          final minutes = timeLeft.inMinutes.remainder(60).toString().padLeft(2, '0');
+          final seconds = timeLeft.inSeconds.remainder(60).toString().padLeft(2, '0');
+          
           final hoursLabel = _t('hours_short', 'h');
           final minutesLabel = _t('minutes_short', 'm');
-          final timeLeftStr = '$hours$hoursLabel $minutes$minutesLabel';
+          final secondsLabel = _t('seconds_short', 's');
+          
+          final timeLeftStr = '$hours$hoursLabel $minutes$minutesLabel $seconds$secondsLabel';
 
-          return SingleChildScrollView(
-            padding: EdgeInsets.only(top: kToolbarHeight + MediaQuery.of(context).padding.top + 20, left: 16, right: 16, bottom: 100),
-            child: Column(
-              children: [
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppTokens.s16),
+              child: Column(
+                children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.location_on, size: 16, color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppTokens.s8),
                     Expanded(
                       child: Text(
                         '${pt.city}, ${pt.country}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: AppTypography.bodyLarge,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppTokens.s32),
                 
-                Text('${_t('next_prayer', 'Next Prayer')}: ${_localizedPrayerName(nextPrayer)}', style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 8),
-                Text(timeLeftStr, style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                Text('${_t('next_prayer', 'Next Prayer')}: ${_localizedPrayerName(nextPrayer)}', style: AppTypography.titleMedium),
+                const SizedBox(height: AppTokens.s8),
+                Text(timeLeftStr, style: AppTypography.displayMedium.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary,
                 )),
                 
-                const SizedBox(height: 48),
+                const SizedBox(height: AppTokens.s48),
                 
                 _buildPrayerRow(_localizedPrayerName('Fajr'), pt.fajr, nextPrayer == 'Fajr'),
                 _buildPrayerRow(_localizedPrayerName('Sunrise'), pt.sunrise, false),
@@ -170,10 +178,11 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
                 _buildPrayerRow(_localizedPrayerName('Asr'), pt.asr, nextPrayer == 'Asr'),
                 _buildPrayerRow(_localizedPrayerName('Maghrib'), pt.maghrib, nextPrayer == 'Maghrib'),
                 _buildPrayerRow(_localizedPrayerName('Isha'), pt.isha, nextPrayer == 'Isha'),
-              ],
-            ),
-          );
-        }
+                ],
+              ),
+            );
+          }
+        ),
       ),
     );
   }
@@ -181,11 +190,11 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
   Widget _buildPrayerRow(String name, String time, bool isNext) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(vertical: AppTokens.s16, horizontal: AppTokens.s16),
+      margin: const EdgeInsets.only(bottom: AppTokens.s12),
       decoration: BoxDecoration(
         color: isNext ? colorScheme.primaryContainer.withOpacity(0.3) : Colors.white.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppTokens.r16),
         border: isNext ? Border.all(color: colorScheme.primary, width: 2) : Border.all(color: Colors.transparent),
       ),
       child: Row(
@@ -193,18 +202,16 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
         children: [
           Text(
             name, 
-            style: TextStyle(
+            style: AppTypography.titleMedium.copyWith(
               fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
-              fontSize: 18,
-              color: isNext ? colorScheme.primary : Colors.black87,
+              color: isNext ? colorScheme.primary : Colors.black,
             )
           ),
           Text(
             time, 
-            style: TextStyle(
+            style: AppTypography.titleMedium.copyWith(
               fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
-              fontSize: 18,
-              color: isNext ? colorScheme.primary : Colors.black87,
+              color: isNext ? colorScheme.primary : Colors.black,
             )
           ),
         ],

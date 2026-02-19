@@ -103,7 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Text(
         title.toUpperCase(),
         style: AppTypography.labelMedium.copyWith(
-          color: AppColors.neutral500,
+          color: Colors.black,
           letterSpacing: 1.2,
         ),
       ),
@@ -141,7 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.symmetric(horizontal: AppTokens.s16, vertical: AppTokens.s12),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: AppColors.neutral600),
+          Icon(icon, size: 20, color: Colors.black),
           const SizedBox(width: AppTokens.s12),
           Expanded(
             child: Column(
@@ -150,7 +150,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text(
                   title,
                   style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.textPrimary,
+                    color: Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -158,7 +158,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: AppTokens.s2),
                   Text(
                     subtitle,
-                    style: AppTypography.bodySmall.copyWith(color: AppColors.neutral500),
+                    style: AppTypography.bodySmall.copyWith(color: Colors.black),
                   ),
                 ],
               ],
@@ -168,7 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Text(
               trailingText,
               style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.neutral500,
+                color: Colors.black,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -176,7 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
           ...(trailing == null ? const <Widget>[] : <Widget>[trailing]),
           if (trailing == null && showChevron)
-            const Icon(Icons.chevron_right, color: AppColors.neutral400),
+            const Icon(Icons.chevron_right, color: Colors.black),
         ],
       ),
     );

@@ -32,11 +32,14 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
             scrolledUnderElevation: 0,
             title: Text(
               title,
-              style: AppTypography.headlineSmall,
+              style: AppTypography.headlineSmall.copyWith(
+                color: Colors.black,
+              ),
             ),
             centerTitle: centerTitle,
             leading: leading,
             actions: actions,
+            iconTheme: const IconThemeData(color: Colors.black),
           ),
         ),
       ),

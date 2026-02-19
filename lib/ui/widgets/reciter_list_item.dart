@@ -54,7 +54,7 @@ class ReciterListItem extends StatelessWidget {
                   Text(
                     reciter.name,
                     style: AppTypography.titleMedium.copyWith(
-                      color: AppColors.textPrimary,
+                      color: Colors.black,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -70,9 +70,9 @@ class ReciterListItem extends StatelessWidget {
                     child: Text(
                       '${reciter.moshaf.length} ${reciter.moshaf.length == 1 ? "Recitation" : "Recitations"}',
                       style: AppTypography.labelSmall?.copyWith(
-                        color: AppColors.textSecondary,
+                        color: Colors.black,
                         fontWeight: FontWeight.w500,
-                      ) ?? const TextStyle(fontSize: 10, color: AppColors.textSecondary),
+                      ) ?? const TextStyle(fontSize: 10, color: Colors.black),
                     ),
                   ),
                 ],
@@ -83,7 +83,7 @@ class ReciterListItem extends StatelessWidget {
             const HeroIcon(
               HeroIcons.chevronRight,
               size: 20,
-              color: AppColors.neutral400,
+              color: Colors.black,
             ),
           ],
         ),

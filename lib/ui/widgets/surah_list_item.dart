@@ -63,7 +63,7 @@ class SurahListItem extends StatelessWidget {
                         : Text(
                             surah.id.toString(),
                             style: AppTypography.titleMedium.copyWith(
-                              color: AppColors.neutral400,
+                              color: Colors.black,
                             ),
                           ),
               ),
@@ -80,7 +80,7 @@ class SurahListItem extends StatelessWidget {
                     style: AppTypography.titleMedium.copyWith(
                       color: isCurrentTrack 
                           ? AppColors.primaryBlue 
-                          : AppColors.textPrimary,
+                          : Colors.black,
                       fontWeight: isCurrentTrack ? FontWeight.w700 : FontWeight.w500,
                     ),
                   ),
@@ -102,7 +102,7 @@ class SurahListItem extends StatelessWidget {
             if (!isCurrentTrack)
               HeroIcon(
                 HeroIcons.playCircle,
-                color: AppColors.neutral300,
+                color: Colors.black,
                 style: HeroIconStyle.outline,
                 size: 28,
               ),

@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final pt = provider.prayerTime!;
         final nextPrayer = provider.nextPrayerName;
         final timeLeft = provider.timeUntilNextPrayer;
-        final timeLeftStr = '${timeLeft.inHours}h ${timeLeft.inMinutes.remainder(60)}m';
+        final timeLeftStr = '${timeLeft.inHours.toString().padLeft(2, '0')}h ${timeLeft.inMinutes.remainder(60).toString().padLeft(2, '0')}m ${timeLeft.inSeconds.remainder(60).toString().padLeft(2, '0')}s';
 
         return Container(
           width: double.infinity,
@@ -150,9 +150,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Next Prayer',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white,
                             fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -164,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 28,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ],
@@ -182,21 +182,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Icon(Icons.location_on_outlined, color: Colors.white.withOpacity(0.7), size: 14),
+                            Icon(Icons.location_on_outlined, color: Colors.white, size: 14),
                             const SizedBox(width: 4),
                             Flexible(
                               child: Text(
                                 '${pt.city}, ${pt.country}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12),
+                                style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
                               ),
                             ),
                           ],
@@ -245,8 +245,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Text(
             name,
             style: TextStyle(
-              color: isNext ? Theme.of(context).colorScheme.primary : Colors.white.withOpacity(0.7),
-              fontWeight: isNext ? FontWeight.bold : FontWeight.w500,
+              color: isNext ? Theme.of(context).colorScheme.primary : Colors.white,
+              fontWeight: isNext ? FontWeight.bold : FontWeight.w700,
               fontSize: 12,
             ),
           ),
@@ -255,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
             cleanTime,
             style: TextStyle(
               color: isNext ? Theme.of(context).colorScheme.primary : Colors.white,
-              fontWeight: isNext ? FontWeight.bold : FontWeight.w600,
+              fontWeight: isNext ? FontWeight.bold : FontWeight.w900,
               fontSize: 14,
             ),
           ),
@@ -313,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 16),
                 Text(
                   ayah.text,
-                  style: GoogleFonts.amiri(fontSize: 28, height: 2.0, fontWeight: FontWeight.w500),
+                  style: GoogleFonts.amiri(fontSize: 28, height: 2.0, fontWeight: FontWeight.w500, color: Colors.black),
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.rtl,
                 ),

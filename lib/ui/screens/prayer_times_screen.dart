@@ -82,6 +82,40 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
     }
   }
 
+  Widget _getPrayerIcon(String prayerName) {
+    String? assetName;
+    switch (prayerName) {
+      case 'Fajr':
+        assetName = 'fajr.png';
+        break;
+      case 'Sunrise':
+        assetName = 'sunrise.png';
+        break;
+      case 'Dhuhr':
+        assetName = 'Dhuhr.png';
+        break;
+      case 'Asr':
+        assetName = 'Asr.png';
+        break;
+      case 'Maghrib':
+        assetName = 'Maghrib.png';
+        break;
+      case 'Isha':
+        assetName = 'Isha.png';
+        break;
+    }
+
+    if (assetName != null) {
+      return Image.asset(
+        'assets/icons/$assetName',
+        width: 24,
+        height: 24,
+      );
+    }
+    
+    return Icon(Icons.access_time, color: Theme.of(context).colorScheme.primary);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,12 +206,12 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
                 
                 const SizedBox(height: AppTokens.s48),
                 
-                _buildPrayerRow(_localizedPrayerName('Fajr'), pt.fajr, nextPrayer == 'Fajr'),
-                _buildPrayerRow(_localizedPrayerName('Sunrise'), pt.sunrise, false),
-                _buildPrayerRow(_localizedPrayerName('Dhuhr'), pt.dhuhr, nextPrayer == 'Dhuhr'),
-                _buildPrayerRow(_localizedPrayerName('Asr'), pt.asr, nextPrayer == 'Asr'),
-                _buildPrayerRow(_localizedPrayerName('Maghrib'), pt.maghrib, nextPrayer == 'Maghrib'),
-                _buildPrayerRow(_localizedPrayerName('Isha'), pt.isha, nextPrayer == 'Isha'),
+                _buildPrayerRow('Fajr', _localizedPrayerName('Fajr'), pt.fajr, nextPrayer == 'Fajr'),
+                _buildPrayerRow('Sunrise', _localizedPrayerName('Sunrise'), pt.sunrise, false),
+                _buildPrayerRow('Dhuhr', _localizedPrayerName('Dhuhr'), pt.dhuhr, nextPrayer == 'Dhuhr'),
+                _buildPrayerRow('Asr', _localizedPrayerName('Asr'), pt.asr, nextPrayer == 'Asr'),
+                _buildPrayerRow('Maghrib', _localizedPrayerName('Maghrib'), pt.maghrib, nextPrayer == 'Maghrib'),
+                _buildPrayerRow('Isha', _localizedPrayerName('Isha'), pt.isha, nextPrayer == 'Isha'),
                 ],
               ),
             );
@@ -187,7 +221,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
     );
   }
 
-  Widget _buildPrayerRow(String name, String time, bool isNext) {
+  Widget _buildPrayerRow(String prayerKey, String name, String time, bool isNext) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: AppTokens.s16, horizontal: AppTokens.s16),
@@ -198,22 +232,16 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
         border: isNext ? Border.all(color: colorScheme.primary, width: 2) : Border.all(color: Colors.transparent),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            name, 
-            style: AppTypography.titleMedium.copyWith(
-              fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
-              color: isNext ? colorScheme.primary : Colors.black,
-            )
-          ),
-          Text(
-            time, 
-            style: AppTypography.titleMedium.copyWith(
-              fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
-              color: isNext ? colorScheme.primary : Colors.black,
-            )
-          ),
+          _getPrayerIcon(prayerKey),
+          const SizedBox(width: AppTokens.s16),
+          Expanded(child: Text(name, style: AppTypography.bodyLarge.copyWith(
+            fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
+          ))),
+          Text(time, style: AppTypography.bodyLarge.copyWith(
+            fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
+            color: isNext ? colorScheme.primary : null,
+          )),
         ],
       ),
     );

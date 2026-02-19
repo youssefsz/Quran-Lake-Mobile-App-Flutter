@@ -78,6 +78,7 @@ flutter:
   assets:
     - lib/l10n/en/
     - lib/l10n/ar/
+    - assets/icons/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

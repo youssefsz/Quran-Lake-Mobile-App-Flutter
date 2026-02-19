@@ -7,6 +7,7 @@ class AudioProvider with ChangeNotifier {
   final AudioPlayer _audioPlayer = AudioPlayer();
   
   bool _isPlaying = false;
+  bool _isLoading = false;
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
   
@@ -14,6 +15,7 @@ class AudioProvider with ChangeNotifier {
   Surah? _currentSurah;
   
   bool get isPlaying => _isPlaying;
+  bool get isLoading => _isLoading;
   Duration get duration => _duration;
   Duration get position => _position;
   Reciter? get currentReciter => _currentReciter;
@@ -22,6 +24,11 @@ class AudioProvider with ChangeNotifier {
   AudioProvider() {
     _audioPlayer.playerStateStream.listen((state) {
       _isPlaying = state.playing;
+      notifyListeners();
+    });
+
+    _audioPlayer.processingStateStream.listen((state) {
+      _isLoading = state == ProcessingState.loading;
       notifyListeners();
     });
 
@@ -39,14 +46,23 @@ class AudioProvider with ChangeNotifier {
   }
 
   Future<void> play(String url, {Reciter? reciter, Surah? surah}) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       if (reciter != null) _currentReciter = reciter;
       if (surah != null) _currentSurah = surah;
       
       await _audioPlayer.setUrl(url);
+      _isLoading = false;
+      notifyListeners();
       await _audioPlayer.play();
     } catch (e) {
       debugPrint('Error playing audio: $e');
+    } finally {
+      if (_isLoading) {
+        _isLoading = false;
+        notifyListeners();
+      }
     }
   }
 

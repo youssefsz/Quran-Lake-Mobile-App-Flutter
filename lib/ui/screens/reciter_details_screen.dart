@@ -182,9 +182,9 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                   : _buildSurahList(surahProvider, audioProvider),
             ),
             
-            // Mini Player Placeholder (if playing)
-            if (audioProvider.isPlaying)
-               _buildMiniPlayer(audioProvider),
+            // Mini Player Placeholder (if track loaded)
+            if (audioProvider.currentSurah != null)
+              _buildMiniPlayer(audioProvider),
           ],
         ),
       ),
@@ -266,16 +266,22 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
           child: ListTile(
             title: Text(audioProvider.currentSurah?.name ?? 'Unknown Surah'),
             subtitle: Text(audioProvider.currentReciter?.name ?? 'Unknown Reciter'),
-            trailing: IconButton(
-              icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
-              onPressed: () {
-                if (audioProvider.isPlaying) {
-                  audioProvider.pause();
-                } else {
-                  audioProvider.resume();
-                }
-              },
-            ),
+            trailing: audioProvider.isLoading
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : IconButton(
+                    icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: () {
+                      if (audioProvider.isPlaying) {
+                        audioProvider.pause();
+                      } else {
+                        audioProvider.resume();
+                      }
+                    },
+                  ),
           ),
         ),
       ),

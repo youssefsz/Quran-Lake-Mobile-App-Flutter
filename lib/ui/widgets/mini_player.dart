@@ -11,7 +11,7 @@ class MiniPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final audioProvider = context.watch<AudioProvider>();
 
-    if (!audioProvider.isPlaying || audioProvider.currentSurah == null) {
+    if (audioProvider.currentSurah == null) {
       return const SizedBox.shrink();
     }
 
@@ -64,16 +64,23 @@ class MiniPlayer extends StatelessWidget {
                     ],
                   ),
                 ),
-                IconButton(
-                  icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
-                  onPressed: () {
-                    if (audioProvider.isPlaying) {
-                      audioProvider.pause();
-                    } else {
-                      audioProvider.resume();
-                    }
-                  },
-                ),
+                if (audioProvider.isLoading)
+                  const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else
+                  IconButton(
+                    icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: () {
+                      if (audioProvider.isPlaying) {
+                        audioProvider.pause();
+                      } else {
+                        audioProvider.resume();
+                      }
+                    },
+                  ),
               ],
             ),
           ),

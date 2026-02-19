@@ -26,8 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     final localeProvider = context.read<LocaleProvider>();
+    final localeCode = localeProvider.locale.languageCode;
     _translations = localeProvider.getCachedTranslations('home');
-    _lastLocaleCode = localeProvider.locale.languageCode;
+    _lastLocaleCode = localeCode;
     _loadTranslations();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final prayerProvider = context.read<PrayerProvider>();
@@ -42,12 +43,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
       final surahProvider = context.read<SurahProvider>();
       if (surahProvider.surahs.isEmpty && !surahProvider.isLoading) {
-        surahProvider.fetchSurahs();
+        surahProvider.fetchSurahs(language: localeCode);
       }
 
       final reciterProvider = context.read<ReciterProvider>();
       if (reciterProvider.reciters.isEmpty && !reciterProvider.isLoading) {
-        reciterProvider.fetchReciters();
+        reciterProvider.fetchReciters(language: localeCode);
       }
     });
   }
@@ -60,6 +61,11 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_lastLocaleCode != localeCode) {
       _lastLocaleCode = localeCode;
       _loadTranslations();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<SurahProvider>().fetchSurahs(language: localeCode);
+        context.read<ReciterProvider>().fetchReciters(language: localeCode);
+      });
     }
   }
 
@@ -134,55 +140,68 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               // Top Row: Title and Time Left
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Next Prayer',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        nextPrayer,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        timeLeftStr,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(Icons.location_on_outlined, color: Colors.white.withOpacity(0.7), size: 14),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${pt.city}, ${pt.country}',
-                            style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Next Prayer',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.5,
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          nextPrayer,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          timeLeftStr,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(Icons.location_on_outlined, color: Colors.white.withOpacity(0.7), size: 14),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                '${pt.city}, ${pt.country}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -5,7 +5,6 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/reciter_provider.dart';
-import '../../data/models/reciter.dart';
 import '../widgets/reciter_list_item.dart';
 import '../widgets/glass_app_bar.dart';
 import 'reciter_details_screen.dart';
@@ -20,10 +19,14 @@ class RecitersScreen extends StatefulWidget {
 class _RecitersScreenState extends State<RecitersScreen> {
   Map<String, dynamic> _translations = {};
   final TextEditingController _searchController = TextEditingController();
+  String? _lastLocaleCode;
 
   @override
   void initState() {
     super.initState();
+    final localeProvider = context.read<LocaleProvider>();
+    _translations = localeProvider.getCachedTranslations('reciters');
+    _lastLocaleCode = localeProvider.locale.languageCode;
     _loadTranslations();
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -32,6 +35,20 @@ class _RecitersScreenState extends State<RecitersScreen> {
         provider.fetchReciters(language: context.read<LocaleProvider>().locale.languageCode);
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final localeCode = context.watch<LocaleProvider>().locale.languageCode;
+    if (_lastLocaleCode != localeCode) {
+      _lastLocaleCode = localeCode;
+      _loadTranslations();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<ReciterProvider>().fetchReciters(language: localeCode);
+      });
+    }
   }
 
   Future<void> _loadTranslations() async {

@@ -20,8 +20,15 @@ class ReciterProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
   
   String _searchQuery = '';
+  String? _currentLanguage;
 
   Future<void> fetchReciters({String language = 'ar'}) async {
+    if (_currentLanguage == language && _reciters.isNotEmpty) {
+      _filterReciters();
+      return;
+    }
+
+    _currentLanguage = language;
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -41,6 +48,14 @@ class ReciterProvider with ChangeNotifier {
     _searchQuery = query;
     _filterReciters();
     notifyListeners();
+  }
+
+  Reciter? getReciterById(int id) {
+    try {
+      return _reciters.firstWhere((r) => r.id == id);
+    } catch (e) {
+      return null;
+    }
   }
 
   void _filterReciters() {

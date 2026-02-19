@@ -108,7 +108,15 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
                   children: [
                     Icon(Icons.location_on, size: 16, color: Theme.of(context).colorScheme.primary),
                     const SizedBox(width: 8),
-                    Text('${pt.city}, ${pt.country}', style: Theme.of(context).textTheme.bodyLarge),
+                    Expanded(
+                      child: Text(
+                        '${pt.city}, ${pt.country}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 32),

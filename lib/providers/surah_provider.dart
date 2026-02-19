@@ -8,6 +8,7 @@ class SurahProvider with ChangeNotifier {
   List<Surah> _surahs = [];
   bool _isLoading = false;
   String? _errorMessage;
+  String? _currentLanguage;
 
   SurahProvider(this._repository);
 
@@ -16,8 +17,11 @@ class SurahProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> fetchSurahs({String language = 'ar'}) async {
-    if (_surahs.isNotEmpty) return; // Cache
+    if (_currentLanguage == language && _surahs.isNotEmpty) {
+      return;
+    }
 
+    _currentLanguage = language;
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();

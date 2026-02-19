@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 
@@ -13,36 +14,34 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).dividerColor.withOpacity(0.1),
-            width: 1,
-          ),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
-          height: 64,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(context, 0, HeroIcons.home, 'Home'),
-              _buildNavItem(context, 1, HeroIcons.users, 'Reciters'),
-              _buildNavItem(context, 2, HeroIcons.clock, 'Prayer'),
-              _buildNavItem(context, 3, HeroIcons.cog6Tooth, 'Settings'),
-            ],
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+            border: Border(
+              top: BorderSide(
+                color: Theme.of(context).dividerColor.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
+          ),
+          child: SafeArea(
+            top: false,
+            child: Container(
+              height: 64,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(context, 0, HeroIcons.home, 'Home'),
+                  _buildNavItem(context, 1, HeroIcons.users, 'Reciters'),
+                  _buildNavItem(context, 2, HeroIcons.clock, 'Prayer'),
+                  _buildNavItem(context, 3, HeroIcons.cog6Tooth, 'Settings'),
+                ],
+              ),
+            ),
           ),
         ),
       ),

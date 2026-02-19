@@ -1,10 +1,11 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/models/reciter.dart';
-import '../../data/models/surah.dart';
 import '../../providers/audio_provider.dart';
+import '../../providers/reciter_provider.dart';
 import '../../providers/surah_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../widgets/surah_list_item.dart';
@@ -20,14 +21,18 @@ class ReciterDetailsScreen extends StatefulWidget {
 }
 
 class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
+  late Reciter _reciter;
   late Moshaf _selectedMoshaf;
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
+  String? _lastLocaleCode;
 
   @override
   void initState() {
     super.initState();
-    _selectedMoshaf = widget.reciter.moshaf.first;
+    _reciter = widget.reciter;
+    _selectedMoshaf = _reciter.moshaf.first;
+    _lastLocaleCode = context.read<LocaleProvider>().locale.languageCode;
     
     // Ensure Surahs are loaded
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -39,6 +44,45 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final localeCode = context.watch<LocaleProvider>().locale.languageCode;
+    if (_lastLocaleCode != localeCode) {
+      _lastLocaleCode = localeCode;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _refreshLocaleData(localeCode);
+      });
+    }
+  }
+
+  Future<void> _refreshLocaleData(String localeCode) async {
+    final reciterProvider = context.read<ReciterProvider>();
+    final surahProvider = context.read<SurahProvider>();
+
+    await Future.wait([
+      reciterProvider.fetchReciters(language: localeCode),
+      surahProvider.fetchSurahs(language: localeCode),
+    ]);
+
+    if (!mounted) return;
+
+    final updatedReciter = reciterProvider.getReciterById(_reciter.id);
+    if (updatedReciter != null) {
+      setState(() {
+        _reciter = updatedReciter;
+        if (_reciter.moshaf.isNotEmpty) {
+          final selectedId = _selectedMoshaf.id;
+          final hasSelected = _reciter.moshaf.any((m) => m.id == selectedId);
+          _selectedMoshaf = hasSelected
+              ? _reciter.moshaf.firstWhere((m) => m.id == selectedId)
+              : _reciter.moshaf.first;
+        }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final surahProvider = context.watch<SurahProvider>();
     final audioProvider = context.watch<AudioProvider>();
@@ -46,7 +90,7 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: GlassAppBar(
-        title: widget.reciter.name,
+        title: _reciter.name,
       ),
       body: SafeArea(
         top: false,
@@ -68,7 +112,7 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.reciter.moshaf.length > 1) ...[
+                  if (_reciter.moshaf.length > 1) ...[
                     Text(
                       'Select Recitation Style',
                       style: AppTypography.labelMedium.copyWith(color: AppColors.textSecondary),
@@ -86,7 +130,7 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                           isExpanded: true,
                           icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.neutral500),
                           style: AppTypography.bodyMedium.copyWith(color: AppColors.textPrimary),
-                          items: widget.reciter.moshaf.map((moshaf) {
+                          items: _reciter.moshaf.map((moshaf) {
                             return DropdownMenuItem(
                               value: moshaf,
                               child: Text(moshaf.name),
@@ -139,7 +183,7 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
             ),
             
             // Mini Player Placeholder (if playing)
-            if (audioProvider.isPlaying || audioProvider.currentSurah != null)
+            if (audioProvider.isPlaying)
                _buildMiniPlayer(audioProvider),
           ],
         ),
@@ -175,7 +219,7 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
         final surah = surahs[index]!;
         
         final isCurrentTrack = audioProvider.currentSurah?.id == surah.id &&
-                              audioProvider.currentReciter?.id == widget.reciter.id;
+                              audioProvider.currentReciter?.id == _reciter.id;
         final isPlayingThis = isCurrentTrack && audioProvider.isPlaying;
 
         return SurahListItem(
@@ -193,7 +237,7 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                final url = '${_selectedMoshaf.server}${surah.id.toString().padLeft(3, '0')}.mp3';
                audioProvider.play(
                  url, 
-                 reciter: widget.reciter,
+                 reciter: _reciter,
                  surah: surah,
                );
              }
@@ -205,21 +249,34 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
 
 
   Widget _buildMiniPlayer(AudioProvider audioProvider) {
-    return Container(
-      color: Colors.grey[200],
-      padding: const EdgeInsets.all(8),
-      child: ListTile(
-        title: Text(audioProvider.currentSurah?.name ?? 'Unknown Surah'),
-        subtitle: Text(audioProvider.currentReciter?.name ?? 'Unknown Reciter'),
-        trailing: IconButton(
-          icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
-          onPressed: () {
-            if (audioProvider.isPlaying) {
-              audioProvider.pause();
-            } else {
-              audioProvider.resume();
-            }
-          },
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+            border: Border(
+              top: BorderSide(
+                color: Theme.of(context).dividerColor.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
+          ),
+          child: ListTile(
+            title: Text(audioProvider.currentSurah?.name ?? 'Unknown Surah'),
+            subtitle: Text(audioProvider.currentReciter?.name ?? 'Unknown Reciter'),
+            trailing: IconButton(
+              icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
+              onPressed: () {
+                if (audioProvider.isPlaying) {
+                  audioProvider.pause();
+                } else {
+                  audioProvider.resume();
+                }
+              },
+            ),
+          ),
         ),
       ),
     );

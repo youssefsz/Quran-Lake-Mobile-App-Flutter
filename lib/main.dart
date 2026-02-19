@@ -118,24 +118,36 @@ class _MainScreenState extends State<MainScreen> {
     // Note: In a real app we'd localize these labels too, likely in a 'navigation.json' or shared.
     // For now, I'll stick to English for tabs or update them later.
     return Scaffold(
-      body: Column(
+      extendBody: true,
+      body: Stack(
         children: [
-          Expanded(
-            child: IndexedStack(
-              index: _currentIndex,
-              children: _screens,
+          IndexedStack(
+            index: _currentIndex,
+            children: _screens,
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const MiniPlayer(),
+                  CustomBottomNavBar(
+                    selectedIndex: _currentIndex,
+                    onItemSelected: (index) {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
-          const MiniPlayer(),
         ],
-      ),
-      bottomNavigationBar: CustomBottomNavBar(
-        selectedIndex: _currentIndex,
-        onItemSelected: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
       ),
     );
   }

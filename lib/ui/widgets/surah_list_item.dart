@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/models/surah.dart';
+import '../../providers/haptic_provider.dart';
 
 class SurahListItem extends StatelessWidget {
   final Surah surah;
@@ -21,7 +23,10 @@ class SurahListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: () {
+        context.read<HapticProvider>().lightImpact();
+        onTap();
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: isCurrentTrack

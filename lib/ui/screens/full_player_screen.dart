@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/audio_provider.dart';
+import '../../providers/haptic_provider.dart';
 import '../widgets/glass_app_bar.dart';
 
 class FullPlayerScreen extends StatelessWidget {
@@ -19,7 +20,10 @@ class FullPlayerScreen extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.keyboard_arrow_down),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            context.read<HapticProvider>().lightImpact();
+            Navigator.of(context).pop();
+          },
         ),
       ),
       body: SafeArea(
@@ -100,12 +104,14 @@ class FullPlayerScreen extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.skip_previous, size: 36),
                     onPressed: () {
+                      context.read<HapticProvider>().lightImpact();
                       // TODO: Implement Previous
                     },
                   ),
                   const SizedBox(width: 24),
                   FloatingActionButton.large(
                     onPressed: () {
+                      context.read<HapticProvider>().lightImpact();
                       if (audioProvider.isPlaying) {
                         audioProvider.pause();
                       } else {
@@ -121,6 +127,7 @@ class FullPlayerScreen extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.skip_next, size: 36),
                     onPressed: () {
+                      context.read<HapticProvider>().lightImpact();
                       // TODO: Implement Next
                     },
                   ),

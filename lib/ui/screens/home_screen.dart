@@ -9,6 +9,7 @@ import '../../providers/ayah_provider.dart';
 import '../../providers/surah_provider.dart';
 import '../../providers/reciter_provider.dart';
 import '../../providers/audio_provider.dart';
+import '../../providers/haptic_provider.dart';
 import '../widgets/glass_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -321,6 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () {
+                      context.read<HapticProvider>().lightImpact();
                       final reciterProvider = context.read<ReciterProvider>();
                       final surahProvider = context.read<SurahProvider>();
                       final audioProvider = context.read<AudioProvider>();

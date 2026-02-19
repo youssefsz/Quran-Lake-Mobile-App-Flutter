@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:provider/provider.dart';
+import '../../providers/haptic_provider.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -55,7 +57,10 @@ class CustomBottomNavBar extends StatelessWidget {
         : Theme.of(context).disabledColor;
 
     return GestureDetector(
-      onTap: () => onItemSelected(index),
+      onTap: () {
+        context.read<HapticProvider>().lightImpact();
+        onItemSelected(index);
+      },
       child: Container(
         color: Colors.transparent, // Hit test behavior
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

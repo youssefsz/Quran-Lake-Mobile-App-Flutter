@@ -10,6 +10,7 @@ import 'data/repositories/surah_repository.dart';
 import 'data/services/location_service.dart';
 import 'providers/audio_provider.dart';
 import 'providers/locale_provider.dart';
+import 'providers/haptic_provider.dart';
 import 'providers/prayer_provider.dart';
 import 'providers/reciter_provider.dart';
 import 'providers/surah_provider.dart';
@@ -70,6 +71,7 @@ class QuranLakeApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SurahProvider(surahRepository)),
         ChangeNotifierProvider(create: (_) => AyahProvider(ayahRepository)),
         ChangeNotifierProvider(create: (_) => AudioProvider()),
+        ChangeNotifierProvider(create: (_) => HapticProvider()),
         ChangeNotifierProvider(create: (_) => PrayerProvider(prayerTimeRepository)),
       ],
       child: Consumer<LocaleProvider>(

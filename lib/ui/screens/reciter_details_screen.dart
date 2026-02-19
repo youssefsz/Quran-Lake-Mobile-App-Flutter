@@ -8,6 +8,7 @@ import '../../providers/audio_provider.dart';
 import '../../providers/reciter_provider.dart';
 import '../../providers/surah_provider.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/haptic_provider.dart';
 import '../widgets/surah_list_item.dart';
 import '../widgets/glass_app_bar.dart';
 
@@ -275,6 +276,7 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                 : IconButton(
                     icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
                     onPressed: () {
+                      context.read<HapticProvider>().lightImpact();
                       if (audioProvider.isPlaying) {
                         audioProvider.pause();
                       } else {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../widgets/glass_app_bar.dart';
 
@@ -46,6 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final localeProvider = context.watch<LocaleProvider>();
+    final hapticProvider = context.watch<HapticProvider>();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -72,6 +74,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     localeProvider.setLocale(newLocale);
                     // The UI will rebuild, and didChangeDependencies will re-fetch strings
                   }
+                },
+              ),
+            ),
+            ListTile(
+              title: Text(_translations['haptics'] ?? 'Haptic Feedback'),
+              trailing: Switch(
+                value: hapticProvider.isEnabled,
+                onChanged: (value) {
+                  if (!value) {
+                    hapticProvider.lightImpact();
+                    hapticProvider.setEnabled(false);
+                    return;
+                  }
+                  hapticProvider.setEnabled(true);
+                  hapticProvider.lightImpact();
                 },
               ),
             ),

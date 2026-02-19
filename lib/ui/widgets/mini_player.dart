@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/audio_provider.dart';
+import '../../providers/haptic_provider.dart';
 import '../screens/full_player_screen.dart';
 
 class MiniPlayer extends StatelessWidget {
@@ -17,6 +18,7 @@ class MiniPlayer extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        context.read<HapticProvider>().lightImpact();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const FullPlayerScreen()),
@@ -74,6 +76,7 @@ class MiniPlayer extends StatelessWidget {
                   IconButton(
                     icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
                     onPressed: () {
+                      context.read<HapticProvider>().lightImpact();
                       if (audioProvider.isPlaying) {
                         audioProvider.pause();
                       } else {

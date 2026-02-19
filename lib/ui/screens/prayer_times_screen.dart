@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/prayer_provider.dart';
 import '../widgets/glass_app_bar.dart';
@@ -61,6 +62,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
+              context.read<HapticProvider>().lightImpact();
               context.read<PrayerProvider>().fetchPrayerTimes();
             },
           )
@@ -80,7 +82,10 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
                    Text(prayerProvider.errorMessage!, textAlign: TextAlign.center),
                    const SizedBox(height: 16),
                    ElevatedButton(
-                     onPressed: () => prayerProvider.fetchPrayerTimes(), 
+                    onPressed: () {
+                      context.read<HapticProvider>().lightImpact();
+                      prayerProvider.fetchPrayerTimes();
+                    }, 
                      child: const Text('Retry')
                    )
                  ],

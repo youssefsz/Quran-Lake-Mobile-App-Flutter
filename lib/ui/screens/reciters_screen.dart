@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/reciter_provider.dart';
 import '../widgets/reciter_list_item.dart';
@@ -117,9 +118,12 @@ class _RecitersScreenState extends State<RecitersScreen> {
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton(
-                          onPressed: () => provider.fetchReciters(
-                            language: context.read<LocaleProvider>().locale.languageCode,
-                          ),
+                          onPressed: () {
+                            context.read<HapticProvider>().lightImpact();
+                            provider.fetchReciters(
+                              language: context.read<LocaleProvider>().locale.languageCode,
+                            );
+                          },
                           child: const Text('Retry'),
                         ),
                       ],

@@ -11,6 +11,7 @@ import '../../providers/locale_provider.dart';
 import '../../providers/haptic_provider.dart';
 import '../widgets/surah_list_item.dart';
 import '../widgets/glass_app_bar.dart';
+import '../widgets/mini_player.dart';
 
 class ReciterDetailsScreen extends StatefulWidget {
   final Reciter reciter;
@@ -183,9 +184,8 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                   : _buildSurahList(surahProvider, audioProvider),
             ),
             
-            // Mini Player Placeholder (if track loaded)
-            if (audioProvider.currentSurah != null)
-              _buildMiniPlayer(audioProvider),
+            // Mini Player
+            const MiniPlayer(),
           ],
         ),
       ),
@@ -222,11 +222,13 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
         final isCurrentTrack = audioProvider.currentSurah?.id == surah.id &&
                               audioProvider.currentReciter?.id == _reciter.id;
         final isPlayingThis = isCurrentTrack && audioProvider.isPlaying;
+        final isLoadingThis = isCurrentTrack && audioProvider.isLoading;
 
         return SurahListItem(
           surah: surah,
           isPlaying: isPlayingThis,
           isCurrentTrack: isCurrentTrack,
+          isLoading: isLoadingThis,
           onTap: () {
              if (isCurrentTrack) {
                if (audioProvider.isPlaying) {
@@ -245,48 +247,6 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
           },
         );
       },
-    );
-  }
-
-
-  Widget _buildMiniPlayer(AudioProvider audioProvider) {
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
-            border: Border(
-              top: BorderSide(
-                color: Theme.of(context).dividerColor.withOpacity(0.1),
-                width: 1,
-              ),
-            ),
-          ),
-          child: ListTile(
-            title: Text(audioProvider.currentSurah?.name ?? 'Unknown Surah'),
-            subtitle: Text(audioProvider.currentReciter?.name ?? 'Unknown Reciter'),
-            trailing: audioProvider.isLoading
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : IconButton(
-                    icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
-                    onPressed: () {
-                      context.read<HapticProvider>().lightImpact();
-                      if (audioProvider.isPlaying) {
-                        audioProvider.pause();
-                      } else {
-                        audioProvider.resume();
-                      }
-                    },
-                  ),
-          ),
-        ),
-      ),
     );
   }
 }

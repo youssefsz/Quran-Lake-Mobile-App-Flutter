@@ -28,21 +28,10 @@ class ReciterListItem extends StatelessWidget {
         child: Row(
           children: [
             // Avatar / Initial
-            Container(
+            SizedBox(
               width: 50,
               height: 50,
-              decoration: BoxDecoration(
-                color: AppColors.primaryBlue.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  reciter.letter.isNotEmpty ? reciter.letter[0] : '?',
-                  style: AppTypography.titleLarge.copyWith(
-                    color: AppColors.primaryBlue,
-                  ),
-                ),
-              ),
+              child: Image.asset('assets/icons/man.png'),
             ),
             const SizedBox(width: 16),
             

@@ -10,6 +10,7 @@ class SurahListItem extends StatelessWidget {
   final Surah surah;
   final bool isPlaying;
   final bool isCurrentTrack;
+  final bool isLoading;
   final VoidCallback onTap;
 
   const SurahListItem({
@@ -17,6 +18,7 @@ class SurahListItem extends StatelessWidget {
     required this.surah,
     required this.isPlaying,
     required this.isCurrentTrack,
+    this.isLoading = false,
     required this.onTap,
   });
 
@@ -32,40 +34,22 @@ class SurahListItem extends StatelessWidget {
         decoration: isCurrentTrack
             ? BoxDecoration(
                 color: AppColors.primaryBlue.withOpacity(0.05),
-                border: Border(
-                  left: BorderSide(
-                    color: AppColors.primaryBlue,
-                    width: 4,
-                  ),
-                ),
+                borderRadius: BorderRadius.circular(8),
               )
             : null,
         child: Row(
           children: [
-            // Number / Status
+            // Number
             SizedBox(
               width: 40,
               child: Center(
-                child: isCurrentTrack && isPlaying
-                    ? const HeroIcon(
-                        HeroIcons.pause,
-                        color: AppColors.primaryBlue,
-                        style: HeroIconStyle.solid,
-                        size: 24,
-                      )
-                    : isCurrentTrack
-                        ? const HeroIcon(
-                            HeroIcons.play,
-                            color: AppColors.primaryBlue,
-                            style: HeroIconStyle.solid,
-                            size: 24,
-                          )
-                        : Text(
-                            surah.id.toString(),
-                            style: AppTypography.titleMedium.copyWith(
-                              color: Colors.black,
-                            ),
-                          ),
+                child: Text(
+                  surah.id.toString(),
+                  style: AppTypography.titleMedium.copyWith(
+                    color: isCurrentTrack ? AppColors.primaryBlue : Colors.black,
+                    fontWeight: isCurrentTrack ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 16),
@@ -98,8 +82,28 @@ class SurahListItem extends StatelessWidget {
               ),
             ),
             
-            // Play Button (if not current)
-            if (!isCurrentTrack)
+            // Play/Pause Button
+            if (isCurrentTrack)
+              if (isLoading)
+                const SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryBlue),
+                    ),
+                  ),
+                )
+              else
+                HeroIcon(
+                  isPlaying ? HeroIcons.pause : HeroIcons.play,
+                  color: AppColors.primaryBlue,
+                  style: HeroIconStyle.solid,
+                  size: 28,
+                )
+            else
               HeroIcon(
                 HeroIcons.playCircle,
                 color: Colors.black,

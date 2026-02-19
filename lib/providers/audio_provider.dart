@@ -28,7 +28,7 @@ class AudioProvider with ChangeNotifier {
     });
 
     _audioPlayer.processingStateStream.listen((state) {
-      _isLoading = state == ProcessingState.loading;
+      _isLoading = state == ProcessingState.loading || state == ProcessingState.buffering;
       notifyListeners();
     });
 
@@ -76,6 +76,15 @@ class AudioProvider with ChangeNotifier {
 
   Future<void> stop() async {
     await _audioPlayer.stop();
+  }
+
+  Future<void> closePlayer() async {
+    await _audioPlayer.stop();
+    _currentSurah = null;
+    _currentReciter = null;
+    _position = Duration.zero;
+    _duration = Duration.zero;
+    notifyListeners();
   }
 
   Future<void> seek(Duration position) async {

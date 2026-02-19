@@ -53,10 +53,9 @@ class FullPlayerScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Icon(
-                  Icons.music_note,
-                  size: 100,
-                  color: Theme.of(context).primaryColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: Image.asset('assets/icons/quran.png'),
                 ),
               ),
               const SizedBox(height: 40),

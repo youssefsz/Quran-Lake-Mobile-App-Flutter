@@ -237,10 +237,11 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
           const SizedBox(width: AppTokens.s16),
           Expanded(child: Text(name, style: AppTypography.bodyLarge.copyWith(
             fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
+            color: Colors.black,
           ))),
           Text(time, style: AppTypography.bodyLarge.copyWith(
             fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
-            color: isNext ? colorScheme.primary : null,
+            color: isNext ? colorScheme.primary : Colors.black,
           )),
         ],
       ),

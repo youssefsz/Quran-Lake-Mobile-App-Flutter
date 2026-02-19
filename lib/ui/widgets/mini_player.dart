@@ -1,9 +1,11 @@
 import 'dart:ui';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/haptic_provider.dart';
 import '../screens/full_player_screen.dart';
+import '../../core/theme/app_colors.dart';
 
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
@@ -16,34 +18,39 @@ class MiniPlayer extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return GestureDetector(
-      onTap: () {
-        context.read<HapticProvider>().lightImpact();
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const FullPlayerScreen()),
-        );
-      },
-      child: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+    return OpenContainer(
+      openBuilder: (context, _) => const FullPlayerScreen(),
+      closedElevation: 0,
+      closedShape: const RoundedRectangleBorder(),
+      closedColor: Theme.of(context).scaffoldBackgroundColor,
+      middleColor: Theme.of(context).scaffoldBackgroundColor,
+      openColor: Theme.of(context).scaffoldBackgroundColor,
+      transitionDuration: const Duration(milliseconds: 500),
+      transitionType: ContainerTransitionType.fadeThrough,
+      tappable: false,
+      closedBuilder: (context, openContainer) {
+        return GestureDetector(
+          onTap: () {
+            context.read<HapticProvider>().lightImpact();
+            openContainer();
+          },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+              color: Theme.of(context).scaffoldBackgroundColor,
               border: Border(
                 top: BorderSide(
-                  color: Theme.of(context).dividerColor.withOpacity(0.1),
-                  width: 1,
+                  color: Theme.of(context).dividerColor.withOpacity(0.5),
+                  width: 1.5,
                 ),
               ),
             ),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
-                  child: Icon(Icons.music_note, color: Theme.of(context).primaryColor),
+                SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Image.asset('assets/icons/quran.png'),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -88,11 +95,18 @@ class MiniPlayer extends StatelessWidget {
                       }
                     },
                   ),
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.black),
+                  onPressed: () {
+                    context.read<HapticProvider>().lightImpact();
+                    audioProvider.closePlayer();
+                  },
+                ),
               ],
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

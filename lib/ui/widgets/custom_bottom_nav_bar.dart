@@ -71,8 +71,8 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
             color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
             border: Border(
               top: BorderSide(
-                color: Theme.of(context).dividerColor.withOpacity(0.1),
-                width: 1,
+                color: Theme.of(context).dividerColor.withOpacity(0.5),
+                width: 1.5,
               ),
             ),
           ),

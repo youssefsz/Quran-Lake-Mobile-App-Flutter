@@ -1,5 +1,15 @@
 {
   "title": "Prayer Times",
   "next_prayer": "Next Prayer",
-  "location_permission": "Location permission required"
+  "location_permission": "Location permission required",
+  "retry": "Retry",
+  "no_prayer_times": "No prayer times available.",
+  "hours_short": "h",
+  "minutes_short": "m",
+  "fajr": "Fajr",
+  "sunrise": "Sunrise",
+  "dhuhr": "Dhuhr",
+  "asr": "Asr",
+  "maghrib": "Maghrib",
+  "isha": "Isha"
 }

@@ -1,5 +1,15 @@
 {
   "title": "مواقيت الصلاة",
   "next_prayer": "الصلاة القادمة",
-  "location_permission": "مطلوب إذن الموقع"
+  "location_permission": "مطلوب إذن الموقع",
+  "retry": "إعادة المحاولة",
+  "no_prayer_times": "لا توجد مواقيت صلاة متاحة.",
+  "hours_short": "س",
+  "minutes_short": "د",
+  "fajr": "الفجر",
+  "sunrise": "الشروق",
+  "dhuhr": "الظهر",
+  "asr": "العصر",
+  "maghrib": "المغرب",
+  "isha": "العشاء"
 }

@@ -1,7 +1,22 @@
 {
   "title": "Settings",
-  "theme": "Theme",
   "language": "Language",
+  "language_subtitle": "Choose app language",
   "haptics": "Haptic Feedback",
-  "clear_cache": "Clear Cache"
+  "haptics_subtitle": "Light tap feedback",
+  "preferences_section": "Preferences",
+  "support_section": "Support",
+  "support_feedback": "Support & Feedback",
+  "support_feedback_subtitle": "Email us anytime",
+  "legal_section": "Legal",
+  "terms": "Terms of Service",
+  "terms_subtitle": "Read the terms",
+  "privacy": "Privacy Policy",
+  "privacy_subtitle": "How we handle your data",
+  "about_section": "About",
+  "about": "About This App",
+  "about_subtitle": "Learn more about Quran Lake",
+  "app_version": "App Version",
+  "app_version_subtitle": "Current build",
+  "done": "Done"
 }

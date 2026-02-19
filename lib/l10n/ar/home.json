@@ -2,5 +2,9 @@
   "title": "الرئيسية",
   "ayah_of_day": "آية اليوم",
   "listen_now": "استمع الآن",
-  "full_schedule": "الجدول الكامل"
+  "full_schedule": "الجدول الكامل",
+  "nav_home": "الرئيسية",
+  "nav_reciters": "القراء",
+  "nav_prayer": "الصلاة",
+  "nav_settings": "الإعدادات"
 }

@@ -1,7 +1,22 @@
 {
   "title": "الإعدادات",
-  "theme": "المظهر",
   "language": "اللغة",
+  "language_subtitle": "اختر لغة التطبيق",
   "haptics": "الاهتزاز",
-  "clear_cache": "مسح الذاكرة المؤقتة"
+  "haptics_subtitle": "اهتزاز خفيف عند اللمس",
+  "preferences_section": "التفضيلات",
+  "support_section": "الدعم",
+  "support_feedback": "الدعم والملاحظات",
+  "support_feedback_subtitle": "راسلنا عبر البريد",
+  "legal_section": "القانوني",
+  "terms": "شروط الخدمة",
+  "terms_subtitle": "اطّلع على الشروط",
+  "privacy": "سياسة الخصوصية",
+  "privacy_subtitle": "كيف نتعامل مع بياناتك",
+  "about_section": "حول",
+  "about": "حول هذا التطبيق",
+  "about_subtitle": "تعرف على قرآن ليك",
+  "app_version": "إصدار التطبيق",
+  "app_version_subtitle": "الإصدار الحالي",
+  "done": "تم"
 }

@@ -52,6 +52,33 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
     }
   }
 
+  String _t(String key, String fallback) {
+    final value = _translations[key];
+    if (value is String && value.isNotEmpty) {
+      return value;
+    }
+    return fallback;
+  }
+
+  String _localizedPrayerName(String name) {
+    switch (name) {
+      case 'Fajr':
+        return _t('fajr', 'Fajr');
+      case 'Sunrise':
+        return _t('sunrise', 'Sunrise');
+      case 'Dhuhr':
+        return _t('dhuhr', 'Dhuhr');
+      case 'Asr':
+        return _t('asr', 'Asr');
+      case 'Maghrib':
+        return _t('maghrib', 'Maghrib');
+      case 'Isha':
+        return _t('isha', 'Isha');
+      default:
+        return name;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,14 +113,14 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
                       context.read<HapticProvider>().lightImpact();
                       prayerProvider.fetchPrayerTimes();
                     }, 
-                     child: const Text('Retry')
+                    child: Text(_t('retry', 'Retry'))
                    )
                  ],
                ),
              ));
           }
           if (prayerProvider.prayerTime == null) {
-             return const Center(child: Text("No prayer times available."));
+             return Center(child: Text(_t('no_prayer_times', 'No prayer times available.')));
           }
 
           final pt = prayerProvider.prayerTime!;
@@ -102,7 +129,9 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
           
           final hours = timeLeft.inHours;
           final minutes = timeLeft.inMinutes.remainder(60);
-          final timeLeftStr = '${hours}h ${minutes}m';
+          final hoursLabel = _t('hours_short', 'h');
+          final minutesLabel = _t('minutes_short', 'm');
+          final timeLeftStr = '$hours$hoursLabel $minutes$minutesLabel';
 
           return SingleChildScrollView(
             padding: EdgeInsets.only(top: kToolbarHeight + MediaQuery.of(context).padding.top + 20, left: 16, right: 16, bottom: 100),
@@ -126,7 +155,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
                 ),
                 const SizedBox(height: 32),
                 
-                Text('Next Prayer: $nextPrayer', style: Theme.of(context).textTheme.titleMedium),
+                Text('${_t('next_prayer', 'Next Prayer')}: ${_localizedPrayerName(nextPrayer)}', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Text(timeLeftStr, style: Theme.of(context).textTheme.displayMedium?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -135,12 +164,12 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
                 
                 const SizedBox(height: 48),
                 
-                _buildPrayerRow('Fajr', pt.fajr, nextPrayer == 'Fajr'),
-                _buildPrayerRow('Sunrise', pt.sunrise, false),
-                _buildPrayerRow('Dhuhr', pt.dhuhr, nextPrayer == 'Dhuhr'),
-                _buildPrayerRow('Asr', pt.asr, nextPrayer == 'Asr'),
-                _buildPrayerRow('Maghrib', pt.maghrib, nextPrayer == 'Maghrib'),
-                _buildPrayerRow('Isha', pt.isha, nextPrayer == 'Isha'),
+                _buildPrayerRow(_localizedPrayerName('Fajr'), pt.fajr, nextPrayer == 'Fajr'),
+                _buildPrayerRow(_localizedPrayerName('Sunrise'), pt.sunrise, false),
+                _buildPrayerRow(_localizedPrayerName('Dhuhr'), pt.dhuhr, nextPrayer == 'Dhuhr'),
+                _buildPrayerRow(_localizedPrayerName('Asr'), pt.asr, nextPrayer == 'Asr'),
+                _buildPrayerRow(_localizedPrayerName('Maghrib'), pt.maghrib, nextPrayer == 'Maghrib'),
+                _buildPrayerRow(_localizedPrayerName('Isha'), pt.isha, nextPrayer == 'Isha'),
               ],
             ),
           );

@@ -1,5 +1,5 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 
 class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -20,22 +20,27 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: (backgroundColor ?? Theme.of(context).scaffoldBackgroundColor).withOpacity(0.95),
-      child: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        title: Text(
-          title,
-          style: AppTypography.headlineSmall.copyWith(
-            color: Colors.black,
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+        child: Container(
+          color: (backgroundColor ?? Theme.of(context).scaffoldBackgroundColor).withOpacity(0.7),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            title: Text(
+              title,
+              style: AppTypography.headlineSmall.copyWith(
+                color: Colors.black,
+              ),
+            ),
+            centerTitle: centerTitle,
+            leading: leading,
+            actions: actions,
+            iconTheme: const IconThemeData(color: Colors.black),
           ),
         ),
-        centerTitle: centerTitle,
-        leading: leading,
-        actions: actions,
-        iconTheme: const IconThemeData(color: Colors.black),
       ),
     );
   }

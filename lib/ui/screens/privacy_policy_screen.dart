@@ -250,7 +250,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
         'Policy, please contact us at:',
       ),
       const SizedBox(height: AppTokens.s8),
-      _emailLink('support@quranlake.app'),
+      _emailLink('dhibi.ywsf@gmail.com'),
     ];
   }
 
@@ -423,7 +423,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
         'يرجى التواصل معنا على:',
       ),
       const SizedBox(height: AppTokens.s8),
-      _emailLink('support@quranlake.app'),
+      _emailLink('dhibi.ywsf@gmail.com'),
     ];
   }
 

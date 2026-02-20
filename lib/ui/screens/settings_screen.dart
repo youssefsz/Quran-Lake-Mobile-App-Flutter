@@ -37,8 +37,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _lastLocaleCode;
   String? _appVersion;
 
-  static const String _supportEmail = 'support@quranlake.app';
-  static const String _aboutUrl = 'https://quranlake.app/about';
+  static const String _supportEmail = 'dhibi.ywsf@gmail.com';
+  static const String _aboutUrl = 'https://youssef.tn/quranlake/';
   static const List<_LanguageOption> _languageOptions = [
     _LanguageOption(locale: Locale('en'), label: 'English', flag: '🇬🇧'),
     _LanguageOption(locale: Locale('ar'), label: 'العربية', flag: '🇸🇦'),

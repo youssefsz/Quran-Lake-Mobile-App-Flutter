@@ -307,7 +307,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
         'please contact us at:',
       ),
       const SizedBox(height: AppTokens.s8),
-      _emailLink('support@quranlake.app'),
+      _emailLink('dhibi.ywsf@gmail.com'),
     ];
   }
 
@@ -530,7 +530,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
         'معنا على:',
       ),
       const SizedBox(height: AppTokens.s8),
-      _emailLink('support@quranlake.app'),
+      _emailLink('dhibi.ywsf@gmail.com'),
     ];
   }
 

@@ -1,21 +1,11 @@
 (function () {
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
     const homeImg = document.getElementById('homeImg');
-    const savedImg = document.getElementById('savedImg');
+    const prayersImg = document.getElementById('prayersImg');
+    const recitersImg = document.getElementById('recitersImg');
     const settingsImg = document.getElementById('settingsImg');
-    const html = document.documentElement;
-    const images = [homeImg, savedImg, settingsImg];
-    const imageNames = ['home', 'saved', 'settigns'];
+    const images = [homeImg, prayersImg, recitersImg, settingsImg];
     let currentImageIndex = 0;
     let imageInterval = null;
-
-    function updateImages() {
-        homeImg.src = `imgs/screenshots/light/home.jpeg`;
-        savedImg.src = `imgs/screenshots/light/saved.jpeg`;
-        settingsImg.src = `imgs/screenshots/light/settigns.jpeg`;
-    }
-    updateImages();
 
     function showNextImage() {
         // Remove active class from current image

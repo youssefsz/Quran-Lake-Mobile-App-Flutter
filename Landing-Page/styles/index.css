@@ -236,6 +236,12 @@
         gap: 1rem;
     }
 
+    .custom-badges-row {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
     .download-btn {
         display: inline-block;
         text-decoration: none;
@@ -282,40 +288,57 @@
         font-weight: 500;
     }
 
-    .github-source-btn {
+    .custom-badge-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.5rem;
-        background: var(--surface);
-        color: var(--text-primary);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
+        gap: 0.75rem;
+        padding: 0.5rem 1.25rem 0.5rem 0.75rem;
+        background: #000000;
+        color: #ffffff;
+        border: 1px solid #000000;
+        border-radius: 8px;
         text-decoration: none;
-        font-size: 0.875rem;
-        font-weight: 500;
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         width: fit-content;
+        height: 60px;
+        /* Aligns with app store / play store buttons */
     }
 
-    .github-source-btn svg {
-        width: 18px;
-        height: 18px;
+    .custom-badge-btn svg {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
         transition: transform 0.3s ease;
     }
 
-    .github-source-btn:hover {
-        transform: translateY(-2px);
-        background: var(--accent);
-        color: var(--white);
-        border-color: var(--accent);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    .custom-badge-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        filter: brightness(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
-    .github-source-btn:hover svg {
-        transform: scale(1.1);
+    .custom-badge-btn .btn-text-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .custom-badge-btn .btn-small-text {
+        font-size: 0.75rem;
+        font-weight: 500;
+        line-height: 1;
+        margin-bottom: 0.125rem;
+        opacity: 0.9;
+    }
+
+    .custom-badge-btn .btn-large-text {
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0.02em;
     }
 
     .download-btn-wrapper {
@@ -378,6 +401,12 @@
             align-items: center;
         }
 
+        .custom-badges-row {
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
         .download-btn-wrapper {
             display: flex;
             flex-direction: column;
@@ -388,12 +417,12 @@
             height: 56px;
         }
 
-        .github-source-btn {
+        .custom-badge-btn {
             padding: 0.875rem 1.75rem;
             font-size: 0.9375rem;
         }
 
-        .github-source-btn svg {
+        .custom-badge-btn svg {
             width: 20px;
             height: 20px;
         }
@@ -454,12 +483,12 @@
             height: 52px;
         }
 
-        .github-source-btn {
+        .custom-badge-btn {
             padding: 0.8125rem 1.5rem;
             font-size: 0.875rem;
         }
 
-        .github-source-btn svg {
+        .custom-badge-btn svg {
             width: 18px;
             height: 18px;
         }

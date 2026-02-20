@@ -5,19 +5,11 @@
 }
 
 :root {
-    --bg: #FFFFFF;
-    --text-primary: #1D1D1F;
-    --text-secondary: #86868B;
-    --accent: #007AFF;
-    --border-color: rgba(29, 29, 31, 0.1);
-}
-
-:root[data-theme="dark"] {
-    --bg: #000000;
-    --text-primary: #F5F5F7;
-    --text-secondary: #86868B;
-    --accent: #0A84FF;
-    --border-color: rgba(245, 245, 247, 0.1);
+    --bg: #F8FAFC;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --accent: #3B82F6;
+    --border-color: rgba(15, 23, 42, 0.1);
 }
 
 body {
@@ -120,45 +112,7 @@ h1 {
     color: var(--text-primary);
 }
 
-.theme-toggle {
-    position: fixed;
-    top: 2rem;
-    right: 2rem;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--bg);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
 
-:root[data-theme="dark"] .theme-toggle {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.theme-toggle:hover {
-    transform: scale(1.05);
-    background: var(--accent);
-    color: #FFFFFF;
-    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-}
-
-:root[data-theme="dark"] .theme-toggle:hover {
-    box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
-}
-
-.theme-toggle svg {
-    width: 24px;
-    height: 24px;
-    transition: transform 0.3s ease;
-}
 
 @media (max-width: 768px) {
     .container {
@@ -177,17 +131,7 @@ h1 {
         font-size: 0.9375rem;
     }
 
-    .theme-toggle {
-        top: 1rem;
-        right: 1rem;
-        width: 40px;
-        height: 40px;
-    }
 
-    .theme-toggle svg {
-        width: 20px;
-        height: 20px;
-    }
 }
 
 @media (max-width: 480px) {

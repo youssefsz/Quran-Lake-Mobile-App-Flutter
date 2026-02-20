@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Primary Meta Tags -->
-  <title>Privacy Policy – QuickQuote</title>
-  <meta name="title" content="Privacy Policy – QuickQuote">
+  <title>Privacy Policy – Quran Lake</title>
+  <meta name="title" content="Privacy Policy – Quran Lake">
   <meta name="description"
-    content="Privacy Policy for QuickQuote. Learn how we protect your privacy and handle your data.">
+    content="Privacy Policy for Quran Lake. Learn how we protect your privacy and handle your data.">
   <meta name="robots" content="index, follow">
 
   <!--css-->
@@ -25,36 +25,19 @@
   <link rel="manifest" href="imgs/favicons/site.webmanifest">
 
   <!-- Theme Color -->
-  <meta name="theme-color" content="#007AFF">
-  <meta name="msapplication-TileColor" content="#007AFF">
+  <meta name="theme-color" content="#3B82F6">
+  <meta name="msapplication-TileColor" content="#3B82F6">
 
   <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Prevent flickering by setting theme before body renders -->
-  <script>
-    (function () {
-      const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', theme);
-      document.documentElement.classList.add(theme);
-    })();
-  </script>
+
 
 </head>
 
 <body>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-    <svg id="themeIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      <path
-        d="M12 2V4M12 20V22M4.93 4.93L6.34 6.34M17.66 17.66L19.07 19.07M2 12H4M20 12H22M6.34 17.66L4.93 19.07M19.07 4.93L17.66 6.34"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-  </button>
 
   <div class="container">
     <div class="header">
@@ -66,163 +49,162 @@
         Back to Home
       </a>
       <h1>Privacy Policy</h1>
-      <p class="last-updated">Last Updated: January 2025</p>
+      <p class="last-updated">Last Updated: February 2026</p>
     </div>
 
     <div class="content">
       <div class="section">
-        <h2 class="section-title">1. Introduction</h2>
+        <h2 class="section-title">1. Information We Collect</h2>
         <div class="section-content">
-          <p>Welcome to QuickQuote. We respect your privacy and are committed to protecting your personal data. This
-            privacy policy explains how we collect, use, and safeguard information when you use our app.</p>
-        </div>
-      </div>
+          <p><strong>1.1 Location Data</strong></p>
+          <p>When you use the Prayer Times feature, the App requests access to your device's location services (GPS). We
+            use your geographic coordinates (latitude and longitude) solely to calculate accurate prayer times for your
+            area and to display your city and country name. Location data is processed in real time and is not
+            transmitted to our servers.</p>
 
-      <div class="section">
-        <h2 class="section-title">2. Information We Collect</h2>
-        <div class="section-content">
-          <p>QuickQuote is designed with privacy in mind. We collect minimal information:</p>
+          <p><strong>1.2 Locally Stored Data</strong></p>
+          <p>The App stores the following data locally on your device:</p>
           <ul>
-            <li>Quotes and Content: Quotes you add or save are stored locally on your device using device storage.</li>
-            <li>Preferences: Theme preferences (light/dark mode) are stored locally on your device.</li>
-            <li>App Usage: We do not track your usage patterns, browsing history, or personal information.</li>
+            <li>Prayer times cache: Cached prayer schedule data for the current day, stored in a local SQLite database
+              to reduce network requests.</li>
+            <li>Language preference: Your chosen language setting (English or Arabic).</li>
+            <li>Onboarding status: A flag indicating whether you have completed the initial setup.</li>
+            <li>Haptic feedback preference: Your haptic feedback toggle state.</li>
+          </ul>
+
+          <p><strong>1.3 Information We Do Not Collect</strong></p>
+          <p>We do not collect, store, or process any of the following:</p>
+          <ul>
+            <li>Personal identification information (name, email, phone number)</li>
+            <li>User accounts, login credentials, or passwords</li>
+            <li>Payment or financial information</li>
+            <li>Usage analytics or behavioral tracking data</li>
+            <li>Advertising identifiers</li>
+            <li>Contacts, photos, or other device data</li>
+            <li>Cookies or web tracking technologies</li>
           </ul>
         </div>
       </div>
 
       <div class="section">
-        <h2 class="section-title">3. Local Storage</h2>
+        <h2 class="section-title">2. How We Use Information</h2>
         <div class="section-content">
-          <p>All data in QuickQuote is stored locally on your device:</p>
+          <p>The limited data we process is used exclusively for the following purposes:</p>
           <ul>
-            <li>Saved quotes are stored using local device storage (SharedPreferences)</li>
-            <li>Your quotes, preferences, and settings never leave your device</li>
-            <li>We do not use cloud storage or sync your data to external servers</li>
+            <li>Calculating and displaying accurate prayer times based on your location.</li>
+            <li>Displaying your city and country name on the Prayer Times screen.</li>
+            <li>Remembering your language and app preferences between sessions.</li>
+            <li>Streaming Quran audio recitations from third-party servers.</li>
           </ul>
         </div>
       </div>
 
       <div class="section">
-        <h2 class="section-title">4. Data Collection and Sharing</h2>
+        <h2 class="section-title">3. Third-Party Services</h2>
         <div class="section-content">
-          <p>We do not:</p>
+          <p>The App communicates with the following third-party services to provide its core functionality:</p>
           <ul>
-            <li>Collect personal information</li>
-            <li>Share data with third parties</li>
-            <li>Use analytics or tracking services</li>
-            <li>Access your contacts, photos, or other personal data</li>
-            <li>Use cookies or similar tracking technologies</li>
+            <li>MP3 Quran API (mp3quran.net): Used to retrieve the list of Quran reciters, available recitation styles
+              (Moshafs), and to stream Quran audio. No personal data is sent to this service.</li>
+            <li>Aladhan API (aladhan.com): Used to retrieve prayer times based on geographic coordinates. Only your
+              latitude and longitude are sent; no personal identifiers are included.</li>
+            <li>BigDataCloud API (bigdatacloud.net): Used for reverse geocoding to convert your coordinates into a
+              human-readable city and country name. Only your latitude and longitude are sent.</li>
+          </ul>
+          <p>Each of these services has its own privacy policy. We encourage you to review them. We do not control how
+            these third parties handle data.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">4. Data Storage and Security</h2>
+        <div class="section-content">
+          <p>All data is stored locally on your device. We do not operate any backend servers, databases, or cloud
+            storage. The App does not transmit any personal information over the internet. Your cached prayer times and
+            preferences remain on your device and are deleted when you uninstall the App or clear the App's data.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">5. Data Retention</h2>
+        <div class="section-content">
+          <p>Since all data is stored locally on your device:</p>
+          <ul>
+            <li>Prayer time caches are refreshed daily and overwritten automatically.</li>
+            <li>Preferences persist until you change them, clear the App data, or uninstall the App.</li>
+            <li>You can clear cached prayer times at any time from the Prayer Times screen.</li>
           </ul>
         </div>
       </div>
 
       <div class="section">
-        <h2 class="section-title">5. Permissions</h2>
+        <h2 class="section-title">6. Permissions</h2>
         <div class="section-content">
-          <p>QuickQuote may request the following permissions:</p>
+          <p>The App may request the following permissions:</p>
           <ul>
-            <li>Storage Permission: Only used to store your saved quotes and preferences locally on your device. This
-              data remains on your device and is never transmitted.</li>
-          </ul>
-          <p>We do not require internet access or network permissions for core functionality.</p>
-        </div>
-      </div>
-
-      <div class="section">
-        <h2 class="section-title">6. Children's Privacy</h2>
-        <div class="section-content">
-          <p>QuickQuote is suitable for users of all ages. We do not knowingly collect personal information from
-            children. Since we do not collect any personal information, children can safely use our app.</p>
-        </div>
-      </div>
-
-      <div class="section">
-        <h2 class="section-title">7. Data Security</h2>
-        <div class="section-content">
-          <p>All data stored by QuickQuote remains on your device and is protected by your device's built-in security
-            features. We recommend keeping your device's operating system updated to ensure the best security.</p>
-        </div>
-      </div>
-
-      <div class="section">
-        <h2 class="section-title">8. Changes to This Policy</h2>
-        <div class="section-content">
-          <p>We may update this Privacy Policy from time to time. Any changes will be reflected in the app with an
-            updated "Last Updated" date. We encourage you to review this policy periodically.</p>
-        </div>
-      </div>
-
-      <div class="section">
-        <h2 class="section-title">9. Your Rights</h2>
-        <div class="section-content">
-          <p>Since all data is stored locally on your device, you have full control:</p>
-          <ul>
-            <li>You can delete saved quotes at any time</li>
-            <li>You can clear all app data through your device settings</li>
-            <li>You can uninstall the app at any time, which will remove all locally stored data</li>
+            <li>Location (When In Use): Required for the Prayer Times feature to calculate accurate prayer schedules for
+              your area. You can deny this permission; the Prayer Times feature will not function without it, but all
+              other App features will continue to work normally.</li>
+            <li>Internet Access: Required to stream Quran audio and to fetch prayer times from external APIs.</li>
+            <li>Notifications: Used to display audio playback controls in the notification area while listening to Quran
+              recitations in the background.</li>
+            <li>Background Audio: Allows Quran audio to continue playing when the App is minimized or the screen is
+              locked.</li>
           </ul>
         </div>
       </div>
 
       <div class="section">
-        <h2 class="section-title">10. Contact Us</h2>
+        <h2 class="section-title">7. Children's Privacy</h2>
         <div class="section-content">
-          <p>If you have questions about this Privacy Policy, please contact us through the Support option in the app
-            settings.</p>
+          <p>The App is suitable for users of all ages and contains exclusively religious and educational content (Quran
+            recitations and prayer times). We do not knowingly collect personal information from children under 13 (or
+            the applicable age in your jurisdiction). Since the App does not collect personal information from any user,
+            no special measures for children's data are necessary.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">8. Your Rights</h2>
+        <div class="section-content">
+          <p>Because we do not collect or store personal data on our servers, traditional data access, correction, or
+            deletion requests do not apply. However, you have full control over locally stored data:</p>
+          <ul>
+            <li>You can clear cached data through the App or your device settings.</li>
+            <li>You can revoke location permission at any time through your device settings.</li>
+            <li>You can uninstall the App to remove all locally stored data.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">9. Monetization</h2>
+        <div class="section-content">
+          <p>The App is entirely free to use. We do not display advertisements, offer in-app purchases, or use any form
+            of monetization. The App does not contain any paid features or subscriptions.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">10. Changes to This Policy</h2>
+        <div class="section-content">
+          <p>We may update this Privacy Policy from time to time. Any changes will be reflected in the App with an
+            updated "Effective Date" at the top of this page. Your continued use of the App after changes are posted
+            constitutes your acceptance of the updated policy.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">11. Contact Us</h2>
+        <div class="section-content">
+          <p>If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us at:</p>
+          <p><a href="mailto:support@quranlake.app">support@quranlake.app</a></p>
         </div>
       </div>
     </div>
   </div>
 
-  <script>
-    (function () {
-      const themeToggle = document.getElementById('themeToggle');
-      const themeIcon = document.getElementById('themeIcon');
-      const html = document.documentElement;
 
-      function getTheme() {
-        return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      }
-
-      function setTheme(theme) {
-        html.setAttribute('data-theme', theme);
-        html.classList.remove('light', 'dark');
-        html.classList.add(theme);
-        localStorage.setItem('theme', theme);
-        updateIcon(theme);
-      }
-
-      function updateIcon(theme) {
-        if (theme === 'dark') {
-          themeIcon.innerHTML = `
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="currentColor"/>
-          `;
-        } else {
-          themeIcon.innerHTML = `
-            <path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 2V4M12 20V22M4.93 4.93L6.34 6.34M17.66 17.66L19.07 19.07M2 12H4M20 12H22M6.34 17.66L4.93 19.07M19.07 4.93L17.66 6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          `;
-        }
-      }
-
-      // Initialize theme on load
-      const currentTheme = getTheme();
-      setTheme(currentTheme);
-
-      // Toggle theme on button click
-      themeToggle.addEventListener('click', () => {
-        const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        setTheme(newTheme);
-      });
-
-      // Listen for system theme changes
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('theme')) {
-          setTheme(e.matches ? 'dark' : 'light');
-        }
-      });
-    })();
-  </script>
 </body>
 
 </html>

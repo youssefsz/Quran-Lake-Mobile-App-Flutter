@@ -10,40 +10,12 @@
     let currentImageIndex = 0;
     let imageInterval = null;
 
-    function getTheme() {
-        return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    function updateImages() {
+        homeImg.src = `imgs/screenshots/light/home.jpeg`;
+        savedImg.src = `imgs/screenshots/light/saved.jpeg`;
+        settingsImg.src = `imgs/screenshots/light/settigns.jpeg`;
     }
-
-    function setTheme(theme) {
-        html.setAttribute('data-theme', theme);
-        html.classList.remove('light', 'dark');
-        html.classList.add(theme);
-        localStorage.setItem('theme', theme);
-        updateImages(theme);
-        updateIcon(theme);
-    }
-
-    function updateImages(theme) {
-        const mode = theme === 'dark' ? 'dark' : 'light';
-        // Note: light folder has 'settigns' typo, dark folder has 'settings'
-        const settingsName = mode === 'dark' ? 'settings' : 'settigns';
-        homeImg.src = `imgs/screenshots/${mode}/home.jpeg`;
-        savedImg.src = `imgs/screenshots/${mode}/saved.jpeg`;
-        settingsImg.src = `imgs/screenshots/${mode}/${settingsName}.jpeg`;
-    }
-
-    function updateIcon(theme) {
-        if (theme === 'dark') {
-            themeIcon.innerHTML = `
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="currentColor"/>
-          `;
-        } else {
-            themeIcon.innerHTML = `
-            <path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 2V4M12 20V22M4.93 4.93L6.34 6.34M17.66 17.66L19.07 19.07M2 12H4M20 12H22M6.34 17.66L4.93 19.07M19.07 4.93L17.66 6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          `;
-        }
-    }
+    updateImages();
 
     function showNextImage() {
         // Remove active class from current image
@@ -66,25 +38,8 @@
         imageInterval = setInterval(showNextImage, 3000);
     }
 
-    // Initialize theme on load
-    const currentTheme = getTheme();
-    setTheme(currentTheme);
-
     // Start image cycling
     startImageCycle();
-
-    // Toggle theme on button click
-    themeToggle.addEventListener('click', () => {
-        const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        setTheme(newTheme);
-    });
-
-    // Listen for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('theme')) {
-            setTheme(e.matches ? 'dark' : 'light');
-        }
-    });
     // Modal Logic
     const modal = document.getElementById('apkModal');
     const googlePlayBtn = document.getElementById('googlePlayBtn');
@@ -145,8 +100,8 @@
         setTimeout(() => {
             // Trigger download
             const link = document.createElement('a');
-            link.href = 'apk/QuickQuoteTN.apk';
-            link.download = 'QuickQuoteTN.apk';
+            link.href = 'apk/QuranLake.apk';
+            link.download = 'QuranLake.apk';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

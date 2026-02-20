@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:provider/provider.dart';
-import '../../core/theme/app_colors.dart';
 import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 
@@ -68,10 +67,12 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+            color: Theme.of(
+              context,
+            ).scaffoldBackgroundColor.withValues(alpha: 0.7),
             border: Border(
               top: BorderSide(
-                color: Theme.of(context).dividerColor.withOpacity(0.5),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
                 width: 1.5,
               ),
             ),
@@ -84,10 +85,30 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildNavItem(context, 0, HeroIcons.home, _t('nav_home', 'Home')),
-                  _buildNavItem(context, 1, HeroIcons.users, _t('nav_reciters', 'Reciters')),
-                  _buildNavItem(context, 2, HeroIcons.clock, _t('nav_prayer', 'Prayer')),
-                  _buildNavItem(context, 3, HeroIcons.cog6Tooth, _t('nav_settings', 'Settings')),
+                  _buildNavItem(
+                    context,
+                    0,
+                    HeroIcons.home,
+                    _t('nav_home', 'Home'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    1,
+                    HeroIcons.users,
+                    _t('nav_reciters', 'Reciters'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    2,
+                    HeroIcons.clock,
+                    _t('nav_prayer', 'Prayer'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    3,
+                    HeroIcons.cog6Tooth,
+                    _t('nav_settings', 'Settings'),
+                  ),
                 ],
               ),
             ),
@@ -97,12 +118,15 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
     );
   }
 
-  Widget _buildNavItem(BuildContext context, int index, HeroIcons icon, String label) {
+  Widget _buildNavItem(
+    BuildContext context,
+    int index,
+    HeroIcons icon,
+    String label,
+  ) {
     final isSelected = widget.selectedIndex == index;
     // High contrast black for unselected items as requested
-    final color = isSelected 
-        ? Theme.of(context).primaryColor 
-        : Colors.black;
+    final color = isSelected ? Theme.of(context).primaryColor : Colors.black;
 
     return GestureDetector(
       onTap: () {

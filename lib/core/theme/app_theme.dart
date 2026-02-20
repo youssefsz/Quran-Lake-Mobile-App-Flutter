@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_typography.dart';
-import 'app_tokens.dart';
 import 'component_styles.dart';
 
 import 'package:flutter/services.dart';
@@ -21,7 +20,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      
+
       // -----------------------------------------------------------------------
       // Color Scheme
       // -----------------------------------------------------------------------
@@ -30,18 +29,18 @@ class AppTheme {
         onPrimary: AppColors.textInverse,
         primaryContainer: AppColors.softBlue,
         onPrimaryContainer: AppColors.neutral900,
-        
+
         secondary: AppColors.secondaryCyan,
         onSecondary: AppColors.textInverse,
         secondaryContainer: AppColors.faintBlue,
         onSecondaryContainer: AppColors.neutral900,
-        
+
         surface: AppColors.surface,
         onSurface: AppColors.textPrimary,
-        
+
         error: AppColors.error,
         onError: AppColors.textInverse,
-        
+
         outline: AppColors.neutral300,
         outlineVariant: AppColors.neutral200,
       ),
@@ -50,13 +49,13 @@ class AppTheme {
       // Typography
       // -----------------------------------------------------------------------
       textTheme: AppTypography.textTheme,
-      
+
       // -----------------------------------------------------------------------
       // Scaffold & App Background
       // -----------------------------------------------------------------------
       scaffoldBackgroundColor: AppColors.background,
       canvasColor: AppColors.background,
-      
+
       // -----------------------------------------------------------------------
       // AppBar Theme (Global)
       // -----------------------------------------------------------------------
@@ -70,7 +69,8 @@ class AppTheme {
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark, // Android: Dark icons
-          statusBarBrightness: Brightness.light, // iOS: Dark icons (for light background)
+          statusBarBrightness:
+              Brightness.light, // iOS: Dark icons (for light background)
         ),
       ),
 
@@ -83,31 +83,26 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ComponentStyles.secondaryButton,
       ),
-      textButtonTheme: TextButtonThemeData(
-        style: ComponentStyles.ghostButton,
-      ),
+      textButtonTheme: TextButtonThemeData(style: ComponentStyles.ghostButton),
       inputDecorationTheme: ComponentStyles.inputDecorationTheme,
       cardTheme: ComponentStyles.cardTheme,
       dividerTheme: ComponentStyles.dividerTheme,
-      
+
       // -----------------------------------------------------------------------
       // Icon Theme
       // -----------------------------------------------------------------------
-      iconTheme: const IconThemeData(
-        color: AppColors.neutral600,
-        size: 24,
-      ),
+      iconTheme: const IconThemeData(color: AppColors.neutral600, size: 24),
       primaryIconTheme: const IconThemeData(
         color: AppColors.primaryBlue,
         size: 24,
       ),
-      
+
       // -----------------------------------------------------------------------
       // Other
       // -----------------------------------------------------------------------
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      splashColor: AppColors.softBlue.withOpacity(0.1),
-      highlightColor: AppColors.softBlue.withOpacity(0.05),
+      splashColor: AppColors.softBlue.withValues(alpha: 0.1),
+      highlightColor: AppColors.softBlue.withValues(alpha: 0.05),
     );
   }
 }

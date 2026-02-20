@@ -4,7 +4,7 @@ import '../data/repositories/reciters_repository.dart';
 
 class ReciterProvider with ChangeNotifier {
   final RecitersRepository _repository;
-  
+
   List<Reciter> _reciters = [];
   List<Reciter> _filteredReciters = [];
   bool _isLoading = false;
@@ -12,13 +12,14 @@ class ReciterProvider with ChangeNotifier {
 
   ReciterProvider(this._repository);
 
-  List<Reciter> get reciters => _filteredReciters.isNotEmpty || _searchQuery.isNotEmpty 
-      ? _filteredReciters 
+  List<Reciter> get reciters =>
+      _filteredReciters.isNotEmpty || _searchQuery.isNotEmpty
+      ? _filteredReciters
       : _reciters;
-      
+
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
-  
+
   String _searchQuery = '';
   String? _currentLanguage;
 
@@ -63,8 +64,10 @@ class ReciterProvider with ChangeNotifier {
       _filteredReciters = [];
     } else {
       _filteredReciters = _reciters.where((reciter) {
-        return reciter.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-               reciter.letter.toLowerCase().contains(_searchQuery.toLowerCase());
+        return reciter.name.toLowerCase().contains(
+              _searchQuery.toLowerCase(),
+            ) ||
+            reciter.letter.toLowerCase().contains(_searchQuery.toLowerCase());
       }).toList();
     }
   }

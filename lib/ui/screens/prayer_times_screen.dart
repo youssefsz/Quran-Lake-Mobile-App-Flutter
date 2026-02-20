@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/theme/app_typography.dart';
 import '../../providers/haptic_provider.dart';
@@ -106,14 +105,13 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
     }
 
     if (assetName != null) {
-      return Image.asset(
-        'assets/icons/$assetName',
-        width: 24,
-        height: 24,
-      );
+      return Image.asset('assets/icons/$assetName', width: 24, height: 24);
     }
-    
-    return Icon(Icons.access_time, color: Theme.of(context).colorScheme.primary);
+
+    return Icon(
+      Icons.access_time,
+      color: Theme.of(context).colorScheme.primary,
+    );
   }
 
   @override
@@ -129,7 +127,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
               context.read<HapticProvider>().lightImpact();
               context.read<PrayerProvider>().fetchPrayerTimes();
             },
-          )
+          ),
         ],
       ),
       body: SafeArea(
@@ -139,110 +137,186 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             if (prayerProvider.errorMessage != null) {
-              return Center(child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(prayerProvider.errorMessage!, textAlign: TextAlign.center),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<HapticProvider>().lightImpact();
-                        prayerProvider.fetchPrayerTimes();
-                      }, 
-                      child: Text(_t('retry', 'Retry'))
-                    )
-                  ],
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        prayerProvider.errorMessage!,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<HapticProvider>().lightImpact();
+                          prayerProvider.fetchPrayerTimes();
+                        },
+                        child: Text(_t('retry', 'Retry')),
+                      ),
+                    ],
+                  ),
                 ),
-              ));
+              );
             }
             if (prayerProvider.prayerTime == null) {
-              return Center(child: Text(_t('no_prayer_times', 'No prayer times available.')));
+              return Center(
+                child: Text(
+                  _t('no_prayer_times', 'No prayer times available.'),
+                ),
+              );
             }
 
-          final pt = prayerProvider.prayerTime!;
-          final nextPrayer = prayerProvider.nextPrayerName;
-          final timeLeft = prayerProvider.timeUntilNextPrayer;
-          
-          final hours = timeLeft.inHours.toString().padLeft(2, '0');
-          final minutes = timeLeft.inMinutes.remainder(60).toString().padLeft(2, '0');
-          final seconds = timeLeft.inSeconds.remainder(60).toString().padLeft(2, '0');
-          
-          final hoursLabel = _t('hours_short', 'h');
-          final minutesLabel = _t('minutes_short', 'm');
-          final secondsLabel = _t('seconds_short', 's');
-          
-          final timeLeftStr = '$hours$hoursLabel $minutes$minutesLabel $seconds$secondsLabel';
+            final pt = prayerProvider.prayerTime!;
+            final nextPrayer = prayerProvider.nextPrayerName;
+            final timeLeft = prayerProvider.timeUntilNextPrayer;
+
+            final hours = timeLeft.inHours.toString().padLeft(2, '0');
+            final minutes = timeLeft.inMinutes
+                .remainder(60)
+                .toString()
+                .padLeft(2, '0');
+            final seconds = timeLeft.inSeconds
+                .remainder(60)
+                .toString()
+                .padLeft(2, '0');
+
+            final hoursLabel = _t('hours_short', 'h');
+            final minutesLabel = _t('minutes_short', 'm');
+            final secondsLabel = _t('seconds_short', 's');
+
+            final timeLeftStr =
+                '$hours$hoursLabel $minutes$minutesLabel $seconds$secondsLabel';
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(AppTokens.s16),
               child: Column(
                 children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.location_on, size: 16, color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(width: AppTokens.s8),
-                    Expanded(
-                      child: Text(
-                        '${pt.city}, ${pt.country}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: AppTypography.bodyLarge,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
+                      const SizedBox(width: AppTokens.s8),
+                      Expanded(
+                        child: Text(
+                          '${pt.city}, ${pt.country}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: AppTypography.bodyLarge,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppTokens.s32),
+
+                  Text(
+                    '${_t('next_prayer', 'Next Prayer')}: ${_localizedPrayerName(nextPrayer)}',
+                    style: AppTypography.titleMedium,
+                  ),
+                  const SizedBox(height: AppTokens.s8),
+                  Text(
+                    timeLeftStr,
+                    style: AppTypography.displayMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                  ],
-                ),
-                const SizedBox(height: AppTokens.s32),
-                
-                Text('${_t('next_prayer', 'Next Prayer')}: ${_localizedPrayerName(nextPrayer)}', style: AppTypography.titleMedium),
-                const SizedBox(height: AppTokens.s8),
-                Text(timeLeftStr, style: AppTypography.displayMedium.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                )),
-                
-                const SizedBox(height: AppTokens.s48),
-                
-                _buildPrayerRow('Fajr', _localizedPrayerName('Fajr'), pt.fajr, nextPrayer == 'Fajr'),
-                _buildPrayerRow('Sunrise', _localizedPrayerName('Sunrise'), pt.sunrise, false),
-                _buildPrayerRow('Dhuhr', _localizedPrayerName('Dhuhr'), pt.dhuhr, nextPrayer == 'Dhuhr'),
-                _buildPrayerRow('Asr', _localizedPrayerName('Asr'), pt.asr, nextPrayer == 'Asr'),
-                _buildPrayerRow('Maghrib', _localizedPrayerName('Maghrib'), pt.maghrib, nextPrayer == 'Maghrib'),
-                _buildPrayerRow('Isha', _localizedPrayerName('Isha'), pt.isha, nextPrayer == 'Isha'),
+                  ),
+
+                  const SizedBox(height: AppTokens.s48),
+
+                  _buildPrayerRow(
+                    'Fajr',
+                    _localizedPrayerName('Fajr'),
+                    pt.fajr,
+                    nextPrayer == 'Fajr',
+                  ),
+                  _buildPrayerRow(
+                    'Sunrise',
+                    _localizedPrayerName('Sunrise'),
+                    pt.sunrise,
+                    false,
+                  ),
+                  _buildPrayerRow(
+                    'Dhuhr',
+                    _localizedPrayerName('Dhuhr'),
+                    pt.dhuhr,
+                    nextPrayer == 'Dhuhr',
+                  ),
+                  _buildPrayerRow(
+                    'Asr',
+                    _localizedPrayerName('Asr'),
+                    pt.asr,
+                    nextPrayer == 'Asr',
+                  ),
+                  _buildPrayerRow(
+                    'Maghrib',
+                    _localizedPrayerName('Maghrib'),
+                    pt.maghrib,
+                    nextPrayer == 'Maghrib',
+                  ),
+                  _buildPrayerRow(
+                    'Isha',
+                    _localizedPrayerName('Isha'),
+                    pt.isha,
+                    nextPrayer == 'Isha',
+                  ),
                 ],
               ),
             );
-          }
+          },
         ),
       ),
     );
   }
 
-  Widget _buildPrayerRow(String prayerKey, String name, String time, bool isNext) {
+  Widget _buildPrayerRow(
+    String prayerKey,
+    String name,
+    String time,
+    bool isNext,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: AppTokens.s16, horizontal: AppTokens.s16),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppTokens.s16,
+        horizontal: AppTokens.s16,
+      ),
       margin: const EdgeInsets.only(bottom: AppTokens.s12),
       decoration: BoxDecoration(
-        color: isNext ? colorScheme.primaryContainer.withOpacity(0.3) : Colors.white.withOpacity(0.5),
+        color: isNext
+            ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+            : Colors.white.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(AppTokens.r16),
-        border: isNext ? Border.all(color: colorScheme.primary, width: 2) : Border.all(color: Colors.transparent),
+        border: isNext
+            ? Border.all(color: colorScheme.primary, width: 2)
+            : Border.all(color: Colors.transparent),
       ),
       child: Row(
         children: [
           _getPrayerIcon(prayerKey),
           const SizedBox(width: AppTokens.s16),
-          Expanded(child: Text(name, style: AppTypography.bodyLarge.copyWith(
-            fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
-            color: Colors.black,
-          ))),
-          Text(time, style: AppTypography.bodyLarge.copyWith(
-            fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
-            color: isNext ? colorScheme.primary : Colors.black,
-          )),
+          Expanded(
+            child: Text(
+              name,
+              style: AppTypography.bodyLarge.copyWith(
+                fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          Text(
+            time,
+            style: AppTypography.bodyLarge.copyWith(
+              fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
+              color: isNext ? colorScheme.primary : Colors.black,
+            ),
+          ),
         ],
       ),
     );

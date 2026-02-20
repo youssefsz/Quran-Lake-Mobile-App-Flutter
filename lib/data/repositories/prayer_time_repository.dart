@@ -13,9 +13,9 @@ class PrayerTimeRepository {
     required DioClient dioClient,
     required DatabaseHelper databaseHelper,
     required LocationService locationService,
-  })  : _dioClient = dioClient,
-        _databaseHelper = databaseHelper,
-        _locationService = locationService;
+  }) : _dioClient = dioClient,
+       _databaseHelper = databaseHelper,
+       _locationService = locationService;
 
   Future<PrayerTime> getPrayerTimes() async {
     final now = DateTime.now();
@@ -52,7 +52,10 @@ class PrayerTimeRepository {
       },
     );
 
-    final city = locationResponse.data['city'] ?? locationResponse.data['locality'] ?? 'Unknown City';
+    final city =
+        locationResponse.data['city'] ??
+        locationResponse.data['locality'] ??
+        'Unknown City';
     final country = locationResponse.data['countryName'] ?? 'Unknown Country';
 
     // 5. Create Model

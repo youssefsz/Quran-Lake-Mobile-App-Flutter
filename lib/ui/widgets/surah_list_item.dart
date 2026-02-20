@@ -33,7 +33,7 @@ class SurahListItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: isCurrentTrack
             ? BoxDecoration(
-                color: AppColors.primaryBlue.withOpacity(0.05),
+                color: AppColors.primaryBlue.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(8),
               )
             : null,
@@ -46,14 +46,18 @@ class SurahListItem extends StatelessWidget {
                 child: Text(
                   surah.id.toString(),
                   style: AppTypography.titleMedium.copyWith(
-                    color: isCurrentTrack ? AppColors.primaryBlue : Colors.black,
-                    fontWeight: isCurrentTrack ? FontWeight.bold : FontWeight.normal,
+                    color: isCurrentTrack
+                        ? AppColors.primaryBlue
+                        : Colors.black,
+                    fontWeight: isCurrentTrack
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
               ),
             ),
             const SizedBox(width: 16),
-            
+
             // Info
             Expanded(
               child: Column(
@@ -62,26 +66,28 @@ class SurahListItem extends StatelessWidget {
                   Text(
                     surah.name,
                     style: AppTypography.titleMedium.copyWith(
-                      color: isCurrentTrack 
-                          ? AppColors.primaryBlue 
+                      color: isCurrentTrack
+                          ? AppColors.primaryBlue
                           : Colors.black,
-                      fontWeight: isCurrentTrack ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight: isCurrentTrack
+                          ? FontWeight.w700
+                          : FontWeight.w500,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       _buildTag(
-                        context, 
-                        surah.isMakkia ? 'Meccan' : 'Medinan', 
-                        surah.isMakkia ? Colors.orange : Colors.green
+                        context,
+                        surah.isMakkia ? 'Meccan' : 'Medinan',
+                        surah.isMakkia ? Colors.orange : Colors.green,
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            
+
             // Play/Pause Button
             if (isCurrentTrack)
               if (isLoading)
@@ -92,7 +98,9 @@ class SurahListItem extends StatelessWidget {
                     padding: EdgeInsets.all(4.0),
                     child: CircularProgressIndicator(
                       strokeWidth: 2.5,
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryBlue),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColors.primaryBlue,
+                      ),
                     ),
                   ),
                 )
@@ -120,12 +128,12 @@ class SurahListItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         text.toUpperCase(),
-        style: AppTypography.labelSmall?.copyWith(
+        style: AppTypography.labelSmall.copyWith(
           color: color,
           fontSize: 9,
           fontWeight: FontWeight.bold,

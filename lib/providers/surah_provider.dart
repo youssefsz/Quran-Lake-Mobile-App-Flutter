@@ -4,7 +4,7 @@ import '../data/repositories/surah_repository.dart';
 
 class SurahProvider with ChangeNotifier {
   final SurahRepository _repository;
-  
+
   List<Surah> _surahs = [];
   bool _isLoading = false;
   String? _errorMessage;

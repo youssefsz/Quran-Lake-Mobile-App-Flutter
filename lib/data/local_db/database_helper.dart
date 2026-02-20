@@ -20,11 +20,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), 'quran_lake.db');
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
-    );
+    return await openDatabase(path, version: 1, onCreate: _onCreate);
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -41,7 +37,7 @@ class DatabaseHelper {
         country TEXT
       )
     ''');
-    
+
     // Optional: Location cache if needed separately
     await db.execute('''
       CREATE TABLE location_cache(

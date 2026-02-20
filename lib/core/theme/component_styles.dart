@@ -13,49 +13,51 @@ class ComponentStyles {
   // Button Styles
   // ===========================================================================
 
-  static final ButtonStyle primaryButton = ElevatedButton.styleFrom(
-    backgroundColor: AppColors.primaryBlue,
-    foregroundColor: AppColors.textInverse,
-    elevation: 0,
-    textStyle: AppTypography.labelLarge,
-    padding: const EdgeInsets.symmetric(
-      horizontal: AppTokens.s24,
-      vertical: AppTokens.s16,
-    ),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(AppTokens.r12),
-    ),
-    minimumSize: const Size(0, 48), // Comfortable touch target
-  ).copyWith(
-    // Add subtle shadow on hover/focus if needed, but keeping it flat for modern look
-    overlayColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.pressed)) {
-        return Colors.white.withOpacity(0.1);
-      }
-      return null;
-    }),
-  );
+  static final ButtonStyle primaryButton =
+      ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primaryBlue,
+        foregroundColor: AppColors.textInverse,
+        elevation: 0,
+        textStyle: AppTypography.labelLarge,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.s24,
+          vertical: AppTokens.s16,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTokens.r12),
+        ),
+        minimumSize: const Size(0, 48), // Comfortable touch target
+      ).copyWith(
+        // Add subtle shadow on hover/focus if needed, but keeping it flat for modern look
+        overlayColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.pressed)) {
+            return Colors.white.withValues(alpha: 0.1);
+          }
+          return null;
+        }),
+      );
 
-  static final ButtonStyle secondaryButton = OutlinedButton.styleFrom(
-    foregroundColor: AppColors.primaryBlue,
-    side: const BorderSide(color: AppColors.neutral300, width: 1.0),
-    textStyle: AppTypography.labelLarge,
-    padding: const EdgeInsets.symmetric(
-      horizontal: AppTokens.s24,
-      vertical: AppTokens.s16,
-    ),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(AppTokens.r12),
-    ),
-    minimumSize: const Size(0, 48),
-  ).copyWith(
-    overlayColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.pressed)) {
-        return AppColors.primaryBlue.withOpacity(0.05);
-      }
-      return null;
-    }),
-  );
+  static final ButtonStyle secondaryButton =
+      OutlinedButton.styleFrom(
+        foregroundColor: AppColors.primaryBlue,
+        side: const BorderSide(color: AppColors.neutral300, width: 1.0),
+        textStyle: AppTypography.labelLarge,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.s24,
+          vertical: AppTokens.s16,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTokens.r12),
+        ),
+        minimumSize: const Size(0, 48),
+      ).copyWith(
+        overlayColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.pressed)) {
+            return AppColors.primaryBlue.withValues(alpha: 0.05);
+          }
+          return null;
+        }),
+      );
 
   static final ButtonStyle ghostButton = TextButton.styleFrom(
     foregroundColor: AppColors.primaryBlue,
@@ -102,7 +104,9 @@ class ComponentStyles {
     ),
     hintStyle: AppTypography.bodyMedium.copyWith(color: AppColors.neutral400),
     labelStyle: AppTypography.labelMedium.copyWith(color: AppColors.neutral600),
-    floatingLabelStyle: AppTypography.labelSmall.copyWith(color: AppColors.primaryBlue),
+    floatingLabelStyle: AppTypography.labelSmall.copyWith(
+      color: AppColors.primaryBlue,
+    ),
   );
 
   // ===========================================================================
@@ -123,7 +127,7 @@ class ComponentStyles {
   // ===========================================================================
   // Divider Theme
   // ===========================================================================
-  
+
   static final DividerThemeData dividerTheme = DividerThemeData(
     color: AppColors.neutral200,
     thickness: 1,
@@ -133,10 +137,11 @@ class ComponentStyles {
   // ===========================================================================
   // Navigation Bar Theme (Standard)
   // ===========================================================================
-  
-  static final NavigationBarThemeData navigationBarTheme = NavigationBarThemeData(
+
+  static final NavigationBarThemeData
+  navigationBarTheme = NavigationBarThemeData(
     backgroundColor: Colors.transparent, // Using Surface container underneath
-    indicatorColor: AppColors.softBlue.withOpacity(0.3),
+    indicatorColor: AppColors.softBlue.withValues(alpha: 0.3),
     labelTextStyle: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
         return AppTypography.labelSmall.copyWith(color: AppColors.primaryBlue);

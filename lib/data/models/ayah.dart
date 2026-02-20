@@ -20,7 +20,7 @@ class Ayah {
   factory Ayah.fromJson(Map<String, dynamic> json) {
     // Expecting response from http://api.alquran.cloud/v1/ayah/random/editions/quran-uthmani,en.asad
     // The response structure is data: [ {text: ...}, {text: ...} ]
-    
+
     final arabicData = json['data'][0];
     final englishData = json['data'][1];
 

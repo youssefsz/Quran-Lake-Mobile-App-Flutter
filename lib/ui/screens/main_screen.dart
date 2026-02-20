@@ -25,16 +25,11 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Note: In a real app we'd localize these labels too, likely in a 'navigation.json' or shared.
-    // For now, I'll stick to English for tabs or update them later.
     return Scaffold(
       extendBody: true,
       body: Stack(
         children: [
-          IndexedStack(
-            index: _currentIndex,
-            children: _screens,
-          ),
+          IndexedStack(index: _currentIndex, children: _screens),
           Positioned(
             left: 0,
             right: 0,

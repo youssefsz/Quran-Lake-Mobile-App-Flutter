@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/haptic_provider.dart';
-  import '../../providers/locale_provider.dart';
+import '../../providers/locale_provider.dart';
 import '../screens/full_player_screen.dart';
 import '../../core/theme/app_colors.dart';
 
@@ -63,14 +63,19 @@ class _MiniPlayerState extends State<MiniPlayer> {
                 const FullPlayerScreen(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
-              const begin = Offset(0.0, 1.0);
-              const end = Offset.zero;
-              const curve = Curves.easeInOut;
-              var tween = Tween(begin: begin, end: end)
-                  .chain(CurveTween(curve: curve));
-              var offsetAnimation = animation.drive(tween);
-              return SlideTransition(position: offsetAnimation, child: child);
-            },
+                  const begin = Offset(0.0, 1.0);
+                  const end = Offset.zero;
+                  const curve = Curves.easeInOut;
+                  var tween = Tween(
+                    begin: begin,
+                    end: end,
+                  ).chain(CurveTween(curve: curve));
+                  var offsetAnimation = animation.drive(tween);
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
           ),
         );
       },
@@ -80,7 +85,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
           color: Theme.of(context).scaffoldBackgroundColor,
           border: Border(
             top: BorderSide(
-              color: Theme.of(context).dividerColor.withOpacity(0.5),
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
               width: 1.5,
             ),
           ),
@@ -103,8 +108,8 @@ class _MiniPlayerState extends State<MiniPlayer> {
                         _translations['unknown_surah'] ??
                         'Unknown Surah',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
+                      color: AppColors.textPrimary,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -113,8 +118,8 @@ class _MiniPlayerState extends State<MiniPlayer> {
                         _translations['unknown_reciter'] ??
                         'Unknown Reciter',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
+                      color: AppColors.textSecondary,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -130,8 +135,9 @@ class _MiniPlayerState extends State<MiniPlayer> {
             else
               IconButton(
                 icon: Icon(
-                    audioProvider.isPlaying ? Icons.pause : Icons.play_arrow,
-                    color: AppColors.neutral800),
+                  audioProvider.isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: AppColors.neutral800,
+                ),
                 onPressed: () {
                   context.read<HapticProvider>().lightImpact();
                   if (audioProvider.isPlaying) {

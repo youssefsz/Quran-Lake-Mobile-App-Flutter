@@ -14,13 +14,6 @@ import 'providers/haptic_provider.dart';
 import 'providers/prayer_provider.dart';
 import 'providers/reciter_provider.dart';
 import 'providers/surah_provider.dart';
-import 'ui/screens/home_screen.dart';
-import 'ui/screens/reciters_screen.dart';
-import 'ui/screens/prayer_times_screen.dart';
-import 'ui/screens/settings_screen.dart';
-import 'ui/widgets/mini_player.dart';
-import 'ui/widgets/custom_bottom_nav_bar.dart';
-
 import 'package:quran_lake/data/repositories/ayah_repository.dart';
 import 'package:quran_lake/providers/ayah_provider.dart';
 import 'package:just_audio_background/just_audio_background.dart';

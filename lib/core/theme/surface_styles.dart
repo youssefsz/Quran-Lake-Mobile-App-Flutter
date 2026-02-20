@@ -25,7 +25,9 @@ class SurfaceStyles {
 
   /// Subtle effect for overlays and cards.
   static const SurfaceStyleSettings subtle = SurfaceStyleSettings(
-    color: Color(0xF2FFFFFF), // 95% White (Solid/Opaque look) or slightly transparent
+    color: Color(
+      0xF2FFFFFF,
+    ), // 95% White (Solid/Opaque look) or slightly transparent
     borderColor: Color(0xFFE2E8F0), // Slate 200
     borderWidth: 1.0,
   );

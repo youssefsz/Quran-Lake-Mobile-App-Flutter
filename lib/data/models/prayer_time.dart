@@ -50,7 +50,12 @@ class PrayerTime {
   }
 
   // Helper to create from Aladhan API response structure if needed
-  factory PrayerTime.fromAladhan(Map<String, dynamic> timings, String date, String city, String country) {
+  factory PrayerTime.fromAladhan(
+    Map<String, dynamic> timings,
+    String date,
+    String city,
+    String country,
+  ) {
     return PrayerTime(
       date: date,
       fajr: timings['Fajr'],

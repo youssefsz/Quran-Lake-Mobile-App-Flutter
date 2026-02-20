@@ -302,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: const EdgeInsets.only(right: 12),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: isNext ? Colors.white : Colors.white.withOpacity(0.1),
+        color: isNext ? Colors.white : Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -345,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
             decoration: BoxDecoration(
               color: Theme.of(
                 context,
-              ).colorScheme.errorContainer.withOpacity(0.5),
+              ).colorScheme.errorContainer.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Text('Error: ${ayahProvider.errorMessage}'),
@@ -365,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: Theme.of(context).dividerColor.withOpacity(0.5),
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
             ),
           ),
           child: Padding(
@@ -489,8 +489,8 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(24),
       ),
       child: Shimmer.fromColors(
-        baseColor: Colors.white.withOpacity(0.35),
-        highlightColor: Colors.white.withOpacity(0.85),
+        baseColor: Colors.white.withValues(alpha: 0.35),
+        highlightColor: Colors.white.withValues(alpha: 0.85),
         period: const Duration(milliseconds: 1400),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -547,7 +547,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: Theme.of(context).dividerColor.withOpacity(0.5),
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
         ),
       ),
       child: Padding(
@@ -708,7 +708,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 2),
                       Text(
                         '${(_translations['surah_label'] ?? 'Surah {id}').toString().replaceAll('{id}', surah.id.toString())} • ${surah.isMakkia ? (_translations['meccan'] ?? 'Meccan') : (_translations['medinan'] ?? 'Medinan')}',
-                        style: AppTypography.bodySmall?.copyWith(
+                        style: AppTypography.bodySmall.copyWith(
                           color: AppColors.textSecondary,
                         ),
                       ),

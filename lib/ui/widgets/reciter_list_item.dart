@@ -34,7 +34,7 @@ class ReciterListItem extends StatelessWidget {
               child: Image.asset('assets/icons/man.png'),
             ),
             const SizedBox(width: 16),
-            
+
             // Info
             Expanded(
               child: Column(
@@ -51,23 +51,26 @@ class ReciterListItem extends StatelessWidget {
                   const SizedBox(height: 4),
                   // Moshaf Count Badge
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.neutral100,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       '${reciter.moshaf.length} ${reciter.moshaf.length == 1 ? "Recitation" : "Recitations"}',
-                      style: AppTypography.labelSmall?.copyWith(
+                      style: AppTypography.labelSmall.copyWith(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
-                      ) ?? const TextStyle(fontSize: 10, color: Colors.black),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            
+
             // Arrow
             const HeroIcon(
               HeroIcons.chevronRight,

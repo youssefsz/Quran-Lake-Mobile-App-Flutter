@@ -4,7 +4,7 @@ import '../data/repositories/ayah_repository.dart';
 
 class AyahProvider with ChangeNotifier {
   final AyahRepository _repository;
-  
+
   Ayah? _ayah;
   bool _isLoading = false;
   String? _errorMessage;

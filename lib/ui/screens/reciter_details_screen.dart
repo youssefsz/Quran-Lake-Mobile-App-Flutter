@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
@@ -8,7 +7,6 @@ import '../../providers/audio_provider.dart';
 import '../../providers/reciter_provider.dart';
 import '../../providers/surah_provider.dart';
 import '../../providers/locale_provider.dart';
-import '../../providers/haptic_provider.dart';
 import '../widgets/surah_list_item.dart';
 import '../widgets/glass_app_bar.dart';
 import '../widgets/mini_player.dart';
@@ -35,12 +33,14 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
     _reciter = widget.reciter;
     _selectedMoshaf = _reciter.moshaf.first;
     _lastLocaleCode = context.read<LocaleProvider>().locale.languageCode;
-    
+
     // Ensure Surahs are loaded
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final surahProvider = context.read<SurahProvider>();
       if (surahProvider.surahs.isEmpty) {
-        surahProvider.fetchSurahs(language: context.read<LocaleProvider>().locale.languageCode);
+        surahProvider.fetchSurahs(
+          language: context.read<LocaleProvider>().locale.languageCode,
+        );
       }
     });
   }
@@ -91,14 +91,14 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: GlassAppBar(
-        title: _reciter.name,
-      ),
+      appBar: GlassAppBar(title: _reciter.name),
       body: SafeArea(
         top: false,
         child: Column(
           children: [
-            SizedBox(height: kToolbarHeight + MediaQuery.of(context).padding.top),
+            SizedBox(
+              height: kToolbarHeight + MediaQuery.of(context).padding.top,
+            ),
             // Header Section (Moshaf & Search)
             Container(
               padding: const EdgeInsets.all(16.0),
@@ -106,7 +106,7 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                 color: Theme.of(context).scaffoldBackgroundColor,
                 border: Border(
                   bottom: BorderSide(
-                    color: AppColors.neutral200.withOpacity(0.5),
+                    color: AppColors.neutral200.withValues(alpha: 0.5),
                     width: 1,
                   ),
                 ),
@@ -117,7 +117,9 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                   if (_reciter.moshaf.length > 1) ...[
                     Text(
                       'Select Recitation Style',
-                      style: AppTypography.labelMedium.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.labelMedium.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Container(
@@ -130,8 +132,13 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                         child: DropdownButton<Moshaf>(
                           value: _selectedMoshaf,
                           isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.neutral500),
-                          style: AppTypography.bodyMedium.copyWith(color: AppColors.textPrimary),
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down,
+                            color: AppColors.neutral500,
+                          ),
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
                           items: _reciter.moshaf.map((moshaf) {
                             return DropdownMenuItem(
                               value: moshaf,
@@ -150,14 +157,19 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                     ),
                     const SizedBox(height: 16),
                   ],
-                  
+
                   // Modern Search
                   TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search Surah...',
-                      hintStyle: AppTypography.bodyMedium.copyWith(color: AppColors.neutral400),
-                      prefixIcon: const Icon(Icons.search, color: AppColors.neutral400),
+                      hintStyle: AppTypography.bodyMedium.copyWith(
+                        color: AppColors.neutral400,
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: AppColors.neutral400,
+                      ),
                       filled: true,
                       fillColor: AppColors.neutral100,
                       border: OutlineInputBorder(
@@ -166,7 +178,9 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                       ),
                       contentPadding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    style: AppTypography.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
                     onChanged: (value) {
                       setState(() {
                         _searchQuery = value;
@@ -183,7 +197,7 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                   ? const Center(child: CircularProgressIndicator())
                   : _buildSurahList(surahProvider, audioProvider),
             ),
-            
+
             // Mini Player
             const MiniPlayer(),
           ],
@@ -192,23 +206,31 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
     );
   }
 
-  Widget _buildSurahList(SurahProvider surahProvider, AudioProvider audioProvider) {
+  Widget _buildSurahList(
+    SurahProvider surahProvider,
+    AudioProvider audioProvider,
+  ) {
     final availableSurahIds = _selectedMoshaf.availableSurahs;
-    
+
     // Map IDs to Surah objects and filter
-    final surahs = availableSurahIds.map((id) {
-      return surahProvider.getSurahById(id);
-    }).where((surah) {
-      if (surah == null) return false;
-      if (_searchQuery.isEmpty) return true;
-      return surah.name.toLowerCase().contains(_searchQuery.toLowerCase());
-    }).toList();
+    final surahs = availableSurahIds
+        .map((id) {
+          return surahProvider.getSurahById(id);
+        })
+        .where((surah) {
+          if (surah == null) return false;
+          if (_searchQuery.isEmpty) return true;
+          return surah.name.toLowerCase().contains(_searchQuery.toLowerCase());
+        })
+        .toList();
 
     if (surahs.isEmpty) {
       return Center(
         child: Text(
           'No Surahs found',
-          style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+          style: AppTypography.bodyMedium.copyWith(
+            color: AppColors.textSecondary,
+          ),
         ),
       );
     }
@@ -218,9 +240,10 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
       itemCount: surahs.length,
       itemBuilder: (context, index) {
         final surah = surahs[index]!;
-        
-        final isCurrentTrack = audioProvider.currentSurah?.id == surah.id &&
-                              audioProvider.currentReciter?.id == _reciter.id;
+
+        final isCurrentTrack =
+            audioProvider.currentSurah?.id == surah.id &&
+            audioProvider.currentReciter?.id == _reciter.id;
         final isPlayingThis = isCurrentTrack && audioProvider.isPlaying;
         final isLoadingThis = isCurrentTrack && audioProvider.isLoading;
 
@@ -230,22 +253,23 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
           isCurrentTrack: isCurrentTrack,
           isLoading: isLoadingThis,
           onTap: () {
-             if (isCurrentTrack) {
-               if (audioProvider.isPlaying) {
-                 audioProvider.pause();
-               } else {
-                 audioProvider.resume();
-               }
-             } else {
-               final url = '${_selectedMoshaf.server}${surah.id.toString().padLeft(3, '0')}.mp3';
-               audioProvider.play(
-                 url, 
-                 reciter: _reciter,
-                 surah: surah,
-                 moshaf: _selectedMoshaf,
-                 surahProvider: surahProvider,
-               );
-             }
+            if (isCurrentTrack) {
+              if (audioProvider.isPlaying) {
+                audioProvider.pause();
+              } else {
+                audioProvider.resume();
+              }
+            } else {
+              final url =
+                  '${_selectedMoshaf.server}${surah.id.toString().padLeft(3, '0')}.mp3';
+              audioProvider.play(
+                url,
+                reciter: _reciter,
+                surah: surah,
+                moshaf: _selectedMoshaf,
+                surahProvider: surahProvider,
+              );
+            }
           },
         );
       },

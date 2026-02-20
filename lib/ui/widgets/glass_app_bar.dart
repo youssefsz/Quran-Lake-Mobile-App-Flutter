@@ -24,16 +24,15 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
         child: Container(
-          color: (backgroundColor ?? Theme.of(context).scaffoldBackgroundColor).withOpacity(0.7),
+          color: (backgroundColor ?? Theme.of(context).scaffoldBackgroundColor)
+              .withValues(alpha: 0.7),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             scrolledUnderElevation: 0,
             title: Text(
               title,
-              style: AppTypography.headlineSmall.copyWith(
-                color: Colors.black,
-              ),
+              style: AppTypography.headlineSmall.copyWith(color: Colors.black),
             ),
             centerTitle: centerTitle,
             leading: leading,

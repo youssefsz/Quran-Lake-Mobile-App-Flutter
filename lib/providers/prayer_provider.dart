@@ -58,10 +58,10 @@ class PrayerProvider extends ChangeNotifier {
 
   void _parsePrayerTimes() {
     if (_prayerTime == null) return;
-    
+
     final now = DateTime.now();
     _lastParsedDate = DateTime(now.year, now.month, now.day);
-    
+
     // Helper to parse time string "05:30 (BST)" -> DateTime
     DateTime parseTime(String timeStr) {
       // Remove timezone info like (BST), (EST) etc.
@@ -81,7 +81,7 @@ class PrayerProvider extends ChangeNotifier {
         'Isha': parseTime(_prayerTime!.isha),
       };
     } catch (e) {
-      print('Error parsing prayer times: $e');
+      debugPrint('Error parsing prayer times: $e');
     }
   }
 
@@ -89,12 +89,12 @@ class PrayerProvider extends ChangeNotifier {
     if (_prayerTime == null) return;
 
     final now = DateTime.now();
-    
+
     // If date has changed, we need to re-parse (update the date part of the DateTimes)
-    if (_lastParsedDate != null && 
-        (_lastParsedDate!.year != now.year || 
-         _lastParsedDate!.month != now.month || 
-         _lastParsedDate!.day != now.day)) {
+    if (_lastParsedDate != null &&
+        (_lastParsedDate!.year != now.year ||
+            _lastParsedDate!.month != now.month ||
+            _lastParsedDate!.day != now.day)) {
       _parsePrayerTimes();
     }
 

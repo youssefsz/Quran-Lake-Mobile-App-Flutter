@@ -18,7 +18,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   Map<String, dynamic> _translations = {};
-  
+
   // Track permission states to update UI instantly
   bool _notificationGranted = false;
   bool _locationGranted = false;
@@ -32,7 +32,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Future<void> _checkPermissions() async {
     final notifStatus = await Permission.notification.status;
     final locStatus = await Permission.location.status;
-    
+
     if (mounted) {
       setState(() {
         _notificationGranted = notifStatus.isGranted;
@@ -53,10 +53,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     await prefs.setBool('onboarding_complete', true);
 
     if (!mounted) return;
-    
+
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const MainScreen(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const MainScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -64,95 +65,126 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
-  
+
   Future<void> _handleBottomButtonPress() async {
     // Page 0: Welcome & Language -> Next (Skip Notif if iOS/Granted)
     if (_currentPage == 0) {
-       // Logic handles skipping in next step logic implicitly by page list structure?
-       // No, we need to know where to go.
-       // On iOS, next page is Location.
-       // On Android, next page is Notification (unless granted).
-       
-       if (Platform.isIOS) {
-          // Check if Location is already granted, if so finish?
+      // Logic handles skipping in next step logic implicitly by page list structure?
+      // No, we need to know where to go.
+      // On iOS, next page is Location.
+      // On Android, next page is Notification (unless granted).
+
+      if (Platform.isIOS) {
+        // Check if Location is already granted, if so finish?
+        final locStatus = await Permission.location.status;
+        if (locStatus.isGranted) {
+          _completeOnboarding();
+        } else {
+          _nextPage();
+        }
+      } else {
+        // Android
+        final notifStatus = await Permission.notification.status;
+        if (notifStatus.isGranted) {
+          // Skip Notif Page
           final locStatus = await Permission.location.status;
           if (locStatus.isGranted) {
-             _completeOnboarding();
+            _completeOnboarding();
           } else {
-             _nextPage();
+            // Jump to Location (Page 2)
+            _pageController.jumpToPage(2);
           }
-       } else {
-          // Android
-          final notifStatus = await Permission.notification.status;
-          if (notifStatus.isGranted) {
-             // Skip Notif Page
-             final locStatus = await Permission.location.status;
-             if (locStatus.isGranted) {
-                _completeOnboarding();
-             } else {
-                // Jump to Location (Page 2)
-                _pageController.jumpToPage(2);
-             }
-          } else {
-             _nextPage();
-          }
-       }
-       return;
+        } else {
+          _nextPage();
+        }
+      }
+      return;
     }
-    
-    // Page 1: 
+
+    // Page 1:
     // iOS: Location Page
     // Android: Notification Page
     if (_currentPage == 1) {
-       if (Platform.isIOS) {
-          // Handle Location (Same as Page 2 on Android)
-          if (_locationGranted) {
-            _completeOnboarding();
-          } else {
-            final status = await Permission.location.request();
-            setState(() { _locationGranted = status.isGranted; });
-            if (status.isGranted) {
-               _completeOnboarding();
-            } else if (status.isPermanentlyDenied) {
-               if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_translations['enable_loc_msg'] ?? 'Please enable location')));
-            }
-          }
-       } else {
-          // Handle Notification (Android)
-          if (_notificationGranted) {
-            _nextPage();
-          } else {
-            final status = await Permission.notification.request();
-            setState(() { _notificationGranted = status.isGranted; });
-            if (status.isGranted) {
-               final locStatus = await Permission.location.status;
-               if (locStatus.isGranted) {
-                  _completeOnboarding();
-               } else {
-                  _nextPage();
-               }
-            } else if (status.isPermanentlyDenied) {
-               if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_translations['enable_notif_msg'] ?? 'Please enable notifications')));
-            }
-          }
-       }
-       return;
-    }
-    
-    // Page 2: Location (Android only)
-    if (_currentPage == 2 && !Platform.isIOS) {
+      if (Platform.isIOS) {
+        // Handle Location (Same as Page 2 on Android)
         if (_locationGranted) {
           _completeOnboarding();
         } else {
           final status = await Permission.location.request();
-          setState(() { _locationGranted = status.isGranted; });
+          setState(() {
+            _locationGranted = status.isGranted;
+          });
           if (status.isGranted) {
-             _completeOnboarding();
+            _completeOnboarding();
           } else if (status.isPermanentlyDenied) {
-             if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_translations['enable_loc_msg'] ?? 'Please enable location')));
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    _translations['enable_loc_msg'] ?? 'Please enable location',
+                  ),
+                ),
+              );
+            }
           }
         }
-        return;
+      } else {
+        // Handle Notification (Android)
+        if (_notificationGranted) {
+          _nextPage();
+        } else {
+          final status = await Permission.notification.request();
+          setState(() {
+            _notificationGranted = status.isGranted;
+          });
+          if (status.isGranted) {
+            final locStatus = await Permission.location.status;
+            if (locStatus.isGranted) {
+              _completeOnboarding();
+            } else {
+              _nextPage();
+            }
+          } else if (status.isPermanentlyDenied) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    _translations['enable_notif_msg'] ??
+                        'Please enable notifications',
+                  ),
+                ),
+              );
+            }
+          }
+        }
+      }
+      return;
+    }
+
+    // Page 2: Location (Android only)
+    if (_currentPage == 2 && !Platform.isIOS) {
+      if (_locationGranted) {
+        _completeOnboarding();
+      } else {
+        final status = await Permission.location.request();
+        setState(() {
+          _locationGranted = status.isGranted;
+        });
+        if (status.isGranted) {
+          _completeOnboarding();
+        } else if (status.isPermanentlyDenied) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  _translations['enable_loc_msg'] ?? 'Please enable location',
+                ),
+              ),
+            );
+          }
+        }
+      }
+      return;
     }
   }
 
@@ -166,7 +198,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             if (snapshot.hasData) {
               _translations = snapshot.data!;
             }
-            
+
             final pages = [
               _buildWelcomePage(localeProvider),
               if (!Platform.isIOS) _buildNotificationPage(),
@@ -175,35 +207,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             // Determine button text based on page and state
             String buttonText = _translations['continue_button'] ?? 'Continue';
-            
+
             // Map current page index to logical page type
             // 0: Welcome & Language
             // 1: Notification (Android only) OR Location (iOS)
             // 2: Location (Android only)
-            
+
             if (_currentPage == 0) {
-               buttonText = _translations['get_started'] ?? 'Get Started';
+              buttonText = _translations['get_started'] ?? 'Get Started';
             } else {
-               // Logic for dynamic pages
-               if (Platform.isIOS) {
-                  // Page 1 is Location on iOS
-                  if (_currentPage == 1) {
-                     buttonText = _locationGranted
+              // Logic for dynamic pages
+              if (Platform.isIOS) {
+                // Page 1 is Location on iOS
+                if (_currentPage == 1) {
+                  buttonText = _locationGranted
                       ? (_translations['continue_button'] ?? 'Continue')
                       : (_translations['allow_location'] ?? 'Allow Location');
-                  }
-               } else {
-                  // Android: Page 1 is Notif, Page 2 is Loc
-                  if (_currentPage == 1) {
-                     buttonText = _notificationGranted 
+                }
+              } else {
+                // Android: Page 1 is Notif, Page 2 is Loc
+                if (_currentPage == 1) {
+                  buttonText = _notificationGranted
                       ? (_translations['continue_button'] ?? 'Continue')
-                      : (_translations['allow_notifications'] ?? 'Allow Notifications');
-                  } else if (_currentPage == 2) {
-                     buttonText = _locationGranted
+                      : (_translations['allow_notifications'] ??
+                            'Allow Notifications');
+                } else if (_currentPage == 2) {
+                  buttonText = _locationGranted
                       ? (_translations['continue_button'] ?? 'Continue')
                       : (_translations['allow_location'] ?? 'Allow Location');
-                  }
-               }
+                }
+              }
             }
 
             return Scaffold(
@@ -219,24 +252,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           setState(() {
                             // Prevent skipping permissions by swiping
                             if (Platform.isIOS) {
-                               // iOS: Page 1 is Location
-                               if (index == 1 && !_locationGranted && _currentPage == 0) {
-                                  // Moving from Welcome to Location: Allowed
-                               }
+                              // iOS: Page 1 is Location
+                              if (index == 1 &&
+                                  !_locationGranted &&
+                                  _currentPage == 0) {
+                                // Moving from Welcome to Location: Allowed
+                              }
                             } else {
-                               // Android: Page 1 is Notif, Page 2 is Loc
-                               if (index == 1 && !_notificationGranted && _currentPage == 0) {
-                                   // Moving from Welcome to Notification: Allowed
-                               }
-                               
-                               // If trying to go to Location (2) without Notification (1) permission
-                               if (index == 2 && !_notificationGranted) {
-                                   // Snap back to Notification page
-                                   _pageController.jumpToPage(1);
-                                   return;
-                               }
+                              // Android: Page 1 is Notif, Page 2 is Loc
+                              if (index == 1 &&
+                                  !_notificationGranted &&
+                                  _currentPage == 0) {
+                                // Moving from Welcome to Notification: Allowed
+                              }
+
+                              // If trying to go to Location (2) without Notification (1) permission
+                              if (index == 2 && !_notificationGranted) {
+                                // Snap back to Notification page
+                                _pageController.jumpToPage(1);
+                                return;
+                              }
                             }
-                            
+
                             _currentPage = index;
                             // Check permissions again when entering pages
                             _checkPermissions();
@@ -245,7 +282,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         children: pages,
                       ),
                     ),
-                    
+
                     // Page indicator
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 24),
@@ -268,7 +305,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                       ),
                     ),
-                    
+
                     // Bottom Action Button
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
@@ -293,7 +330,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _buildWelcomePage(LocaleProvider localeProvider) {
     final isEn = localeProvider.locale.languageCode == 'en';
     final isAr = localeProvider.locale.languageCode == 'ar';
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
@@ -307,7 +344,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primaryBlue.withOpacity(0.1),
+                  color: AppColors.primaryBlue.withValues(alpha: 0.1),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -329,16 +366,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            _translations['welcome_subtitle'] ?? 'Your companion for Quran recitation and prayer times.',
+            _translations['welcome_subtitle'] ??
+                'Your companion for Quran recitation and prayer times.',
             style: AppTypography.bodyLarge.copyWith(
               color: AppColors.textSecondary,
               height: 1.5,
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           const SizedBox(height: 48),
-          
+
           // Language Selection (Compact)
           Text(
             _translations['select_language'] ?? 'Choose your language',
@@ -385,7 +423,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            _translations['notification_desc'] ?? 'Enable notifications to get prayer time alerts and daily reminders.',
+            _translations['notification_desc'] ??
+                'Enable notifications to get prayer time alerts and daily reminders.',
             style: AppTypography.bodyLarge.copyWith(
               color: AppColors.textSecondary,
               height: 1.5,
@@ -419,7 +458,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            _translations['location_desc'] ?? 'We need your location to calculate accurate prayer times for your area.',
+            _translations['location_desc'] ??
+                'We need your location to calculate accurate prayer times for your area.',
             style: AppTypography.bodyLarge.copyWith(
               color: AppColors.textSecondary,
               height: 1.5,
@@ -454,7 +494,9 @@ class _CompactLanguageButton extends StatelessWidget {
         width: double.infinity, // Full width
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryBlue.withOpacity(0.05) : AppColors.surface,
+          color: isSelected
+              ? AppColors.primaryBlue.withValues(alpha: 0.05)
+              : AppColors.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? AppColors.primaryBlue : AppColors.neutral300,
@@ -471,19 +513,21 @@ class _CompactLanguageButton extends StatelessWidget {
                 language,
                 style: AppTypography.titleLarge.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: isSelected ? AppColors.primaryBlue : AppColors.textPrimary,
+                  color: isSelected
+                      ? AppColors.primaryBlue
+                      : AppColors.textPrimary,
                 ),
               ),
             ),
             if (isSelected)
-               Container(
-                 padding: const EdgeInsets.all(4),
-                 decoration: BoxDecoration(
-                   color: AppColors.primaryBlue,
-                   shape: BoxShape.circle,
-                 ),
-                 child: Icon(Icons.check_rounded, color: Colors.white, size: 16),
-               ),
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryBlue,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.check_rounded, color: Colors.white, size: 16),
+              ),
           ],
         ),
       ),

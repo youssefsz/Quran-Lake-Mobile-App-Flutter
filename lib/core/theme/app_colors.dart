@@ -68,10 +68,10 @@ class AppColors {
 
   // Base color for surface layers (usually white with low opacity)
   static const Color surfaceBase = Color(0xFFFFFFFF);
-  
+
   // Border for surface elements to give definition
   static const Color surfaceBorder = Color(0x4DFFFFFF); // 30% White
-  
+
   // Shadow for surface elements to give depth
   static const Color surfaceShadow = Color(0x1A0F172A); // 10% Navy
 }

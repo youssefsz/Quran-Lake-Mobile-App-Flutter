@@ -1,21 +1,19 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../data/models/reciter.dart';
 import '../data/models/surah.dart';
 import 'surah_provider.dart';
 
 class AudioProvider with ChangeNotifier {
   final AudioPlayer _audioPlayer = AudioPlayer();
-  
+
   bool _isPlaying = false;
   bool _isLoading = false;
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
-  
+
   Reciter? _currentReciter;
   Surah? _currentSurah;
   Moshaf? _currentMoshaf;
@@ -25,7 +23,7 @@ class AudioProvider with ChangeNotifier {
   bool _shuffleModeEnabled = false;
   double _playbackSpeed = 1.0;
   double _volume = 1.0;
-  
+
   bool get isPlaying => _isPlaying;
   bool get isLoading => _isLoading;
   Duration get duration => _duration;
@@ -46,7 +44,9 @@ class AudioProvider with ChangeNotifier {
     });
 
     _audioPlayer.processingStateStream.listen((state) {
-      _isLoading = state == ProcessingState.loading || state == ProcessingState.buffering;
+      _isLoading =
+          state == ProcessingState.loading ||
+          state == ProcessingState.buffering;
       notifyListeners();
     });
 
@@ -59,7 +59,7 @@ class AudioProvider with ChangeNotifier {
       _position = p;
       notifyListeners();
     });
-    
+
     // Listen to current index to update currentSurah when track changes automatically
     _audioPlayer.currentIndexStream.listen((index) {
       if (index != null && _currentMoshaf != null && _surahProvider != null) {
@@ -71,7 +71,7 @@ class AudioProvider with ChangeNotifier {
         }
       }
     });
-    
+
     _audioPlayer.loopModeStream.listen((mode) {
       _loopMode = mode;
       notifyListeners();
@@ -81,12 +81,12 @@ class AudioProvider with ChangeNotifier {
       _shuffleModeEnabled = enabled;
       notifyListeners();
     });
-    
+
     _audioPlayer.speedStream.listen((speed) {
       _playbackSpeed = speed;
       notifyListeners();
     });
-    
+
     _audioPlayer.volumeStream.listen((vol) {
       _volume = vol;
       notifyListeners();
@@ -96,20 +96,24 @@ class AudioProvider with ChangeNotifier {
   Future<void> _init() async {
     // Configure AudioSession for background playback
     final session = await AudioSession.instance;
-    await session.configure(const AudioSessionConfiguration(
-      avAudioSessionCategory: AVAudioSessionCategory.playback,
-      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.duckOthers,
-      avAudioSessionMode: AVAudioSessionMode.defaultMode,
-      avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
-      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.notifyOthersOnDeactivation,
-      androidAudioAttributes: AndroidAudioAttributes(
-        contentType: AndroidAudioContentType.music,
-        flags: AndroidAudioFlags.none,
-        usage: AndroidAudioUsage.media,
+    await session.configure(
+      const AudioSessionConfiguration(
+        avAudioSessionCategory: AVAudioSessionCategory.playback,
+        avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.duckOthers,
+        avAudioSessionMode: AVAudioSessionMode.defaultMode,
+        avAudioSessionRouteSharingPolicy:
+            AVAudioSessionRouteSharingPolicy.defaultPolicy,
+        avAudioSessionSetActiveOptions:
+            AVAudioSessionSetActiveOptions.notifyOthersOnDeactivation,
+        androidAudioAttributes: AndroidAudioAttributes(
+          contentType: AndroidAudioContentType.music,
+          flags: AndroidAudioFlags.none,
+          usage: AndroidAudioUsage.media,
+        ),
+        androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+        androidWillPauseWhenDucked: true,
       ),
-      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
-      androidWillPauseWhenDucked: true,
-    ));
+    );
     await session.setActive(true);
   }
 
@@ -137,18 +141,29 @@ class AudioProvider with ChangeNotifier {
     await _audioPlayer.setVolume(volume);
   }
 
-  Future<void> play(String url, {Reciter? reciter, Surah? surah, Moshaf? moshaf, SurahProvider? surahProvider}) async {
+  Future<void> play(
+    String url, {
+    Reciter? reciter,
+    Surah? surah,
+    Moshaf? moshaf,
+    SurahProvider? surahProvider,
+  }) async {
     _isLoading = true;
     notifyListeners();
     try {
       // Check if we are playing from the same Moshaf/Reciter context
-      bool sameContext = _currentReciter?.id == reciter?.id && _currentMoshaf?.id == moshaf?.id;
-      
+      bool sameContext =
+          _currentReciter?.id == reciter?.id &&
+          _currentMoshaf?.id == moshaf?.id;
+
       if (reciter != null) _currentReciter = reciter;
       if (surah != null) _currentSurah = surah;
       if (moshaf != null) _currentMoshaf = moshaf;
-      
-      if (sameContext && _audioPlayer.sequence != null && surah != null && moshaf != null) {
+
+      if (sameContext &&
+          _audioPlayer.sequence.isNotEmpty &&
+          surah != null &&
+          moshaf != null) {
         // Just seek to the correct index in the existing playlist
         final availableSurahs = moshaf.availableSurahs;
         final index = availableSurahs.indexOf(surah.id);
@@ -165,16 +180,18 @@ class AudioProvider with ChangeNotifier {
       if (moshaf != null && surahProvider != null && surah != null) {
         final availableSurahs = moshaf.availableSurahs;
         final initialIndex = availableSurahs.indexOf(surah.id);
-        
+
+        // ignore: deprecated_member_use
         final playlist = ConcatenatingAudioSource(
           children: availableSurahs.map((surahId) {
             final s = surahProvider.getSurahById(surahId);
             final surahName = s?.name ?? 'Surah $surahId';
-            final surahUrl = '${moshaf.server}${surahId.toString().padLeft(3, '0')}.mp3';
-            
+            final surahUrl =
+                '${moshaf.server}${surahId.toString().padLeft(3, '0')}.mp3';
+
             // Provide a default asset image for the artwork
             final artUri = Uri.parse('asset:///assets/logo/logo.png');
-            
+
             return AudioSource.uri(
               Uri.parse(surahUrl),
               tag: MediaItem(
@@ -188,8 +205,11 @@ class AudioProvider with ChangeNotifier {
             );
           }).toList(),
         );
-        
-        await _audioPlayer.setAudioSource(playlist, initialIndex: initialIndex != -1 ? initialIndex : 0);
+
+        await _audioPlayer.setAudioSource(
+          playlist,
+          initialIndex: initialIndex != -1 ? initialIndex : 0,
+        );
       } else {
         // Fallback for single URL play (legacy or specific use case)
         final artUri = Uri.parse('asset:///assets/logo/logo.png');
@@ -201,14 +221,11 @@ class AudioProvider with ChangeNotifier {
           artUri: artUri,
         );
 
-        final audioSource = AudioSource.uri(
-          Uri.parse(url),
-          tag: mediaItem,
-        );
-        
+        final audioSource = AudioSource.uri(Uri.parse(url), tag: mediaItem);
+
         await _audioPlayer.setAudioSource(audioSource);
       }
-      
+
       _isLoading = false;
       notifyListeners();
       await _audioPlayer.play();

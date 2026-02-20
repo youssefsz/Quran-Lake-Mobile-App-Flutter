@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import '../api/dio_client.dart';
 import '../models/reciter.dart';
 
@@ -11,11 +10,10 @@ class RecitersRepository {
     try {
       final response = await _dioClient.get(
         '/reciters',
-        queryParameters: {
-          if (language != null) 'language': language,
-        },
+        // ignore: use_null_aware_elements
+        queryParameters: {if (language != null) 'language': language},
       );
-      
+
       if (response.statusCode == 200) {
         final data = response.data;
         if (data['reciters'] != null) {
@@ -26,7 +24,7 @@ class RecitersRepository {
       }
       return [];
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

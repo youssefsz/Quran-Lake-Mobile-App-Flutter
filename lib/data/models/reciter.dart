@@ -16,7 +16,8 @@ class Reciter {
       id: json['id'] as int,
       name: json['name'] as String,
       letter: json['letter'] as String? ?? '',
-      moshaf: (json['moshaf'] as List<dynamic>?)
+      moshaf:
+          (json['moshaf'] as List<dynamic>?)
               ?.map((e) => Moshaf.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],

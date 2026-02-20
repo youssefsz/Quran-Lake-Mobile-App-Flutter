@@ -2,6 +2,7 @@
 ///
 /// This library exports all core design tokens, styles, and components
 /// required to build the application's UI with a consistent "Blue-ish Glassmorphism" aesthetic.
+library;
 
 export 'app_colors.dart';
 export 'app_typography.dart';

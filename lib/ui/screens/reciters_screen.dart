@@ -29,11 +29,13 @@ class _RecitersScreenState extends State<RecitersScreen> {
     _translations = localeProvider.getCachedTranslations('reciters');
     _lastLocaleCode = localeProvider.locale.languageCode;
     _loadTranslations();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<ReciterProvider>();
       if (provider.reciters.isEmpty && !provider.isLoading) {
-        provider.fetchReciters(language: context.read<LocaleProvider>().locale.languageCode);
+        provider.fetchReciters(
+          language: context.read<LocaleProvider>().locale.languageCode,
+        );
       }
     });
   }
@@ -66,23 +68,30 @@ class _RecitersScreenState extends State<RecitersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: GlassAppBar(
-        title: _translations['title'] ?? 'Reciters',
-      ),
+      appBar: GlassAppBar(title: _translations['title'] ?? 'Reciters'),
       body: SafeArea(
         top: false,
         child: Column(
           children: [
-            SizedBox(height: kToolbarHeight + MediaQuery.of(context).padding.top),
+            SizedBox(
+              height: kToolbarHeight + MediaQuery.of(context).padding.top,
+            ),
             // Modern Search Bar
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
-                  hintText: _translations['search_placeholder'] ?? 'Search reciters...',
-                  hintStyle: AppTypography.bodyMedium.copyWith(color: AppColors.neutral400),
-                  prefixIcon: const Icon(Icons.search, color: AppColors.neutral400),
+                  hintText:
+                      _translations['search_placeholder'] ??
+                      'Search reciters...',
+                  hintStyle: AppTypography.bodyMedium.copyWith(
+                    color: AppColors.neutral400,
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: AppColors.neutral400,
+                  ),
                   filled: true,
                   fillColor: AppColors.neutral100,
                   border: OutlineInputBorder(
@@ -91,84 +100,94 @@ class _RecitersScreenState extends State<RecitersScreen> {
                   ),
                   contentPadding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                style: AppTypography.bodyMedium.copyWith(color: AppColors.textPrimary),
+                style: AppTypography.bodyMedium.copyWith(
+                  color: AppColors.textPrimary,
+                ),
                 onChanged: (value) {
                   context.read<ReciterProvider>().search(value);
                 },
               ),
             ),
-            
+
             Expanded(
               child: Consumer<ReciterProvider>(
-              builder: (context, provider, child) {
-                if (provider.isLoading) {
-                  return _buildShimmerList();
-                }
+                builder: (context, provider, child) {
+                  if (provider.isLoading) {
+                    return _buildShimmerList();
+                  }
 
-                if (provider.errorMessage != null) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.error_outline, size: 48, color: AppColors.error),
-                        const SizedBox(height: 16),
-                        Text(
-                          provider.errorMessage!,
-                          style: AppTypography.bodyMedium,
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            context.read<HapticProvider>().lightImpact();
-                            provider.fetchReciters(
-                              language: context.read<LocaleProvider>().locale.languageCode,
-                            );
-                          },
-                          child: const Text('Retry'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                if (provider.reciters.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'No reciters found',
-                      style: AppTypography.bodyMedium,
-                    ),
-                  );
-                }
-
-                return ListView.separated(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  itemCount: provider.reciters.length,
-                  separatorBuilder: (context, index) => Divider(
-                    height: 1,
-                    color: AppColors.neutral200.withOpacity(0.5),
-                    indent: 82, // Align with text start
-                    endIndent: 20,
-                  ),
-                  itemBuilder: (context, index) {
-                    final reciter = provider.reciters[index];
-                    return ReciterListItem(
-                      reciter: reciter,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReciterDetailsScreen(reciter: reciter),
+                  if (provider.errorMessage != null) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            size: 48,
+                            color: AppColors.error,
                           ),
-                        );
-                      },
+                          const SizedBox(height: 16),
+                          Text(
+                            provider.errorMessage!,
+                            style: AppTypography.bodyMedium,
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              context.read<HapticProvider>().lightImpact();
+                              provider.fetchReciters(
+                                language: context
+                                    .read<LocaleProvider>()
+                                    .locale
+                                    .languageCode,
+                              );
+                            },
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
                     );
-                  },
-                );
-              },
+                  }
+
+                  if (provider.reciters.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No reciters found',
+                        style: AppTypography.bodyMedium,
+                      ),
+                    );
+                  }
+
+                  return ListView.separated(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    itemCount: provider.reciters.length,
+                    separatorBuilder: (context, index) => Divider(
+                      height: 1,
+                      color: AppColors.neutral200.withValues(alpha: 0.5),
+                      indent: 82, // Align with text start
+                      endIndent: 20,
+                    ),
+                    itemBuilder: (context, index) {
+                      final reciter = provider.reciters[index];
+                      return ReciterListItem(
+                        reciter: reciter,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ReciterDetailsScreen(reciter: reciter),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -199,9 +218,17 @@ class _RecitersScreenState extends State<RecitersScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(height: 18, width: 180, color: AppColors.neutral200),
+                      Container(
+                        height: 18,
+                        width: 180,
+                        color: AppColors.neutral200,
+                      ),
                       const SizedBox(height: 10),
-                      Container(height: 12, width: 140, color: AppColors.neutral200),
+                      Container(
+                        height: 12,
+                        width: 140,
+                        color: AppColors.neutral200,
+                      ),
                       const SizedBox(height: 10),
                       Container(
                         height: 20,

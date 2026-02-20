@@ -62,7 +62,11 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
         centerTitle: true,
         leading: IconButton(
           iconSize: 32,
-          icon: const Icon(Icons.keyboard_arrow_down, weight: 800, color: AppColors.neutral800),
+          icon: const Icon(
+            Icons.keyboard_arrow_down,
+            weight: 800,
+            color: AppColors.neutral800,
+          ),
           onPressed: () {
             context.read<HapticProvider>().lightImpact();
             Navigator.of(context).pop();
@@ -92,7 +96,7 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                       borderRadius: BorderRadius.circular(32),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primaryBlue.withOpacity(0.2),
+                          color: AppColors.primaryBlue.withValues(alpha: 0.2),
                           blurRadius: 24,
                           offset: const Offset(0, 12),
                         ),
@@ -105,12 +109,14 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                   ),
                 ),
               ),
-              
+
               // Info
               Column(
                 children: [
                   Text(
-                    surah?.name ?? _translations['unknown_surah'] ?? 'Unknown Surah',
+                    surah?.name ??
+                        _translations['unknown_surah'] ??
+                        'Unknown Surah',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.bold,
@@ -119,7 +125,9 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    reciter?.name ?? _translations['unknown_reciter'] ?? 'Unknown Reciter',
+                    reciter?.name ??
+                        _translations['unknown_reciter'] ??
+                        'Unknown Reciter',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -128,7 +136,7 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                 ],
               ),
               const SizedBox(height: 48),
-              
+
               // Progress Bar & Controls
               Directionality(
                 textDirection: TextDirection.ltr,
@@ -139,12 +147,21 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                         activeTrackColor: AppColors.primaryBlue,
                         inactiveTrackColor: AppColors.neutral200,
                         thumbColor: AppColors.primaryBlue,
-                        overlayColor: AppColors.primaryBlue.withOpacity(0.1),
+                        overlayColor: AppColors.primaryBlue.withValues(
+                          alpha: 0.1,
+                        ),
                         trackHeight: 4,
-                        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
+                        thumbShape: const RoundSliderThumbShape(
+                          enabledThumbRadius: 8,
+                        ),
                       ),
                       child: Slider(
-                        value: audioProvider.position.inSeconds.toDouble().clamp(0, audioProvider.duration.inSeconds.toDouble()),
+                        value: audioProvider.position.inSeconds
+                            .toDouble()
+                            .clamp(
+                              0,
+                              audioProvider.duration.inSeconds.toDouble(),
+                            ),
                         max: audioProvider.duration.inSeconds.toDouble(),
                         onChanged: (value) {
                           audioProvider.seek(Duration(seconds: value.toInt()));
@@ -158,21 +175,19 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                         children: [
                           Text(
                             _formatDuration(audioProvider.position),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppColors.textTertiary,
-                            ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: AppColors.textTertiary),
                           ),
                           Text(
                             _formatDuration(audioProvider.duration),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppColors.textTertiary,
-                            ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: AppColors.textTertiary),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 32),
-                    
+
                     // Controls
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,22 +196,29 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                         IconButton(
                           icon: Icon(
                             Icons.shuffle_rounded,
-                            color: audioProvider.shuffleModeEnabled ? AppColors.primaryBlue : AppColors.neutral400,
+                            color: audioProvider.shuffleModeEnabled
+                                ? AppColors.primaryBlue
+                                : AppColors.neutral400,
                           ),
                           onPressed: () {
                             context.read<HapticProvider>().lightImpact();
                             audioProvider.toggleShuffle();
                           },
                         ),
-                        
+
                         Row(
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.skip_previous_rounded, size: 40),
+                              icon: const Icon(
+                                Icons.skip_previous_rounded,
+                                size: 40,
+                              ),
                               color: AppColors.neutral800,
                               onPressed: () {
                                 context.read<HapticProvider>().lightImpact();
-                                context.read<AudioProvider>().playPrevious(context.read<SurahProvider>());
+                                context.read<AudioProvider>().playPrevious(
+                                  context.read<SurahProvider>(),
+                                );
                               },
                             ),
                             const SizedBox(width: 16),
@@ -208,7 +230,9 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.primaryBlue.withOpacity(0.3),
+                                    color: AppColors.primaryBlue.withValues(
+                                      alpha: 0.3,
+                                    ),
                                     blurRadius: 16,
                                     offset: const Offset(0, 8),
                                   ),
@@ -218,7 +242,9 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: () {
-                                    context.read<HapticProvider>().lightImpact();
+                                    context
+                                        .read<HapticProvider>()
+                                        .lightImpact();
                                     if (audioProvider.isLoading) return;
 
                                     if (audioProvider.isPlaying) {
@@ -233,10 +259,15 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                                         ? const SizedBox(
                                             width: 32,
                                             height: 32,
-                                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                              strokeWidth: 3,
+                                            ),
                                           )
                                         : Icon(
-                                            audioProvider.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                                            audioProvider.isPlaying
+                                                ? Icons.pause_rounded
+                                                : Icons.play_arrow_rounded,
                                             size: 40,
                                             color: Colors.white,
                                           ),
@@ -246,11 +277,16 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                             ),
                             const SizedBox(width: 16),
                             IconButton(
-                              icon: const Icon(Icons.skip_next_rounded, size: 40),
+                              icon: const Icon(
+                                Icons.skip_next_rounded,
+                                size: 40,
+                              ),
                               color: AppColors.neutral800,
                               onPressed: () {
                                 context.read<HapticProvider>().lightImpact();
-                                context.read<AudioProvider>().playNext(context.read<SurahProvider>());
+                                context.read<AudioProvider>().playNext(
+                                  context.read<SurahProvider>(),
+                                );
                               },
                             ),
                           ],
@@ -260,7 +296,9 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                         IconButton(
                           icon: Icon(
                             _getLoopIcon(audioProvider.loopMode),
-                            color: audioProvider.loopMode == LoopMode.off ? AppColors.neutral400 : AppColors.primaryBlue,
+                            color: audioProvider.loopMode == LoopMode.off
+                                ? AppColors.neutral400
+                                : AppColors.primaryBlue,
                           ),
                           onPressed: () {
                             context.read<HapticProvider>().lightImpact();
@@ -270,7 +308,7 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                       ],
                     ),
                     const SizedBox(height: 32),
-                    
+
                     // Extra Controls: Speed & Volume (Integrated)
                     Row(
                       children: [
@@ -282,13 +320,17 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                             onTap: () => _cycleSpeed(audioProvider),
                             borderRadius: BorderRadius.circular(12),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
                               child: Text(
                                 '${audioProvider.playbackSpeed}x',
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.labelLarge
+                                    ?.copyWith(
+                                      color: AppColors.textPrimary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ),
                           ),
@@ -306,9 +348,11 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                             child: Row(
                               children: [
                                 Icon(
-                                  audioProvider.volume == 0 ? Icons.volume_off_rounded : Icons.volume_down_rounded, 
-                                  size: 20, 
-                                  color: AppColors.neutral500
+                                  audioProvider.volume == 0
+                                      ? Icons.volume_off_rounded
+                                      : Icons.volume_down_rounded,
+                                  size: 20,
+                                  color: AppColors.neutral500,
                                 ),
                                 Expanded(
                                   child: SliderTheme(
@@ -316,9 +360,12 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                                       activeTrackColor: AppColors.neutral800,
                                       inactiveTrackColor: AppColors.neutral200,
                                       thumbColor: AppColors.neutral800,
-                                      overlayColor: AppColors.neutral800.withOpacity(0.1),
+                                      overlayColor: AppColors.neutral800
+                                          .withValues(alpha: 0.1),
                                       trackHeight: 3,
-                                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                                      thumbShape: const RoundSliderThumbShape(
+                                        enabledThumbRadius: 6,
+                                      ),
                                     ),
                                     child: Slider(
                                       value: audioProvider.volume,
@@ -328,7 +375,11 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                                     ),
                                   ),
                                 ),
-                                const Icon(Icons.volume_up_rounded, size: 20, color: AppColors.neutral500),
+                                const Icon(
+                                  Icons.volume_up_rounded,
+                                  size: 20,
+                                  color: AppColors.neutral500,
+                                ),
                               ],
                             ),
                           ),

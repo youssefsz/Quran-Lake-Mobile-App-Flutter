@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import '../models/ayah.dart';
 
 class AyahRepository {
-  final Dio _dio = Dio(); // Using a separate Dio instance for external API to avoid base URL conflicts
+  final Dio _dio =
+      Dio(); // Using a separate Dio instance for external API to avoid base URL conflicts
 
   Future<Ayah> getRandomAyah() async {
     try {
@@ -26,11 +27,11 @@ class AyahRepository {
           //     { "text": "...", "number": 1, "surah": { ... }, ... }  // English
           //   ]
           // }
-          
+
           // Our factory expects the root json or the data part?
           // The factory I wrote: factory Ayah.fromJson(Map<String, dynamic> json)
           // It accesses json['data'][0]. So I should pass the whole response.data
-          
+
           return Ayah.fromJson(response.data);
         }
       }

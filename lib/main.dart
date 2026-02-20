@@ -24,6 +24,9 @@ import 'ui/widgets/custom_bottom_nav_bar.dart';
 import 'package:quran_lake/data/repositories/ayah_repository.dart';
 import 'package:quran_lake/providers/ayah_provider.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'ui/screens/onboarding_screen.dart';
+import 'ui/screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,12 +50,16 @@ void main() async {
     databaseHelper: databaseHelper,
     locationService: locationService,
   );
+
+  final prefs = await SharedPreferences.getInstance();
+  final bool onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
   
   runApp(QuranLakeApp(
     recitersRepository: recitersRepository,
     surahRepository: surahRepository,
     ayahRepository: ayahRepository,
     prayerTimeRepository: prayerTimeRepository,
+    onboardingComplete: onboardingComplete,
   ));
 }
 
@@ -61,6 +68,7 @@ class QuranLakeApp extends StatelessWidget {
   final SurahRepository surahRepository;
   final AyahRepository ayahRepository;
   final PrayerTimeRepository prayerTimeRepository;
+  final bool onboardingComplete;
 
   const QuranLakeApp({
     super.key,
@@ -68,6 +76,7 @@ class QuranLakeApp extends StatelessWidget {
     required this.surahRepository,
     required this.ayahRepository,
     required this.prayerTimeRepository,
+    required this.onboardingComplete,
   });
 
   @override
@@ -100,67 +109,10 @@ class QuranLakeApp extends StatelessWidget {
               Locale('en'),
               Locale('ar'),
             ],
-            home: const MainScreen(),
+            home: onboardingComplete ? const MainScreen() : const OnboardingScreen(),
             debugShowCheckedModeBanner: false,
           );
         },
-      ),
-    );
-  }
-}
-
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
-
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    RecitersScreen(),
-    PrayerTimesScreen(),
-    SettingsScreen(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    // Note: In a real app we'd localize these labels too, likely in a 'navigation.json' or shared.
-    // For now, I'll stick to English for tabs or update them later.
-    return Scaffold(
-      extendBody: true,
-      body: Stack(
-        children: [
-          IndexedStack(
-            index: _currentIndex,
-            children: _screens,
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: SafeArea(
-              top: false,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const MiniPlayer(),
-                  CustomBottomNavBar(
-                    selectedIndex: _currentIndex,
-                    onItemSelected: (index) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

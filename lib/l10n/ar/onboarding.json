@@ -1,0 +1,13 @@
+{
+  "welcome_title": "مرحباً بك في بحيرة القرآن",
+  "welcome_subtitle": "رفيقك لتلاوة القرآن وأوقات الصلاة.",
+  "select_language": "اختر لغتك",
+  "continue_button": "استمرار",
+  "notification_title": "ابق على اطلاع",
+  "notification_desc": "قم بتفعيل الإشعارات للحصول على تنبيهات أوقات الصلاة والتذكيرات اليومية.",
+  "allow_notifications": "السماح بالإشعارات",
+  "location_title": "أوقات صلاة دقيقة",
+  "location_desc": "نحتاج إلى موقعك لحساب أوقات الصلاة بدقة لمنطقتك.",
+  "allow_location": "السماح بالموقع",
+  "get_started": "ابدأ الآن"
+}

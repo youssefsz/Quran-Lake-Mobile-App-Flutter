@@ -1,0 +1,13 @@
+{
+  "welcome_title": "Welcome to Quran Lake",
+  "welcome_subtitle": "Your companion for Quran recitation and prayer times.",
+  "select_language": "Choose your language",
+  "continue_button": "Continue",
+  "notification_title": "Stay Updated",
+  "notification_desc": "Enable notifications to get prayer time alerts and daily reminders.",
+  "allow_notifications": "Allow Notifications",
+  "location_title": "Accurate Prayer Times",
+  "location_desc": "We need your location to calculate accurate prayer times for your area.",
+  "allow_location": "Allow Location",
+  "get_started": "Get Started"
+}

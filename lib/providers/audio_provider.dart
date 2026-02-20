@@ -1,5 +1,9 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
+import 'package:audio_session/audio_session.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../data/models/reciter.dart';
 import '../data/models/surah.dart';
 import 'surah_provider.dart';
@@ -15,6 +19,12 @@ class AudioProvider with ChangeNotifier {
   Reciter? _currentReciter;
   Surah? _currentSurah;
   Moshaf? _currentMoshaf;
+  SurahProvider? _surahProvider;
+
+  LoopMode _loopMode = LoopMode.off;
+  bool _shuffleModeEnabled = false;
+  double _playbackSpeed = 1.0;
+  double _volume = 1.0;
   
   bool get isPlaying => _isPlaying;
   bool get isLoading => _isLoading;
@@ -23,8 +33,13 @@ class AudioProvider with ChangeNotifier {
   Reciter? get currentReciter => _currentReciter;
   Surah? get currentSurah => _currentSurah;
   Moshaf? get currentMoshaf => _currentMoshaf;
+  LoopMode get loopMode => _loopMode;
+  bool get shuffleModeEnabled => _shuffleModeEnabled;
+  double get playbackSpeed => _playbackSpeed;
+  double get volume => _volume;
 
   AudioProvider() {
+    _init();
     _audioPlayer.playerStateStream.listen((state) {
       _isPlaying = state.playing;
       notifyListeners();
@@ -45,28 +60,162 @@ class AudioProvider with ChangeNotifier {
       notifyListeners();
     });
     
-    // Auto-play next if playlist logic is implemented later
+    // Listen to current index to update currentSurah when track changes automatically
+    _audioPlayer.currentIndexStream.listen((index) {
+      if (index != null && _currentMoshaf != null && _surahProvider != null) {
+        final availableSurahs = _currentMoshaf!.availableSurahs;
+        if (index < availableSurahs.length) {
+          final surahId = availableSurahs[index];
+          _currentSurah = _surahProvider!.getSurahById(surahId);
+          notifyListeners();
+        }
+      }
+    });
+    
+    _audioPlayer.loopModeStream.listen((mode) {
+      _loopMode = mode;
+      notifyListeners();
+    });
+
+    _audioPlayer.shuffleModeEnabledStream.listen((enabled) {
+      _shuffleModeEnabled = enabled;
+      notifyListeners();
+    });
+    
+    _audioPlayer.speedStream.listen((speed) {
+      _playbackSpeed = speed;
+      notifyListeners();
+    });
+    
+    _audioPlayer.volumeStream.listen((vol) {
+      _volume = vol;
+      notifyListeners();
+    });
   }
 
-  Future<void> play(String url, {Reciter? reciter, Surah? surah, Moshaf? moshaf}) async {
+  Future<void> _init() async {
+    // Configure AudioSession for background playback
+    final session = await AudioSession.instance;
+    await session.configure(const AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playback,
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.duckOthers,
+      avAudioSessionMode: AVAudioSessionMode.defaultMode,
+      avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.notifyOthersOnDeactivation,
+      androidAudioAttributes: AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.music,
+        flags: AndroidAudioFlags.none,
+        usage: AndroidAudioUsage.media,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidWillPauseWhenDucked: true,
+    ));
+    await session.setActive(true);
+  }
+
+  void updateSurahProvider(SurahProvider surahProvider) {
+    _surahProvider = surahProvider;
+  }
+
+  Future<void> setLoopMode(LoopMode mode) async {
+    await _audioPlayer.setLoopMode(mode);
+  }
+
+  Future<void> toggleShuffle() async {
+    final enable = !shuffleModeEnabled;
+    if (enable) {
+      await _audioPlayer.shuffle();
+    }
+    await _audioPlayer.setShuffleModeEnabled(enable);
+  }
+
+  Future<void> setPlaybackSpeed(double speed) async {
+    await _audioPlayer.setSpeed(speed);
+  }
+
+  Future<void> setVolume(double volume) async {
+    await _audioPlayer.setVolume(volume);
+  }
+
+  Future<void> play(String url, {Reciter? reciter, Surah? surah, Moshaf? moshaf, SurahProvider? surahProvider}) async {
     _isLoading = true;
     notifyListeners();
     try {
+      // Check if we are playing from the same Moshaf/Reciter context
+      bool sameContext = _currentReciter?.id == reciter?.id && _currentMoshaf?.id == moshaf?.id;
+      
       if (reciter != null) _currentReciter = reciter;
       if (surah != null) _currentSurah = surah;
       if (moshaf != null) _currentMoshaf = moshaf;
       
-      await _audioPlayer.setUrl(url);
+      if (sameContext && _audioPlayer.sequence != null && surah != null && moshaf != null) {
+        // Just seek to the correct index in the existing playlist
+        final availableSurahs = moshaf.availableSurahs;
+        final index = availableSurahs.indexOf(surah.id);
+        if (index != -1) {
+          await _audioPlayer.seek(Duration.zero, index: index);
+          await _audioPlayer.play();
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
+      }
+
+      // If context changed or no playlist, build a new one
+      if (moshaf != null && surahProvider != null && surah != null) {
+        final availableSurahs = moshaf.availableSurahs;
+        final initialIndex = availableSurahs.indexOf(surah.id);
+        
+        final playlist = ConcatenatingAudioSource(
+          children: availableSurahs.map((surahId) {
+            final s = surahProvider.getSurahById(surahId);
+            final surahName = s?.name ?? 'Surah $surahId';
+            final surahUrl = '${moshaf.server}${surahId.toString().padLeft(3, '0')}.mp3';
+            
+            // Provide a default asset image for the artwork
+            final artUri = Uri.parse('asset:///assets/icons/quran.png');
+            
+            return AudioSource.uri(
+              Uri.parse(surahUrl),
+              tag: MediaItem(
+                id: surahUrl,
+                album: moshaf.name,
+                title: surahName,
+                artist: reciter?.name ?? 'Unknown Reciter',
+                artUri: artUri,
+                extras: {'surah_id': surahId},
+              ),
+            );
+          }).toList(),
+        );
+        
+        await _audioPlayer.setAudioSource(playlist, initialIndex: initialIndex != -1 ? initialIndex : 0);
+      } else {
+        // Fallback for single URL play (legacy or specific use case)
+        final artUri = Uri.parse('asset:///assets/icons/quran.png');
+        final mediaItem = MediaItem(
+          id: url,
+          album: _currentMoshaf?.name ?? 'Quran Lake',
+          title: _currentSurah?.name ?? 'Unknown Surah',
+          artist: _currentReciter?.name ?? 'Unknown Reciter',
+          artUri: artUri,
+        );
+
+        final audioSource = AudioSource.uri(
+          Uri.parse(url),
+          tag: mediaItem,
+        );
+        
+        await _audioPlayer.setAudioSource(audioSource);
+      }
+      
       _isLoading = false;
       notifyListeners();
       await _audioPlayer.play();
     } catch (e) {
       debugPrint('Error playing audio: $e');
-    } finally {
-      if (_isLoading) {
-        _isLoading = false;
-        notifyListeners();
-      }
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -92,48 +241,18 @@ class AudioProvider with ChangeNotifier {
   }
 
   Future<void> playNext(SurahProvider surahProvider) async {
-    if (_currentSurah == null || _currentMoshaf == null) return;
-
-    final availableSurahs = _currentMoshaf!.availableSurahs;
-    if (availableSurahs.isEmpty) return;
-    
-    final currentIndex = availableSurahs.indexOf(_currentSurah!.id);
-    if (currentIndex == -1) return;
-
-    int nextIndex = currentIndex + 1;
-    if (nextIndex >= availableSurahs.length) {
-      nextIndex = 0; // Loop to start
-    }
-
-    final nextSurahId = availableSurahs[nextIndex];
-    final nextSurah = surahProvider.getSurahById(nextSurahId);
-    
-    if (nextSurah != null) {
-      final url = '${_currentMoshaf!.server}${nextSurahId.toString().padLeft(3, '0')}.mp3';
-      await play(url, surah: nextSurah);
+    if (_audioPlayer.hasNext) {
+      await _audioPlayer.seekToNext();
+    } else {
+      // Loop or stop
     }
   }
 
   Future<void> playPrevious(SurahProvider surahProvider) async {
-    if (_currentSurah == null || _currentMoshaf == null) return;
-
-    final availableSurahs = _currentMoshaf!.availableSurahs;
-    if (availableSurahs.isEmpty) return;
-
-    final currentIndex = availableSurahs.indexOf(_currentSurah!.id);
-    if (currentIndex == -1) return;
-
-    int prevIndex = currentIndex - 1;
-    if (prevIndex < 0) {
-      prevIndex = availableSurahs.length - 1; // Loop to end
-    }
-
-    final prevSurahId = availableSurahs[prevIndex];
-    final prevSurah = surahProvider.getSurahById(prevSurahId);
-    
-    if (prevSurah != null) {
-      final url = '${_currentMoshaf!.server}${prevSurahId.toString().padLeft(3, '0')}.mp3';
-      await play(url, surah: prevSurah);
+    if (_audioPlayer.hasPrevious) {
+      await _audioPlayer.seekToPrevious();
+    } else {
+      // Loop or stop
     }
   }
 

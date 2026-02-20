@@ -99,7 +99,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
                       Text(
                         audioProvider.currentSurah?.name ?? _translations['unknown_surah'] ?? 'Unknown Surah',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Colors.black,
+                          color: AppColors.textPrimary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -107,7 +107,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
                       Text(
                         audioProvider.currentReciter?.name ?? _translations['unknown_reciter'] ?? 'Unknown Reciter',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.black,
+                          color: AppColors.textSecondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -123,7 +123,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
                   )
                 else
                   IconButton(
-                    icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.black),
+                    icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow, color: AppColors.neutral800),
                     onPressed: () {
                       context.read<HapticProvider>().lightImpact();
                       if (audioProvider.isPlaying) {
@@ -134,7 +134,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
                     },
                   ),
                 IconButton(
-                  icon: const Icon(Icons.close, color: Colors.black),
+                  icon: const Icon(Icons.close, color: AppColors.neutral800),
                   onPressed: () {
                     context.read<HapticProvider>().lightImpact();
                     audioProvider.closePlayer();

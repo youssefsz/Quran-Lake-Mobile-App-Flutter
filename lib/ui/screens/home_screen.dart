@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../core/theme/app_colors.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/prayer_provider.dart';
@@ -34,7 +35,11 @@ class _HomeScreenState extends State<HomeScreen> {
     _translations = localeProvider.getCachedTranslations('home');
     _lastLocaleCode = localeCode;
     _loadTranslations();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _checkPermissions();
+      
+      if (!mounted) return;
+      
       final prayerProvider = context.read<PrayerProvider>();
       if (prayerProvider.prayerTime == null && !prayerProvider.isLoading) {
         prayerProvider.fetchPrayerTimes();
@@ -71,6 +76,14 @@ class _HomeScreenState extends State<HomeScreen> {
         context.read<ReciterProvider>().fetchReciters(language: localeCode);
       });
     }
+  }
+
+  Future<void> _checkPermissions() async {
+    // Proactively request permissions on app start
+    await [
+      Permission.location,
+      Permission.notification,
+    ].request();
   }
 
   Future<void> _loadTranslations() async {
@@ -354,7 +367,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (defaultReciter.moshaf.isNotEmpty) {
                          final moshaf = defaultReciter.moshaf.first;
                          final url = '${moshaf.server}${surah.id.toString().padLeft(3, '0')}.mp3';
-                         audioProvider.play(url, reciter: defaultReciter, surah: surah, moshaf: moshaf);
+                         audioProvider.play(
+                           url, 
+                           reciter: defaultReciter, 
+                           surah: surah, 
+                           moshaf: moshaf,
+                           surahProvider: surahProvider
+                         );
                       }
                     },
                     icon: const Icon(Icons.play_arrow_rounded, color: Colors.white),
@@ -553,7 +572,13 @@ class _HomeScreenState extends State<HomeScreen> {
             if (defaultReciter.moshaf.isNotEmpty) {
                 final moshaf = defaultReciter.moshaf.first;
                 final url = '${moshaf.server}${surah.id.toString().padLeft(3, '0')}.mp3';
-                audioProvider.play(url, reciter: defaultReciter, surah: surah, moshaf: moshaf);
+                audioProvider.play(
+                  url, 
+                  reciter: defaultReciter, 
+                  surah: surah, 
+                  moshaf: moshaf,
+                  surahProvider: context.read<SurahProvider>()
+                );
             }
           },
           child: Padding(

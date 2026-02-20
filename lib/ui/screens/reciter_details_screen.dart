@@ -243,6 +243,7 @@ class _ReciterDetailsScreenState extends State<ReciterDetailsScreen> {
                  reciter: _reciter,
                  surah: surah,
                  moshaf: _selectedMoshaf,
+                 surahProvider: surahProvider,
                );
              }
           },

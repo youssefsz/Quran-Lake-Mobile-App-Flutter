@@ -23,9 +23,16 @@ import 'ui/widgets/custom_bottom_nav_bar.dart';
 
 import 'package:quran_lake/data/repositories/ayah_repository.dart';
 import 'package:quran_lake/providers/ayah_provider.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.example.quran_lake.channel.audio',
+    androidNotificationChannelName: 'Audio playback',
+    androidNotificationOngoing: true,
+  );
   
   final dioClient = DioClient();
   final databaseHelper = DatabaseHelper();
@@ -70,7 +77,10 @@ class QuranLakeApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ReciterProvider(recitersRepository)),
         ChangeNotifierProvider(create: (_) => SurahProvider(surahRepository)),
         ChangeNotifierProvider(create: (_) => AyahProvider(ayahRepository)),
-        ChangeNotifierProvider(create: (_) => AudioProvider()),
+        ChangeNotifierProxyProvider<SurahProvider, AudioProvider>(
+          create: (_) => AudioProvider(),
+          update: (_, surahProvider, audioProvider) => audioProvider!..updateSurahProvider(surahProvider),
+        ),
         ChangeNotifierProvider(create: (_) => HapticProvider()),
         ChangeNotifierProvider(create: (_) => PrayerProvider(prayerTimeRepository)),
       ],

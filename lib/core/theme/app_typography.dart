@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 /// The centralized typography system for the Quran Lake design system.
 ///
 /// Uses 'Outfit' for headings (modern, clean, geometric) and 'Inter' for body (highly legible).
+/// Fonts are bundled locally in assets/fonts/ for offline use.
 class AppTypography {
   AppTypography._();
 
@@ -12,15 +12,17 @@ class AppTypography {
   // Font Families
   // ===========================================================================
 
-  static final String? displayFontFamily = GoogleFonts.outfit().fontFamily;
-  static final String? bodyFontFamily = GoogleFonts.inter().fontFamily;
+  static const String displayFontFamily = 'Outfit';
+  static const String bodyFontFamily = 'Inter';
+  static const String arabicFontFamily = 'Amiri';
 
   // ===========================================================================
   // Text Styles
   // ===========================================================================
 
   // Display Styles (Large, impactful headings)
-  static final TextStyle displayLarge = GoogleFonts.outfit(
+  static const TextStyle displayLarge = TextStyle(
+    fontFamily: 'Outfit',
     fontSize: 57,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.25,
@@ -28,7 +30,8 @@ class AppTypography {
     color: AppColors.textPrimary,
   );
 
-  static final TextStyle displayMedium = GoogleFonts.outfit(
+  static const TextStyle displayMedium = TextStyle(
+    fontFamily: 'Outfit',
     fontSize: 45,
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
@@ -36,7 +39,8 @@ class AppTypography {
     color: AppColors.textPrimary,
   );
 
-  static final TextStyle displaySmall = GoogleFonts.outfit(
+  static const TextStyle displaySmall = TextStyle(
+    fontFamily: 'Outfit',
     fontSize: 36,
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
@@ -45,7 +49,8 @@ class AppTypography {
   );
 
   // Headline Styles (Section headers)
-  static final TextStyle headlineLarge = GoogleFonts.outfit(
+  static const TextStyle headlineLarge = TextStyle(
+    fontFamily: 'Outfit',
     fontSize: 32,
     fontWeight: FontWeight.w500, // Medium
     letterSpacing: 0,
@@ -53,7 +58,8 @@ class AppTypography {
     color: AppColors.textPrimary,
   );
 
-  static final TextStyle headlineMedium = GoogleFonts.outfit(
+  static const TextStyle headlineMedium = TextStyle(
+    fontFamily: 'Outfit',
     fontSize: 28,
     fontWeight: FontWeight.w500,
     letterSpacing: 0,
@@ -61,7 +67,8 @@ class AppTypography {
     color: AppColors.textPrimary,
   );
 
-  static final TextStyle headlineSmall = GoogleFonts.outfit(
+  static const TextStyle headlineSmall = TextStyle(
+    fontFamily: 'Outfit',
     fontSize: 24,
     fontWeight: FontWeight.w500,
     letterSpacing: 0,
@@ -70,7 +77,8 @@ class AppTypography {
   );
 
   // Title Styles (Card titles, smaller headers)
-  static final TextStyle titleLarge = GoogleFonts.outfit(
+  static const TextStyle titleLarge = TextStyle(
+    fontFamily: 'Outfit',
     fontSize: 22,
     fontWeight: FontWeight.w500,
     letterSpacing: 0,
@@ -78,7 +86,8 @@ class AppTypography {
     color: AppColors.textPrimary,
   );
 
-  static final TextStyle titleMedium = GoogleFonts.outfit(
+  static const TextStyle titleMedium = TextStyle(
+    fontFamily: 'Outfit',
     fontSize: 16,
     fontWeight: FontWeight.w600, // SemiBold
     letterSpacing: 0.15,
@@ -86,7 +95,8 @@ class AppTypography {
     color: AppColors.textPrimary,
   );
 
-  static final TextStyle titleSmall = GoogleFonts.outfit(
+  static const TextStyle titleSmall = TextStyle(
+    fontFamily: 'Outfit',
     fontSize: 14,
     fontWeight: FontWeight.w600,
     letterSpacing: 0.1,
@@ -95,7 +105,8 @@ class AppTypography {
   );
 
   // Body Styles (Paragraphs, long text)
-  static final TextStyle bodyLarge = GoogleFonts.inter(
+  static const TextStyle bodyLarge = TextStyle(
+    fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.5,
@@ -103,7 +114,8 @@ class AppTypography {
     color: AppColors.textSecondary,
   );
 
-  static final TextStyle bodyMedium = GoogleFonts.inter(
+  static const TextStyle bodyMedium = TextStyle(
+    fontFamily: 'Inter',
     fontSize: 14,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.25,
@@ -111,7 +123,8 @@ class AppTypography {
     color: AppColors.textSecondary,
   );
 
-  static final TextStyle bodySmall = GoogleFonts.inter(
+  static const TextStyle bodySmall = TextStyle(
+    fontFamily: 'Inter',
     fontSize: 12,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.4,
@@ -120,7 +133,8 @@ class AppTypography {
   );
 
   // Label Styles (Buttons, captions, overlines)
-  static final TextStyle labelLarge = GoogleFonts.inter(
+  static const TextStyle labelLarge = TextStyle(
+    fontFamily: 'Inter',
     fontSize: 14,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,
@@ -128,7 +142,8 @@ class AppTypography {
     color: AppColors.textPrimary,
   );
 
-  static final TextStyle labelMedium = GoogleFonts.inter(
+  static const TextStyle labelMedium = TextStyle(
+    fontFamily: 'Inter',
     fontSize: 12,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.5,
@@ -136,7 +151,8 @@ class AppTypography {
     color: AppColors.textSecondary,
   );
 
-  static final TextStyle labelSmall = GoogleFonts.inter(
+  static const TextStyle labelSmall = TextStyle(
+    fontFamily: 'Inter',
     fontSize: 11,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.5,
@@ -148,7 +164,7 @@ class AppTypography {
   // Theme Integration
   // ===========================================================================
 
-  static TextTheme get textTheme => TextTheme(
+  static TextTheme get textTheme => const TextTheme(
     displayLarge: displayLarge,
     displayMedium: displayMedium,
     displaySmall: displaySmall,

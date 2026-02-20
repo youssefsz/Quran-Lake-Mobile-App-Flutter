@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../core/errors/app_exception.dart';
 import '../../core/theme/app_colors.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/prayer_provider.dart';
@@ -14,6 +15,7 @@ import '../../core/theme/app_typography.dart';
 import '../../data/models/surah.dart';
 import 'package:heroicons/heroicons.dart';
 import '../widgets/glass_app_bar.dart';
+import '../widgets/app_error_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,6 +26,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic> _translations = {};
+  Map<String, dynamic> _errorTranslations = {};
   String? _lastLocaleCode;
 
   /// Translates a prayer name key (e.g. 'Fajr') to the localized string.
@@ -38,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final localeProvider = context.read<LocaleProvider>();
     final localeCode = localeProvider.locale.languageCode;
     _translations = localeProvider.getCachedTranslations('home');
+    _errorTranslations = localeProvider.getCachedTranslations('errors');
     _lastLocaleCode = localeCode;
     _loadTranslations();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -90,10 +94,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadTranslations() async {
     final provider = context.read<LocaleProvider>();
-    final translations = await provider.getScreenTranslations('home');
+    final results = await Future.wait([
+      provider.getScreenTranslations('home'),
+      provider.getScreenTranslations('errors'),
+    ]);
     if (mounted) {
       setState(() {
-        _translations = translations;
+        _translations = results[0];
+        _errorTranslations = results[1];
       });
     }
   }
@@ -339,16 +347,15 @@ class _HomeScreenState extends State<HomeScreen> {
         if (ayahProvider.isLoading) {
           return _buildAyahShimmer();
         }
-        if (ayahProvider.errorMessage != null) {
-          return Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Theme.of(
-                context,
-              ).colorScheme.errorContainer.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Text('Error: ${ayahProvider.errorMessage}'),
+        if (ayahProvider.hasError) {
+          return AppErrorWidget(
+            errorType: ayahProvider.errorType ?? AppErrorType.unknown,
+            translations: _errorTranslations,
+            compact: true,
+            onRetry: () {
+              context.read<HapticProvider>().lightImpact();
+              ayahProvider.fetchRandomAyah();
+            },
           );
         }
         if (ayahProvider.ayah == null) {
@@ -600,6 +607,35 @@ class _HomeScreenState extends State<HomeScreen> {
     final surahProvider = context.watch<SurahProvider>();
     if (surahProvider.isLoading) {
       return _buildQuickSurahsShimmer();
+    }
+
+    if (surahProvider.hasError) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: Text(
+              _translations['quick_surahs'] ?? 'Quick Surahs',
+              style: AppTypography.titleLarge,
+            ),
+          ),
+          const SizedBox(height: 12),
+          AppErrorWidget(
+            errorType: surahProvider.errorType ?? AppErrorType.unknown,
+            translations: _errorTranslations,
+            compact: true,
+            onRetry: () {
+              context.read<HapticProvider>().lightImpact();
+              final localeCode = context
+                  .read<LocaleProvider>()
+                  .locale
+                  .languageCode;
+              surahProvider.fetchSurahs(language: localeCode);
+            },
+          ),
+        ],
+      );
     }
 
     // IDs for Quick Surahs: Al-Kahf (18), Yaseen (36), Al-Waqi'a (56), Al-Mulk (67)

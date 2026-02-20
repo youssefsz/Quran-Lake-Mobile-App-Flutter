@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../core/errors/app_exception.dart';
 import '../data/models/reciter.dart';
 import '../data/repositories/reciters_repository.dart';
 
@@ -8,7 +9,7 @@ class ReciterProvider with ChangeNotifier {
   List<Reciter> _reciters = [];
   List<Reciter> _filteredReciters = [];
   bool _isLoading = false;
-  String? _errorMessage;
+  AppException? _error;
 
   ReciterProvider(this._repository);
 
@@ -18,7 +19,13 @@ class ReciterProvider with ChangeNotifier {
       : _reciters;
 
   bool get isLoading => _isLoading;
-  String? get errorMessage => _errorMessage;
+  AppException? get error => _error;
+
+  /// Whether an error is present.
+  bool get hasError => _error != null;
+
+  /// The classified error type, or null.
+  AppErrorType? get errorType => _error?.type;
 
   String _searchQuery = '';
   String? _currentLanguage;
@@ -31,14 +38,15 @@ class ReciterProvider with ChangeNotifier {
 
     _currentLanguage = language;
     _isLoading = true;
-    _errorMessage = null;
+    _error = null;
     notifyListeners();
 
     try {
       _reciters = await _repository.getReciters(language: language);
       _filterReciters();
     } catch (e) {
-      _errorMessage = e.toString();
+      _error = AppException.from(e);
+      debugPrint('ReciterProvider error: $_error');
     } finally {
       _isLoading = false;
       notifyListeners();

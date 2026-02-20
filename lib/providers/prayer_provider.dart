@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:quran_lake/core/errors/app_exception.dart';
 import 'package:quran_lake/data/models/prayer_time.dart';
 import 'package:quran_lake/data/repositories/prayer_time_repository.dart';
 
@@ -12,8 +13,14 @@ class PrayerProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
+  AppException? _error;
+  AppException? get error => _error;
+
+  /// Whether an error is present.
+  bool get hasError => _error != null;
+
+  /// The classified error type, or null.
+  AppErrorType? get errorType => _error?.type;
 
   Duration _timeUntilNextPrayer = Duration.zero;
   Duration get timeUntilNextPrayer => _timeUntilNextPrayer;
@@ -34,7 +41,7 @@ class PrayerProvider extends ChangeNotifier {
 
   Future<void> fetchPrayerTimes() async {
     _isLoading = true;
-    _errorMessage = null;
+    _error = null;
     notifyListeners();
 
     try {
@@ -42,7 +49,8 @@ class PrayerProvider extends ChangeNotifier {
       _parsePrayerTimes();
       _calculateNextPrayer();
     } catch (e) {
-      _errorMessage = e.toString();
+      _error = AppException.from(e);
+      debugPrint('PrayerProvider error: $_error');
     } finally {
       _isLoading = false;
       notifyListeners();

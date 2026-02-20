@@ -1,0 +1,15 @@
+{
+    "error_no_internet_title": "No Internet Connection",
+    "error_no_internet_subtitle": "Please check your Wi-Fi or mobile data and try again.",
+    "error_timeout_title": "Connection Timed Out",
+    "error_timeout_subtitle": "The server is taking too long to respond. Please try again.",
+    "error_server_title": "Server Unavailable",
+    "error_server_subtitle": "We could not reach the server. Please try again later.",
+    "error_server_error_title": "Something Went Wrong",
+    "error_server_error_subtitle": "An unexpected error occurred on the server. Please try again.",
+    "error_location_title": "Location Unavailable",
+    "error_location_subtitle": "Please enable location services and grant permission to the app.",
+    "error_unknown_title": "Oops!",
+    "error_unknown_subtitle": "Something unexpected happened. Please try again.",
+    "error_retry": "Try Again"
+}

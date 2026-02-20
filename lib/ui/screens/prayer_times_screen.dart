@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/errors/app_exception.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/theme/app_typography.dart';
 import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/prayer_provider.dart';
 import '../widgets/glass_app_bar.dart';
+import '../widgets/app_error_widget.dart';
 
 class PrayerTimesScreen extends StatefulWidget {
   const PrayerTimesScreen({super.key});
@@ -16,6 +18,7 @@ class PrayerTimesScreen extends StatefulWidget {
 
 class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
   Map<String, dynamic> _translations = {};
+  Map<String, dynamic> _errorTranslations = {};
   String? _lastLocaleCode;
 
   @override
@@ -23,6 +26,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
     super.initState();
     final localeProvider = context.read<LocaleProvider>();
     _translations = localeProvider.getCachedTranslations('prayer_times');
+    _errorTranslations = localeProvider.getCachedTranslations('errors');
     _lastLocaleCode = localeProvider.locale.languageCode;
     _loadTranslations();
     // Trigger fetch if not already loaded
@@ -46,10 +50,14 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
 
   Future<void> _loadTranslations() async {
     final provider = context.read<LocaleProvider>();
-    final translations = await provider.getScreenTranslations('prayer_times');
+    final results = await Future.wait([
+      provider.getScreenTranslations('prayer_times'),
+      provider.getScreenTranslations('errors'),
+    ]);
     if (mounted) {
       setState(() {
-        _translations = translations;
+        _translations = results[0];
+        _errorTranslations = results[1];
       });
     }
   }
@@ -136,28 +144,14 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
             if (prayerProvider.isLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-            if (prayerProvider.errorMessage != null) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        prayerProvider.errorMessage!,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.read<HapticProvider>().lightImpact();
-                          prayerProvider.fetchPrayerTimes();
-                        },
-                        child: Text(_t('retry', 'Retry')),
-                      ),
-                    ],
-                  ),
-                ),
+            if (prayerProvider.hasError) {
+              return AppErrorWidget(
+                errorType: prayerProvider.errorType ?? AppErrorType.unknown,
+                translations: _errorTranslations,
+                onRetry: () {
+                  context.read<HapticProvider>().lightImpact();
+                  prayerProvider.fetchPrayerTimes();
+                },
               );
             }
             if (prayerProvider.prayerTime == null) {

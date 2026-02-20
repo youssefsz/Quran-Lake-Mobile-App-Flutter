@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../core/errors/app_exception.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../providers/haptic_provider.dart';
@@ -8,6 +9,7 @@ import '../../providers/locale_provider.dart';
 import '../../providers/reciter_provider.dart';
 import '../widgets/reciter_list_item.dart';
 import '../widgets/glass_app_bar.dart';
+import '../widgets/app_error_widget.dart';
 import 'reciter_details_screen.dart';
 
 class RecitersScreen extends StatefulWidget {
@@ -19,6 +21,7 @@ class RecitersScreen extends StatefulWidget {
 
 class _RecitersScreenState extends State<RecitersScreen> {
   Map<String, dynamic> _translations = {};
+  Map<String, dynamic> _errorTranslations = {};
   final TextEditingController _searchController = TextEditingController();
   String? _lastLocaleCode;
 
@@ -27,6 +30,7 @@ class _RecitersScreenState extends State<RecitersScreen> {
     super.initState();
     final localeProvider = context.read<LocaleProvider>();
     _translations = localeProvider.getCachedTranslations('reciters');
+    _errorTranslations = localeProvider.getCachedTranslations('errors');
     _lastLocaleCode = localeProvider.locale.languageCode;
     _loadTranslations();
 
@@ -56,10 +60,14 @@ class _RecitersScreenState extends State<RecitersScreen> {
 
   Future<void> _loadTranslations() async {
     final provider = context.read<LocaleProvider>();
-    final translations = await provider.getScreenTranslations('reciters');
+    final results = await Future.wait([
+      provider.getScreenTranslations('reciters'),
+      provider.getScreenTranslations('errors'),
+    ]);
     if (mounted) {
       setState(() {
-        _translations = translations;
+        _translations = results[0];
+        _errorTranslations = results[1];
       });
     }
   }
@@ -116,36 +124,19 @@ class _RecitersScreenState extends State<RecitersScreen> {
                     return _buildShimmerList();
                   }
 
-                  if (provider.errorMessage != null) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.error_outline,
-                            size: 48,
-                            color: AppColors.error,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            provider.errorMessage!,
-                            style: AppTypography.bodyMedium,
-                          ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              context.read<HapticProvider>().lightImpact();
-                              provider.fetchReciters(
-                                language: context
-                                    .read<LocaleProvider>()
-                                    .locale
-                                    .languageCode,
-                              );
-                            },
-                            child: const Text('Retry'),
-                          ),
-                        ],
-                      ),
+                  if (provider.hasError) {
+                    return AppErrorWidget(
+                      errorType: provider.errorType ?? AppErrorType.unknown,
+                      translations: _errorTranslations,
+                      onRetry: () {
+                        context.read<HapticProvider>().lightImpact();
+                        provider.fetchReciters(
+                          language: context
+                              .read<LocaleProvider>()
+                              .locale
+                              .languageCode,
+                        );
+                      },
                     );
                   }
 

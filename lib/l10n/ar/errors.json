@@ -1,0 +1,15 @@
+{
+    "error_no_internet_title": "لا يوجد اتصال بالإنترنت",
+    "error_no_internet_subtitle": "يرجى التحقق من اتصال الواي فاي أو بيانات الهاتف والمحاولة مرة أخرى.",
+    "error_timeout_title": "انتهت مهلة الاتصال",
+    "error_timeout_subtitle": "الخادم يستغرق وقتاً طويلاً للاستجابة. يرجى المحاولة مرة أخرى.",
+    "error_server_title": "الخادم غير متاح",
+    "error_server_subtitle": "لم نتمكن من الوصول إلى الخادم. يرجى المحاولة لاحقاً.",
+    "error_server_error_title": "حدث خطأ ما",
+    "error_server_error_subtitle": "حدث خطأ غير متوقع في الخادم. يرجى المحاولة مرة أخرى.",
+    "error_location_title": "الموقع غير متاح",
+    "error_location_subtitle": "يرجى تفعيل خدمات الموقع ومنح الإذن للتطبيق.",
+    "error_unknown_title": "عذراً!",
+    "error_unknown_subtitle": "حدث شيء غير متوقع. يرجى المحاولة مرة أخرى.",
+    "error_retry": "إعادة المحاولة"
+}

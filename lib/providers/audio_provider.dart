@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -23,6 +25,8 @@ class AudioProvider with ChangeNotifier {
   bool _shuffleModeEnabled = false;
   double _playbackSpeed = 1.0;
   double _volume = 1.0;
+
+  Uri? _artUri;
 
   bool get isPlaying => _isPlaying;
   bool get isLoading => _isLoading;
@@ -98,6 +102,20 @@ class AudioProvider with ChangeNotifier {
     final session = await AudioSession.instance;
     await session.configure(const AudioSessionConfiguration.music());
     await session.setActive(true);
+
+    try {
+      final byteData = await rootBundle.load('assets/icons/quran.png');
+      final file = File('${Directory.systemTemp.path}/quran_art.png');
+      await file.writeAsBytes(
+        byteData.buffer.asUint8List(
+          byteData.offsetInBytes,
+          byteData.lengthInBytes,
+        ),
+      );
+      _artUri = Uri.file(file.path);
+    } catch (e) {
+      debugPrint('Error loading artwork: $e');
+    }
   }
 
   void updateSurahProvider(SurahProvider surahProvider) {
@@ -173,7 +191,8 @@ class AudioProvider with ChangeNotifier {
                 '${moshaf.server}${surahId.toString().padLeft(3, '0')}.mp3';
 
             // Provide a default asset image for the artwork
-            final artUri = Uri.parse('asset:///assets/logo/logo.png');
+            final artUri =
+                _artUri ?? Uri.parse('asset:///assets/icons/quran.png');
 
             return AudioSource.uri(
               Uri.parse(surahUrl),
@@ -195,7 +214,7 @@ class AudioProvider with ChangeNotifier {
         );
       } else {
         // Fallback for single URL play (legacy or specific use case)
-        final artUri = Uri.parse('asset:///assets/logo/logo.png');
+        final artUri = _artUri ?? Uri.parse('asset:///assets/icons/quran.png');
         final mediaItem = MediaItem(
           id: url,
           album: _currentMoshaf?.name ?? 'Quran Lake',

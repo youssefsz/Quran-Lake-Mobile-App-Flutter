@@ -123,6 +123,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   content: Text(
                     _translations['enable_loc_msg'] ?? 'Please enable location',
                   ),
+                  action: SnackBarAction(
+                    label: 'Settings',
+                    onPressed: openAppSettings,
+                  ),
+                  duration: const Duration(seconds: 4),
                 ),
               );
             }
@@ -152,6 +157,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     _translations['enable_notif_msg'] ??
                         'Please enable notifications',
                   ),
+                  action: SnackBarAction(
+                    label: 'Settings',
+                    onPressed: openAppSettings,
+                  ),
+                  duration: const Duration(seconds: 4),
                 ),
               );
             }
@@ -179,6 +189,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 content: Text(
                   _translations['enable_loc_msg'] ?? 'Please enable location',
                 ),
+                action: SnackBarAction(
+                  label: 'Settings',
+                  onPressed: openAppSettings,
+                ),
+                duration: const Duration(seconds: 4),
               ),
             );
           }

@@ -35,7 +35,7 @@ void main() async {
     androidNotificationChannelId: 'tn.quranlake.app.channel.audio',
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
-    androidNotificationIcon: 'mipmap/launcher_icon',
+    androidNotificationIcon: 'drawable/media_logo',
   );
   
   final dioClient = DioClient();

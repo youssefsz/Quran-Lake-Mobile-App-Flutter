@@ -10,6 +10,8 @@ import '../../core/widgets/app_surface.dart';
 import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../widgets/glass_app_bar.dart';
+import 'privacy_policy_screen.dart';
+import 'terms_of_service_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -36,8 +38,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _appVersion;
 
   static const String _supportEmail = 'support@quranlake.app';
-  static const String _termsUrl = 'https://quranlake.app/terms';
-  static const String _privacyUrl = 'https://quranlake.app/privacy';
   static const String _aboutUrl = 'https://quranlake.app/about';
   static const List<_LanguageOption> _languageOptions = [
     _LanguageOption(locale: Locale('en'), label: 'English', flag: '🇬🇧'),
@@ -116,11 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Column(
         children: [
           for (int i = 0; i < items.length; i++) ...[
-            if (i > 0)
-              const Divider(
-                height: 1,
-                color: AppColors.neutral200,
-              ),
+            if (i > 0) const Divider(height: 1, color: AppColors.neutral200),
             items[i],
           ],
         ],
@@ -138,7 +134,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     bool showChevron = false,
   }) {
     final content = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppTokens.s16, vertical: AppTokens.s12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s16,
+        vertical: AppTokens.s12,
+      ),
       child: Row(
         children: [
           Icon(icon, size: 20, color: Colors.black),
@@ -158,7 +157,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: AppTokens.s2),
                   Text(
                     subtitle,
-                    style: AppTypography.bodySmall.copyWith(color: Colors.black),
+                    style: AppTypography.bodySmall.copyWith(
+                      color: Colors.black,
+                    ),
                   ),
                 ],
               ],
@@ -208,22 +209,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
       (option) => option.locale.languageCode == current.locale.languageCode,
     );
     int selectedIndex = initialIndex < 0 ? 0 : initialIndex;
-    final controller = FixedExtentScrollController(
-      initialItem: selectedIndex,
-    );
+    final controller = FixedExtentScrollController(initialItem: selectedIndex);
 
     await showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surface,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppTokens.r24)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppTokens.r24),
+        ),
       ),
       builder: (context) {
         return SafeArea(
           top: false,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(AppTokens.s16, AppTokens.s8, AppTokens.s16, AppTokens.s16),
+            padding: const EdgeInsets.fromLTRB(
+              AppTokens.s16,
+              AppTokens.s8,
+              AppTokens.s16,
+              AppTokens.s16,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -254,7 +260,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       },
                       child: Text(
                         _translations['done'] ?? 'Done',
-                        style: AppTypography.titleSmall.copyWith(color: AppColors.primaryBlue),
+                        style: AppTypography.titleSmall.copyWith(
+                          color: AppColors.primaryBlue,
+                        ),
                       ),
                     ),
                   ],
@@ -272,7 +280,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           (option) => Center(
                             child: Text(
                               '${option.flag}  ${option.label}',
-                              style: AppTypography.titleSmall.copyWith(color: AppColors.textPrimary),
+                              style: AppTypography.titleSmall.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
                             ),
                           ),
                         )
@@ -297,9 +307,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: GlassAppBar(
-        title: _translations['title'] ?? 'Settings',
-      ),
+      appBar: GlassAppBar(title: _translations['title'] ?? 'Settings'),
       body: SafeArea(
         top: false,
         child: ListView(
@@ -310,13 +318,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             AppTokens.s24,
           ),
           children: [
-            _buildSectionTitle(_translations['preferences_section'] ?? 'Preferences'),
+            _buildSectionTitle(
+              _translations['preferences_section'] ?? 'Preferences',
+            ),
             const SizedBox(height: AppTokens.s8),
             _buildGroup([
               _buildRow(
                 icon: Icons.language,
                 title: _translations['language'] ?? 'Language',
-                subtitle: _translations['language_subtitle'] ?? 'Choose app language',
+                subtitle:
+                    _translations['language_subtitle'] ?? 'Choose app language',
                 trailingText: currentLanguage.label,
                 showChevron: true,
                 onTap: () {
@@ -327,7 +338,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildRow(
                 icon: Icons.vibration,
                 title: _translations['haptics'] ?? 'Haptic Feedback',
-                subtitle: _translations['haptics_subtitle'] ?? 'Light tap feedback',
+                subtitle:
+                    _translations['haptics_subtitle'] ?? 'Light tap feedback',
                 trailing: Switch(
                   value: hapticProvider.isEnabled,
                   onChanged: (value) {
@@ -348,8 +360,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildGroup([
               _buildRow(
                 icon: Icons.email_outlined,
-                title: _translations['support_feedback'] ?? 'Support & Feedback',
-                subtitle: _translations['support_feedback_subtitle'] ?? 'Email us anytime',
+                title:
+                    _translations['support_feedback'] ?? 'Support & Feedback',
+                subtitle:
+                    _translations['support_feedback_subtitle'] ??
+                    'Email us anytime',
                 showChevron: true,
                 onTap: () {
                   hapticProvider.lightImpact();
@@ -364,11 +379,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildRow(
                 icon: Icons.privacy_tip_outlined,
                 title: _translations['privacy'] ?? 'Privacy Policy',
-                subtitle: _translations['privacy_subtitle'] ?? 'How we handle your data',
+                subtitle:
+                    _translations['privacy_subtitle'] ??
+                    'How we handle your data',
                 showChevron: true,
                 onTap: () {
                   hapticProvider.lightImpact();
-                  _openUrl(_privacyUrl);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const PrivacyPolicyScreen(),
+                    ),
+                  );
                 },
               ),
               _buildRow(
@@ -378,7 +399,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 showChevron: true,
                 onTap: () {
                   hapticProvider.lightImpact();
-                  _openUrl(_termsUrl);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const TermsOfServiceScreen(),
+                    ),
+                  );
                 },
               ),
             ]),
@@ -389,7 +414,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildRow(
                 icon: Icons.info_outline,
                 title: _translations['about'] ?? 'About This App',
-                subtitle: _translations['about_subtitle'] ?? 'Learn more about Quran Lake',
+                subtitle:
+                    _translations['about_subtitle'] ??
+                    'Learn more about Quran Lake',
                 showChevron: true,
                 onTap: () {
                   hapticProvider.lightImpact();
@@ -399,7 +426,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildRow(
                 icon: Icons.verified_outlined,
                 title: _translations['app_version'] ?? 'App Version',
-                subtitle: _translations['app_version_subtitle'] ?? 'Current build',
+                subtitle:
+                    _translations['app_version_subtitle'] ?? 'Current build',
                 trailingText: versionText,
               ),
             ]),

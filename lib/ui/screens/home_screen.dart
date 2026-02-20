@@ -599,7 +599,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildQuickSurahsSection() {
     final surahProvider = context.watch<SurahProvider>();
     if (surahProvider.isLoading) {
-      return const SizedBox.shrink();
+      return _buildQuickSurahsShimmer();
     }
 
     // IDs for Quick Surahs: Al-Kahf (18), Yaseen (36), Al-Waqi'a (56), Al-Mulk (67)
@@ -745,6 +745,93 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Shimmer loading skeleton for the Quick Surahs section.
+  /// Mirrors the real tile layout: icon, name + subtitle, and play button.
+  Widget _buildQuickSurahsShimmer() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Text(
+            _translations['quick_surahs'] ?? 'Quick Surahs',
+            style: AppTypography.titleLarge,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ...List.generate(4, (index) => _buildQuickSurahTileShimmer()),
+      ],
+    );
+  }
+
+  /// A single shimmer placeholder tile that mirrors [_buildQuickSurahTile].
+  Widget _buildQuickSurahTileShimmer() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.neutral200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Shimmer.fromColors(
+          baseColor: AppColors.neutral300,
+          highlightColor: AppColors.neutral50,
+          period: const Duration(milliseconds: 1400),
+          child: Row(
+            children: [
+              // Icon placeholder (matches the 32×32 quran icon)
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.neutral200,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Text placeholders (title + subtitle)
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 14,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        color: AppColors.neutral200,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Container(
+                      height: 10,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: AppColors.neutral200,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Play button placeholder (matches the 32×32 play icon)
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.neutral200,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
           ),
         ),
       ),

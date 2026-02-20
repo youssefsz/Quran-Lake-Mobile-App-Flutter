@@ -173,7 +173,7 @@ class AudioProvider with ChangeNotifier {
             final surahUrl = '${moshaf.server}${surahId.toString().padLeft(3, '0')}.mp3';
             
             // Provide a default asset image for the artwork
-            final artUri = Uri.parse('asset:///assets/icons/quran.png');
+            final artUri = Uri.parse('asset:///assets/logo/logo.png');
             
             return AudioSource.uri(
               Uri.parse(surahUrl),
@@ -192,7 +192,7 @@ class AudioProvider with ChangeNotifier {
         await _audioPlayer.setAudioSource(playlist, initialIndex: initialIndex != -1 ? initialIndex : 0);
       } else {
         // Fallback for single URL play (legacy or specific use case)
-        final artUri = Uri.parse('asset:///assets/icons/quran.png');
+        final artUri = Uri.parse('asset:///assets/logo/logo.png');
         final mediaItem = MediaItem(
           id: url,
           album: _currentMoshaf?.name ?? 'Quran Lake',

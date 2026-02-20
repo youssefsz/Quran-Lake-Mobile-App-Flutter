@@ -9,7 +9,7 @@ class AyahRepository {
       // Fetch a random Ayah with Arabic text (quran-uthmani) and English translation (en.asad)
       // The API returns an object with a 'data' array containing two editions
       final response = await _dio.get(
-        'http://api.alquran.cloud/v1/ayah/random/editions/quran-uthmani,en.asad',
+        'https://api.alquran.cloud/v1/ayah/random/editions/quran-uthmani,en.asad',
       );
 
       if (response.statusCode == 200) {

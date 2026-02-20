@@ -418,13 +418,16 @@
         }
 
         .custom-badge-btn {
-            padding: 0.875rem 1.75rem;
-            font-size: 0.9375rem;
+            padding: 0.5rem 1rem 0.5rem 0.75rem;
+            width: 220px;
+            height: 56px;
+            justify-content: flex-start;
+            box-sizing: border-box;
         }
 
         .custom-badge-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 32px;
+            height: 32px;
         }
 
         .image-container {
@@ -484,13 +487,16 @@
         }
 
         .custom-badge-btn {
-            padding: 0.8125rem 1.5rem;
-            font-size: 0.875rem;
+            padding: 0.5rem 0.75rem 0.5rem 0.5rem;
+            width: 200px;
+            height: 52px;
+            justify-content: flex-start;
+            box-sizing: border-box;
         }
 
         .custom-badge-btn svg {
-            width: 18px;
-            height: 18px;
+            width: 28px;
+            height: 28px;
         }
     }
 

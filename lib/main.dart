@@ -27,21 +27,23 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'ui/screens/onboarding_screen.dart';
 import 'ui/screens/main_screen.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await JustAudioBackground.init(
     androidNotificationChannelId: 'tn.quranlake.app.channel.audio',
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
     androidNotificationIcon: 'drawable/media_logo',
   );
-  
+
   final dioClient = DioClient();
   final databaseHelper = DatabaseHelper();
   final locationService = LocationService();
-  
+
   final recitersRepository = RecitersRepository(dioClient);
   final surahRepository = SurahRepository(dioClient);
   final ayahRepository = AyahRepository();
@@ -53,14 +55,19 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final bool onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
-  
-  runApp(QuranLakeApp(
-    recitersRepository: recitersRepository,
-    surahRepository: surahRepository,
-    ayahRepository: ayahRepository,
-    prayerTimeRepository: prayerTimeRepository,
-    onboardingComplete: onboardingComplete,
-  ));
+
+  // Remove splash screen now that initialization is complete
+  FlutterNativeSplash.remove();
+
+  runApp(
+    QuranLakeApp(
+      recitersRepository: recitersRepository,
+      surahRepository: surahRepository,
+      ayahRepository: ayahRepository,
+      prayerTimeRepository: prayerTimeRepository,
+      onboardingComplete: onboardingComplete,
+    ),
+  );
 }
 
 class QuranLakeApp extends StatelessWidget {
@@ -84,15 +91,20 @@ class QuranLakeApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
-        ChangeNotifierProvider(create: (_) => ReciterProvider(recitersRepository)),
+        ChangeNotifierProvider(
+          create: (_) => ReciterProvider(recitersRepository),
+        ),
         ChangeNotifierProvider(create: (_) => SurahProvider(surahRepository)),
         ChangeNotifierProvider(create: (_) => AyahProvider(ayahRepository)),
         ChangeNotifierProxyProvider<SurahProvider, AudioProvider>(
           create: (_) => AudioProvider(),
-          update: (_, surahProvider, audioProvider) => audioProvider!..updateSurahProvider(surahProvider),
+          update: (_, surahProvider, audioProvider) =>
+              audioProvider!..updateSurahProvider(surahProvider),
         ),
         ChangeNotifierProvider(create: (_) => HapticProvider()),
-        ChangeNotifierProvider(create: (_) => PrayerProvider(prayerTimeRepository)),
+        ChangeNotifierProvider(
+          create: (_) => PrayerProvider(prayerTimeRepository),
+        ),
       ],
       child: Consumer<LocaleProvider>(
         builder: (context, localeProvider, child) {
@@ -105,11 +117,10 @@ class QuranLakeApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [
-              Locale('en'),
-              Locale('ar'),
-            ],
-            home: onboardingComplete ? const MainScreen() : const OnboardingScreen(),
+            supportedLocales: const [Locale('en'), Locale('ar')],
+            home: onboardingComplete
+                ? const MainScreen()
+                : const OnboardingScreen(),
             debugShowCheckedModeBanner: false,
           );
         },

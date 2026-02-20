@@ -7,5 +7,19 @@
   "nav_home": "الرئيسية",
   "nav_reciters": "القراء",
   "nav_prayer": "الصلاة",
-  "nav_settings": "الإعدادات"
+  "nav_settings": "الإعدادات",
+  "next_prayer": "الصلاة القادمة",
+  "prayer_not_available": "أوقات الصلاة غير متاحة. اسحب للتحديث في شاشة أوقات الصلاة.",
+  "fajr": "الفجر",
+  "sunrise": "الشروق",
+  "dhuhr": "الظهر",
+  "asr": "العصر",
+  "maghrib": "المغرب",
+  "isha": "العشاء",
+  "listen_to": "استمع إلى {surahName}",
+  "reciters_not_loaded": "لم يتم تحميل القراء بعد. يرجى الانتظار.",
+  "surah_not_found": "لم يتم العثور على تفاصيل السورة.",
+  "surah_label": "سورة {id}",
+  "meccan": "مكية",
+  "medinan": "مدنية"
 }

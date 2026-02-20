@@ -26,6 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic> _translations = {};
   String? _lastLocaleCode;
 
+  /// Translates a prayer name key (e.g. 'Fajr') to the localized string.
+  String _translatePrayerName(String name) {
+    final key = name.toLowerCase();
+    return _translations[key] ?? name;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -143,8 +149,9 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Theme.of(context).dividerColor),
             ),
-            child: const Text(
-              "Prayer times not available. Pull to refresh in Prayer Times screen.",
+            child: Text(
+              _translations['prayer_not_available'] ??
+                  'Prayer times not available. Pull to refresh in Prayer Times screen.',
             ),
           );
         }
@@ -174,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Next Prayer',
+                          _translations['next_prayer'] ?? 'Next Prayer',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -184,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          nextPrayer,
+                          _translatePrayerName(nextPrayer),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -247,20 +254,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildPrayerTimeItem('Fajr', pt.fajr, nextPrayer == 'Fajr'),
-                    _buildPrayerTimeItem('Sunrise', pt.sunrise, false),
                     _buildPrayerTimeItem(
-                      'Dhuhr',
+                      _translatePrayerName('Fajr'),
+                      pt.fajr,
+                      nextPrayer == 'Fajr',
+                    ),
+                    _buildPrayerTimeItem(
+                      _translatePrayerName('Sunrise'),
+                      pt.sunrise,
+                      false,
+                    ),
+                    _buildPrayerTimeItem(
+                      _translatePrayerName('Dhuhr'),
                       pt.dhuhr,
                       nextPrayer == 'Dhuhr',
                     ),
-                    _buildPrayerTimeItem('Asr', pt.asr, nextPrayer == 'Asr'),
                     _buildPrayerTimeItem(
-                      'Maghrib',
+                      _translatePrayerName('Asr'),
+                      pt.asr,
+                      nextPrayer == 'Asr',
+                    ),
+                    _buildPrayerTimeItem(
+                      _translatePrayerName('Maghrib'),
                       pt.maghrib,
                       nextPrayer == 'Maghrib',
                     ),
-                    _buildPrayerTimeItem('Isha', pt.isha, nextPrayer == 'Isha'),
+                    _buildPrayerTimeItem(
+                      _translatePrayerName('Isha'),
+                      pt.isha,
+                      nextPrayer == 'Isha',
+                    ),
                   ],
                 ),
               ),
@@ -385,9 +408,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       if (reciterProvider.reciters.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                             content: Text(
-                              'Reciters not loaded yet. Please wait.',
+                              _translations['reciters_not_loaded'] ??
+                                  'Reciters not loaded yet. Please wait.',
                             ),
                           ),
                         );
@@ -399,8 +423,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                       if (surah == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Surah details not found.'),
+                          SnackBar(
+                            content: Text(
+                              _translations['surah_not_found'] ??
+                                  'Surah details not found.',
+                            ),
                           ),
                         );
                         return;
@@ -425,7 +452,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white,
                     ),
                     label: Text(
-                      'Listen to $surahName',
+                      (_translations['listen_to'] ?? 'Listen to {surahName}')
+                          .toString()
+                          .replaceAll('{surahName}', surahName),
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -636,8 +665,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
             if (reciterProvider.reciters.isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Reciters not loaded yet. Please wait.'),
+                SnackBar(
+                  content: Text(
+                    _translations['reciters_not_loaded'] ??
+                        'Reciters not loaded yet. Please wait.',
+                  ),
                 ),
               );
               return;
@@ -675,7 +707,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Surah ${surah.id} • ${surah.isMakkia ? "Meccan" : "Medinan"}',
+                        '${(_translations['surah_label'] ?? 'Surah {id}').toString().replaceAll('{id}', surah.id.toString())} • ${surah.isMakkia ? (_translations['meccan'] ?? 'Meccan') : (_translations['medinan'] ?? 'Medinan')}',
                         style: AppTypography.bodySmall?.copyWith(
                           color: AppColors.textSecondary,
                         ),

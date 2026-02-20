@@ -7,5 +7,19 @@
   "nav_home": "Home",
   "nav_reciters": "Reciters",
   "nav_prayer": "Prayer",
-  "nav_settings": "Settings"
+  "nav_settings": "Settings",
+  "next_prayer": "Next Prayer",
+  "prayer_not_available": "Prayer times not available. Pull to refresh in Prayer Times screen.",
+  "fajr": "Fajr",
+  "sunrise": "Sunrise",
+  "dhuhr": "Dhuhr",
+  "asr": "Asr",
+  "maghrib": "Maghrib",
+  "isha": "Isha",
+  "listen_to": "Listen to {surahName}",
+  "reciters_not_loaded": "Reciters not loaded yet. Please wait.",
+  "surah_not_found": "Surah details not found.",
+  "surah_label": "Surah {id}",
+  "meccan": "Meccan",
+  "medinan": "Medinan"
 }

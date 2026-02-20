@@ -354,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (defaultReciter.moshaf.isNotEmpty) {
                          final moshaf = defaultReciter.moshaf.first;
                          final url = '${moshaf.server}${surah.id.toString().padLeft(3, '0')}.mp3';
-                         audioProvider.play(url, reciter: defaultReciter, surah: surah);
+                         audioProvider.play(url, reciter: defaultReciter, surah: surah, moshaf: moshaf);
                       }
                     },
                     icon: const Icon(Icons.play_arrow_rounded, color: Colors.white),
@@ -553,7 +553,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (defaultReciter.moshaf.isNotEmpty) {
                 final moshaf = defaultReciter.moshaf.first;
                 final url = '${moshaf.server}${surah.id.toString().padLeft(3, '0')}.mp3';
-                audioProvider.play(url, reciter: defaultReciter, surah: surah);
+                audioProvider.play(url, reciter: defaultReciter, surah: surah, moshaf: moshaf);
             }
           },
           child: Padding(

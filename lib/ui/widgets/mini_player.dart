@@ -4,11 +4,49 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/haptic_provider.dart';
+  import '../../providers/locale_provider.dart';
 import '../screens/full_player_screen.dart';
 import '../../core/theme/app_colors.dart';
 
-class MiniPlayer extends StatelessWidget {
+class MiniPlayer extends StatefulWidget {
   const MiniPlayer({super.key});
+
+  @override
+  State<MiniPlayer> createState() => _MiniPlayerState();
+}
+
+class _MiniPlayerState extends State<MiniPlayer> {
+  Map<String, dynamic> _translations = {};
+  String? _lastLocaleCode;
+
+  @override
+  void initState() {
+    super.initState();
+    final localeProvider = context.read<LocaleProvider>();
+    _translations = localeProvider.getCachedTranslations('player');
+    _lastLocaleCode = localeProvider.locale.languageCode;
+    _loadTranslations();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final localeCode = context.watch<LocaleProvider>().locale.languageCode;
+    if (_lastLocaleCode != localeCode) {
+      _lastLocaleCode = localeCode;
+      _loadTranslations();
+    }
+  }
+
+  Future<void> _loadTranslations() async {
+    final provider = context.read<LocaleProvider>();
+    final translations = await provider.getScreenTranslations('player');
+    if (mounted) {
+      setState(() {
+        _translations = translations;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +97,7 @@ class MiniPlayer extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        audioProvider.currentSurah?.name ?? 'Unknown Surah',
+                        audioProvider.currentSurah?.name ?? _translations['unknown_surah'] ?? 'Unknown Surah',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Colors.black,
                         ),
@@ -67,7 +105,7 @@ class MiniPlayer extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        audioProvider.currentReciter?.name ?? 'Unknown Reciter',
+                        audioProvider.currentReciter?.name ?? _translations['unknown_reciter'] ?? 'Unknown Reciter',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.black,
                         ),

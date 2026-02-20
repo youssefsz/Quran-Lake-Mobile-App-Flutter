@@ -1,5 +1,3 @@
-import 'dart:ui';
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/audio_provider.dart';
@@ -56,95 +54,103 @@ class _MiniPlayerState extends State<MiniPlayer> {
       return const SizedBox.shrink();
     }
 
-    return OpenContainer(
-      openBuilder: (context, _) => const FullPlayerScreen(),
-      closedElevation: 0,
-      closedShape: const RoundedRectangleBorder(),
-      closedColor: Theme.of(context).scaffoldBackgroundColor,
-      middleColor: Theme.of(context).scaffoldBackgroundColor,
-      openColor: Theme.of(context).scaffoldBackgroundColor,
-      transitionDuration: const Duration(milliseconds: 500),
-      transitionType: ContainerTransitionType.fadeThrough,
-      tappable: false,
-      closedBuilder: (context, openContainer) {
-        return GestureDetector(
-          onTap: () {
-            context.read<HapticProvider>().lightImpact();
-            openContainer();
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              border: Border(
-                top: BorderSide(
-                  color: Theme.of(context).dividerColor.withOpacity(0.5),
-                  width: 1.5,
-                ),
-              ),
-            ),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: Image.asset('assets/icons/quran.png'),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        audioProvider.currentSurah?.name ?? _translations['unknown_surah'] ?? 'Unknown Surah',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        audioProvider.currentReciter?.name ?? _translations['unknown_reciter'] ?? 'Unknown Reciter',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                if (audioProvider.isLoading)
-                  const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                else
-                  IconButton(
-                    icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow, color: AppColors.neutral800),
-                    onPressed: () {
-                      context.read<HapticProvider>().lightImpact();
-                      if (audioProvider.isPlaying) {
-                        audioProvider.pause();
-                      } else {
-                        audioProvider.resume();
-                      }
-                    },
-                  ),
-                IconButton(
-                  icon: const Icon(Icons.close, color: AppColors.neutral800),
-                  onPressed: () {
-                    context.read<HapticProvider>().lightImpact();
-                    audioProvider.closePlayer();
-                  },
-                ),
-              ],
-            ),
+    return GestureDetector(
+      onTap: () {
+        context.read<HapticProvider>().lightImpact();
+        Navigator.of(context).push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const FullPlayerScreen(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, 1.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOut;
+              var tween = Tween(begin: begin, end: end)
+                  .chain(CurveTween(curve: curve));
+              var offsetAnimation = animation.drive(tween);
+              return SlideTransition(position: offsetAnimation, child: child);
+            },
           ),
         );
       },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          border: Border(
+            top: BorderSide(
+              color: Theme.of(context).dividerColor.withOpacity(0.5),
+              width: 1.5,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: Image.asset('assets/icons/quran.png'),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    audioProvider.currentSurah?.name ??
+                        _translations['unknown_surah'] ??
+                        'Unknown Surah',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    audioProvider.currentReciter?.name ??
+                        _translations['unknown_reciter'] ??
+                        'Unknown Reciter',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            if (audioProvider.isLoading)
+              const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            else
+              IconButton(
+                icon: Icon(
+                    audioProvider.isPlaying ? Icons.pause : Icons.play_arrow,
+                    color: AppColors.neutral800),
+                onPressed: () {
+                  context.read<HapticProvider>().lightImpact();
+                  if (audioProvider.isPlaying) {
+                    audioProvider.pause();
+                  } else {
+                    audioProvider.resume();
+                  }
+                },
+              ),
+            IconButton(
+              icon: const Icon(Icons.close, color: AppColors.neutral800),
+              onPressed: () {
+                context.read<HapticProvider>().lightImpact();
+                audioProvider.closePlayer();
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

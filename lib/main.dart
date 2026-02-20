@@ -29,7 +29,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await JustAudioBackground.init(
-    androidNotificationChannelId: 'com.example.quran_lake.channel.audio',
+    androidNotificationChannelId: 'tn.quranlake.app.channel.audio',
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
   );

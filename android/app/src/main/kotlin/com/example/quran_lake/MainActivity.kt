@@ -1,4 +1,4 @@
-package com.example.quran_lake
+package tn.quranlake.app
 
 import com.ryanheise.audioservice.AudioServiceActivity
 

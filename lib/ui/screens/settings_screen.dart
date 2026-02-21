@@ -7,6 +7,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/widgets/app_surface.dart';
+import '../../data/services/app_review_service.dart';
 import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../widgets/glass_app_bar.dart';
@@ -369,6 +370,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onTap: () {
                   hapticProvider.lightImpact();
                   _openEmail();
+                },
+              ),
+              _buildRow(
+                icon: Icons.star_outline,
+                title: _translations['rate_app'] ?? 'Rate this App',
+                subtitle:
+                    _translations['rate_app_subtitle'] ?? 'Share your feedback',
+                showChevron: true,
+                onTap: () async {
+                  hapticProvider.lightImpact();
+                  final appReviewService = AppReviewService();
+                  // Directly open the store listing. This is compliant with Apple HIG.
+                  // It does NOT trigger the quota-limited review prompt.
+                  await appReviewService.openStoreListing();
                 },
               ),
             ]),

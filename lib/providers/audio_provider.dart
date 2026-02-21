@@ -6,10 +6,12 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:audio_session/audio_session.dart';
 import '../data/models/reciter.dart';
 import '../data/models/surah.dart';
+import '../data/services/app_review_service.dart';
 import 'surah_provider.dart';
 
 class AudioProvider with ChangeNotifier {
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final AppReviewService _appReviewService = AppReviewService();
 
   bool _isPlaying = false;
   bool _isLoading = false;
@@ -51,6 +53,7 @@ class AudioProvider with ChangeNotifier {
       _isLoading =
           state == ProcessingState.loading ||
           state == ProcessingState.buffering;
+
       notifyListeners();
     });
 
@@ -173,6 +176,9 @@ class AudioProvider with ChangeNotifier {
           await _audioPlayer.play();
           _isLoading = false;
           notifyListeners();
+          
+          // Log significant event (user opened a surah)
+          _appReviewService.logSignificantEvent();
           return;
         }
       }
@@ -231,6 +237,11 @@ class AudioProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       await _audioPlayer.play();
+
+      // Log significant event (user opened a surah)
+      if (surah != null || _currentSurah != null) {
+        _appReviewService.logSignificantEvent();
+      }
     } catch (e) {
       debugPrint('Error playing audio: $e');
       _isLoading = false;

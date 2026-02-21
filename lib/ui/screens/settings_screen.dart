@@ -316,7 +316,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             AppTokens.s16,
             kToolbarHeight + MediaQuery.of(context).padding.top + AppTokens.s16,
             AppTokens.s16,
-            AppTokens.s24,
+            AppTokens.s160,
           ),
           children: [
             _buildSectionTitle(

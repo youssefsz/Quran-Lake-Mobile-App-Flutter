@@ -26,30 +26,30 @@ class SurfaceStyles {
   /// Subtle effect for overlays and cards.
   static const SurfaceStyleSettings subtle = SurfaceStyleSettings(
     color: Color(
-      0xF2FFFFFF,
-    ), // 95% White (Solid/Opaque look) or slightly transparent
-    borderColor: Color(0xFFE2E8F0), // Slate 200
+      0xF2FFFEFA,
+    ), // 95% Warm White
+    borderColor: Color(0xFFE6E2D8), // Warm Grey 200
     borderWidth: 1.0,
   );
 
   /// Standard effect for navigation bars and modals.
   static const SurfaceStyleSettings standard = SurfaceStyleSettings(
-    color: Color(0xFFFFFFFF), // Solid White
-    borderColor: Color(0xFFE2E8F0), // Slate 200
+    color: Color(0xFFFFFEFA), // Warm White
+    borderColor: Color(0xFFE6E2D8), // Warm Grey 200
     borderWidth: 1.0,
   );
 
   /// Heavy effect for background elements or emphasis.
   static const SurfaceStyleSettings heavy = SurfaceStyleSettings(
-    color: Color(0xFFFFFFFF), // Solid White
-    borderColor: Color(0xFFCBD5E1), // Slate 300
+    color: Color(0xFFFFFEFA), // Warm White
+    borderColor: Color(0xFFD1CDC7), // Warm Grey 300
     borderWidth: 1.0,
   );
 
   /// "Icy" or "Frosted" effect (Replaced with a solid variant).
   static const SurfaceStyleSettings frosted = SurfaceStyleSettings(
-    color: Color(0xFFF1F5F9), // Slate 100
-    borderColor: Color(0xFFE2E8F0), // Slate 200
+    color: Color(0xFFF4F1EB), // Warm Grey 100
+    borderColor: Color(0xFFE6E2D8), // Warm Grey 200
     borderWidth: 1.0,
   );
 }

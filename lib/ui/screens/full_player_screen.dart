@@ -95,12 +95,12 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                       color: AppColors.surface,
                       borderRadius: BorderRadius.circular(32),
                       boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primaryBlue.withValues(alpha: 0.2),
-                          blurRadius: 24,
-                          offset: const Offset(0, 12),
-                        ),
-                      ],
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 24,
+                        offset: const Offset(0, 12),
+                      ),
+                    ],
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(40.0),
@@ -229,14 +229,12 @@ class _FullPlayerScreenState extends State<FullPlayerScreen> {
                                 color: AppColors.primaryBlue,
                                 shape: BoxShape.circle,
                                 boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.primaryBlue.withValues(
-                                      alpha: 0.3,
-                                    ),
-                                    blurRadius: 16,
-                                    offset: const Offset(0, 8),
-                                  ),
-                                ],
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.2),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
                               ),
                               child: Material(
                                 color: Colors.transparent,

@@ -23,6 +23,8 @@ class AppTokens {
   static const double s64 = 64.0;
   static const double s80 = 80.0;
   static const double s96 = 96.0;
+  static const double s128 = 128.0;
+  static const double s160 = 160.0;
 
   // ===========================================================================
   // Border Radius Scale

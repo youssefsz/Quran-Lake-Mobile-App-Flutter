@@ -5,9 +5,9 @@
   "continue_button": "Continue",
   "notification_title": "Stay Updated",
   "notification_desc": "Enable notifications to get prayer time alerts and daily reminders.",
-  "allow_notifications": "Allow Notifications",
+  "allow_notifications": "Continue",
   "location_title": "Accurate Prayer Times",
   "location_desc": "We need your location to calculate accurate prayer times for your area.",
-  "allow_location": "Allow Location",
+  "allow_location": "Continue",
   "get_started": "Get Started"
 }

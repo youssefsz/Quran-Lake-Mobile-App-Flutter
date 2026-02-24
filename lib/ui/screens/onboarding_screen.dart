@@ -231,27 +231,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             if (_currentPage == 0) {
               buttonText = _translations['get_started'] ?? 'Get Started';
             } else {
-              // Logic for dynamic pages
-              if (Platform.isIOS) {
-                // Page 1 is Location on iOS
-                if (_currentPage == 1) {
-                  buttonText = _locationGranted
-                      ? (_translations['continue_button'] ?? 'Continue')
-                      : (_translations['allow_location'] ?? 'Allow Location');
-                }
-              } else {
-                // Android: Page 1 is Notif, Page 2 is Loc
-                if (_currentPage == 1) {
-                  buttonText = _notificationGranted
-                      ? (_translations['continue_button'] ?? 'Continue')
-                      : (_translations['allow_notifications'] ??
-                            'Allow Notifications');
-                } else if (_currentPage == 2) {
-                  buttonText = _locationGranted
-                      ? (_translations['continue_button'] ?? 'Continue')
-                      : (_translations['allow_location'] ?? 'Allow Location');
-                }
-              }
+              buttonText = _translations['continue_button'] ?? 'Continue';
             }
 
             return Scaffold(

@@ -5,9 +5,9 @@
   "continue_button": "استمرار",
   "notification_title": "ابق على اطلاع",
   "notification_desc": "قم بتفعيل الإشعارات للحصول على تنبيهات أوقات الصلاة والتذكيرات اليومية.",
-  "allow_notifications": "السماح بالإشعارات",
+  "allow_notifications": "استمرار",
   "location_title": "أوقات صلاة دقيقة",
   "location_desc": "نحتاج إلى موقعك لحساب أوقات الصلاة بدقة لمنطقتك.",
-  "allow_location": "السماح بالموقع",
+  "allow_location": "استمرار",
   "get_started": "ابدأ الآن"
 }

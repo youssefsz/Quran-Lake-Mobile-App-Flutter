@@ -11,6 +11,7 @@ import '../../providers/reciter_provider.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/haptic_provider.dart';
 import '../../providers/surah_provider.dart';
+import '../../providers/adhan_provider.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/models/surah.dart';
 import 'package:heroicons/heroicons.dart';
@@ -50,8 +51,19 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!mounted) return;
 
       final prayerProvider = context.read<PrayerProvider>();
+      final adhanProvider = context.read<AdhanProvider>();
       if (prayerProvider.prayerTime == null && !prayerProvider.isLoading) {
-        prayerProvider.fetchPrayerTimes();
+        prayerProvider.fetchPrayerTimes().then((_) {
+          // Schedule adhan alarms when prayer times are fetched
+          if (prayerProvider.prayerTime != null && adhanProvider.isEnabled) {
+            adhanProvider.scheduleAdhanAlarms(prayerProvider.prayerTime!);
+            // Show countdown notification on app open if prayer is within 0-120 minutes
+            adhanProvider.checkAndShowCountdownOnAppOpen(prayerProvider.prayerTime!);
+          }
+        });
+      } else if (prayerProvider.prayerTime != null && adhanProvider.isEnabled) {
+        // If prayer times are already loaded, check and show countdown notification
+        adhanProvider.checkAndShowCountdownOnAppOpen(prayerProvider.prayerTime!);
       }
 
       final ayahProvider = context.read<AyahProvider>();

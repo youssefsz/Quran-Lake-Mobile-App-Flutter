@@ -10,6 +10,8 @@ import '../../core/widgets/app_surface.dart';
 import '../../data/services/app_review_service.dart';
 import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/adhan_provider.dart';
+import '../../providers/prayer_provider.dart';
 import '../widgets/glass_app_bar.dart';
 import 'privacy_policy_screen.dart';
 import 'terms_of_service_screen.dart';
@@ -37,6 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Map<String, dynamic> _translations = {};
   String? _lastLocaleCode;
   String? _appVersion;
+  bool _adhanExpanded = false;
 
   static const String _supportEmail = 'dhibi.ywsf@gmail.com';
   static const String _aboutUrl = 'https://youssef.tn/quranlake/';
@@ -204,6 +207,303 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildAdhanSettings(
+    AdhanProvider adhanProvider,
+    PrayerProvider prayerProvider,
+    HapticProvider hapticProvider,
+  ) {
+    // Count enabled prayers for summary
+    int enabledCount = 0;
+    if (adhanProvider.isFajrEnabled) enabledCount++;
+    if (adhanProvider.isSunriseEnabled) enabledCount++;
+    if (adhanProvider.isDhuhrEnabled) enabledCount++;
+    if (adhanProvider.isAsrEnabled) enabledCount++;
+    if (adhanProvider.isMaghribEnabled) enabledCount++;
+    if (adhanProvider.isIshaEnabled) enabledCount++;
+
+    return _buildGroup([
+      // Main Enable/Disable Toggle
+      _buildRow(
+        icon: Icons.notifications_active,
+        title: _translations['adhan_enabled'] ?? 'Enable Adhan',
+        subtitle: adhanProvider.isEnabled
+            ? (_translations['adhan_prayers_enabled'] ??
+                          '$enabledCount prayers enabled')
+                      .replaceAll('{count}', enabledCount.toString()) +
+                  (_translations['adhan_countdown_info'] ??
+                      ' • Countdown notifications enabled')
+            : (_translations['adhan_enabled_subtitle'] ??
+                  'Play adhan at prayer times'),
+        trailing: Switch(
+          value: adhanProvider.isEnabled,
+          onChanged: (value) async {
+            hapticProvider.lightImpact();
+            await adhanProvider.setEnabled(value);
+            if (value && prayerProvider.prayerTime != null) {
+              await adhanProvider.scheduleAdhanAlarms(
+                prayerProvider.prayerTime!,
+              );
+            }
+          },
+        ),
+      ),
+      // Expandable Prayer Selection
+      if (adhanProvider.isEnabled)
+        ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s8,
+          ),
+          childrenPadding: EdgeInsets.zero,
+          leading: Icon(Icons.settings_outlined, size: 20, color: Colors.black),
+          title: Text(
+            _translations['select_prayers'] ?? 'Select Prayers',
+            style: AppTypography.bodyMedium.copyWith(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          subtitle: Text(
+            _translations['select_prayers_subtitle'] ??
+                'Choose which prayers to play adhan',
+            style: AppTypography.bodySmall.copyWith(color: Colors.black),
+          ),
+          onExpansionChanged: (expanded) {
+            setState(() {
+              _adhanExpanded = expanded;
+            });
+          },
+          initiallyExpanded: _adhanExpanded,
+          children: [
+            _buildPrayerToggle(
+              icon: Icons.wb_twilight,
+              title: _translations['fajr'] ?? 'Fajr',
+              value: adhanProvider.isFajrEnabled,
+              onChanged: (value) async {
+                hapticProvider.lightImpact();
+                await adhanProvider.setFajrEnabled(value);
+                if (prayerProvider.prayerTime != null) {
+                  await adhanProvider.scheduleAdhanAlarms(
+                    prayerProvider.prayerTime!,
+                  );
+                }
+              },
+            ),
+            _buildPrayerToggle(
+              icon: Icons.wb_sunny_outlined,
+              title: _translations['sunrise'] ?? 'Sunrise',
+              value: adhanProvider.isSunriseEnabled,
+              onChanged: (value) async {
+                hapticProvider.lightImpact();
+                await adhanProvider.setSunriseEnabled(value);
+                if (prayerProvider.prayerTime != null) {
+                  await adhanProvider.scheduleAdhanAlarms(
+                    prayerProvider.prayerTime!,
+                  );
+                }
+              },
+            ),
+            _buildPrayerToggle(
+              icon: Icons.wb_sunny,
+              title: _translations['dhuhr'] ?? 'Dhuhr',
+              value: adhanProvider.isDhuhrEnabled,
+              onChanged: (value) async {
+                hapticProvider.lightImpact();
+                await adhanProvider.setDhuhrEnabled(value);
+                if (prayerProvider.prayerTime != null) {
+                  await adhanProvider.scheduleAdhanAlarms(
+                    prayerProvider.prayerTime!,
+                  );
+                }
+              },
+            ),
+            _buildPrayerToggle(
+              icon: Icons.wb_twilight_outlined,
+              title: _translations['asr'] ?? 'Asr',
+              value: adhanProvider.isAsrEnabled,
+              onChanged: (value) async {
+                hapticProvider.lightImpact();
+                await adhanProvider.setAsrEnabled(value);
+                if (prayerProvider.prayerTime != null) {
+                  await adhanProvider.scheduleAdhanAlarms(
+                    prayerProvider.prayerTime!,
+                  );
+                }
+              },
+            ),
+            _buildPrayerToggle(
+              icon: Icons.wb_sunny_outlined,
+              title: _translations['maghrib'] ?? 'Maghrib',
+              value: adhanProvider.isMaghribEnabled,
+              onChanged: (value) async {
+                hapticProvider.lightImpact();
+                await adhanProvider.setMaghribEnabled(value);
+                if (prayerProvider.prayerTime != null) {
+                  await adhanProvider.scheduleAdhanAlarms(
+                    prayerProvider.prayerTime!,
+                  );
+                }
+              },
+            ),
+            _buildPrayerToggle(
+              icon: Icons.nightlight_round,
+              title: _translations['isha'] ?? 'Isha',
+              value: adhanProvider.isIshaEnabled,
+              onChanged: (value) async {
+                hapticProvider.lightImpact();
+                await adhanProvider.setIshaEnabled(value);
+                if (prayerProvider.prayerTime != null) {
+                  await adhanProvider.scheduleAdhanAlarms(
+                    prayerProvider.prayerTime!,
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      // Adhan Voice Selection
+      if (adhanProvider.isEnabled)
+        FutureBuilder<List<Map<String, String>>>(
+          future: adhanProvider.availableAdhans,
+          builder: (context, snapshot) {
+            final adhans = snapshot.data ?? [];
+            final currentAdhan = adhans.firstWhere(
+              (a) => a['id'] == adhanProvider.sound,
+              orElse: () => adhans.isNotEmpty ? adhans[0] : {'name': 'Voice 1'},
+            );
+            return _buildRow(
+              icon: Icons.music_note,
+              title: _translations['adhan_voice'] ?? 'Adhan Voice',
+              subtitle:
+                  _translations['adhan_voice_subtitle'] ?? 'Choose adhan voice',
+              trailingText: currentAdhan['name'] ?? 'Voice 1',
+              showChevron: true,
+              onTap: () {
+                hapticProvider.lightImpact();
+                _showAdhanVoicePicker(
+                  adhanProvider,
+                  prayerProvider,
+                  hapticProvider,
+                );
+              },
+            );
+          },
+        ),
+    ]);
+  }
+
+  void _showAdhanVoicePicker(
+    AdhanProvider adhanProvider,
+    PrayerProvider prayerProvider,
+    HapticProvider hapticProvider,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: FutureBuilder<List<Map<String, String>>>(
+            future: adhanProvider.availableAdhans,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final adhans = snapshot.data ?? [];
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      _translations['adhan_voice'] ?? 'Select Adhan Voice',
+                      style: AppTypography.headlineSmall.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const Divider(),
+                  ...adhans.map((adhan) {
+                    final isSelected = adhan['id'] == adhanProvider.sound;
+                    return ListTile(
+                      leading: Icon(
+                        isSelected
+                            ? Icons.check_circle
+                            : Icons.radio_button_unchecked,
+                        color: isSelected ? AppColors.primaryBlue : Colors.grey,
+                      ),
+                      title: Text(adhan['name'] ?? 'Voice'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.play_circle_outline),
+                        color: AppColors.primaryBlue,
+                        onPressed: () async {
+                          hapticProvider.lightImpact();
+                          await adhanProvider.previewAdhan(
+                            adhan['id'] ?? 'adhan-v1',
+                          );
+                        },
+                      ),
+                      onTap: () async {
+                        Navigator.pop(context);
+                        await adhanProvider
+                            .stopAdhan(); // Stop preview if playing
+                        await adhanProvider.setSound(adhan['id'] ?? 'adhan-v1');
+                        if (prayerProvider.prayerTime != null) {
+                          await adhanProvider.scheduleAdhanAlarms(
+                            prayerProvider.prayerTime!,
+                          );
+                        }
+                      },
+                    );
+                  }),
+                  const SizedBox(height: 16),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    ).whenComplete(() {
+      // Stop preview when bottom sheet is dismissed (swiped down or tapped outside)
+      adhanProvider.stopAdhan();
+    });
+  }
+
+  Widget _buildPrayerToggle({
+    required IconData icon,
+    required String title,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s16,
+        vertical: AppTokens.s8,
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: Colors.black),
+          const SizedBox(width: AppTokens.s12),
+          Expanded(
+            child: Text(
+              title,
+              style: AppTypography.bodyMedium.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Switch(value: value, onChanged: onChanged),
+        ],
+      ),
+    );
+  }
+
   Future<void> _showLanguagePicker(LocaleProvider localeProvider) async {
     final current = _currentLanguage(localeProvider.locale);
     final initialIndex = _languageOptions.indexWhere(
@@ -355,6 +655,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ]),
+            const SizedBox(height: AppTokens.s24),
+            _buildSectionTitle(
+              _translations['adhan_section'] ?? 'Adhan (Call to Prayer)',
+            ),
+            const SizedBox(height: AppTokens.s8),
+            Consumer2<AdhanProvider, PrayerProvider>(
+              builder: (context, adhanProvider, prayerProvider, child) {
+                return _buildAdhanSettings(
+                  adhanProvider,
+                  prayerProvider,
+                  hapticProvider,
+                );
+              },
+            ),
             const SizedBox(height: AppTokens.s24),
             _buildSectionTitle(_translations['support_section'] ?? 'Support'),
             const SizedBox(height: AppTokens.s8),

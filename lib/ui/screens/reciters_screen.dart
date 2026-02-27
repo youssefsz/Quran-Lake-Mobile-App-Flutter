@@ -8,7 +8,7 @@ import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/reciter_provider.dart';
 import '../widgets/reciter_list_item.dart';
-import '../widgets/glass_app_bar.dart';
+import '../widgets/searchable_glass_app_bar.dart';
 import '../widgets/app_error_widget.dart';
 import 'reciter_details_screen.dart';
 
@@ -22,7 +22,6 @@ class RecitersScreen extends StatefulWidget {
 class _RecitersScreenState extends State<RecitersScreen> {
   Map<String, dynamic> _translations = {};
   Map<String, dynamic> _errorTranslations = {};
-  final TextEditingController _searchController = TextEditingController();
   String? _lastLocaleCode;
 
   @override
@@ -76,45 +75,19 @@ class _RecitersScreenState extends State<RecitersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: GlassAppBar(title: _translations['title'] ?? 'Reciters'),
+      appBar: SearchableGlassAppBar(
+        title: _translations['title'] ?? 'Reciters',
+        searchHint: _translations['search_placeholder'] ?? 'Search reciters...',
+        onSearchChanged: (value) {
+          context.read<ReciterProvider>().search(value);
+        },
+      ),
       body: SafeArea(
         top: false,
         child: Column(
           children: [
             SizedBox(
               height: kToolbarHeight + MediaQuery.of(context).padding.top,
-            ),
-            // Modern Search Bar
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText:
-                      _translations['search_placeholder'] ??
-                      'Search reciters...',
-                  hintStyle: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.neutral400,
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: AppColors.neutral400,
-                  ),
-                  filled: true,
-                  fillColor: AppColors.neutral100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                style: AppTypography.bodyMedium.copyWith(
-                  color: AppColors.textPrimary,
-                ),
-                onChanged: (value) {
-                  context.read<ReciterProvider>().search(value);
-                },
-              ),
             ),
 
             Expanded(

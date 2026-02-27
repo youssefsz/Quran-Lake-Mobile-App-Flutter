@@ -48,6 +48,8 @@ class PrayerProvider extends ChangeNotifier {
       _prayerTime = await _repository.getPrayerTimes();
       _parsePrayerTimes();
       _calculateNextPrayer();
+      // Note: Adhan scheduling will be handled by AdhanProvider
+      // when it listens to prayer time changes
     } catch (e) {
       _error = AppException.from(e);
       debugPrint('PrayerProvider error: $_error');

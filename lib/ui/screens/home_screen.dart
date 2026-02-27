@@ -263,31 +263,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     _buildPrayerTimeItem(
+                      'Fajr',
                       _translatePrayerName('Fajr'),
                       pt.fajr,
                       nextPrayer == 'Fajr',
                     ),
                     _buildPrayerTimeItem(
+                      'Sunrise',
                       _translatePrayerName('Sunrise'),
                       pt.sunrise,
                       false,
                     ),
                     _buildPrayerTimeItem(
+                      'Dhuhr',
                       _translatePrayerName('Dhuhr'),
                       pt.dhuhr,
                       nextPrayer == 'Dhuhr',
                     ),
                     _buildPrayerTimeItem(
+                      'Asr',
                       _translatePrayerName('Asr'),
                       pt.asr,
                       nextPrayer == 'Asr',
                     ),
                     _buildPrayerTimeItem(
+                      'Maghrib',
                       _translatePrayerName('Maghrib'),
                       pt.maghrib,
                       nextPrayer == 'Maghrib',
                     ),
                     _buildPrayerTimeItem(
+                      'Isha',
                       _translatePrayerName('Isha'),
                       pt.isha,
                       nextPrayer == 'Isha',
@@ -302,7 +308,45 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPrayerTimeItem(String name, String time, bool isNext) {
+  Widget _getPrayerIcon(String prayerName) {
+    String? assetName;
+    switch (prayerName) {
+      case 'Fajr':
+        assetName = 'fajr.png';
+        break;
+      case 'Sunrise':
+        assetName = 'sunrise.png';
+        break;
+      case 'Dhuhr':
+        assetName = 'Dhuhr.png';
+        break;
+      case 'Asr':
+        assetName = 'Asr.png';
+        break;
+      case 'Maghrib':
+        assetName = 'Maghrib.png';
+        break;
+      case 'Isha':
+        assetName = 'Isha.png';
+        break;
+    }
+
+    if (assetName != null) {
+      return Image.asset('assets/icons/$assetName', width: 24, height: 24);
+    }
+
+    return Icon(
+      Icons.access_time,
+      color: Theme.of(context).colorScheme.primary,
+    );
+  }
+
+  Widget _buildPrayerTimeItem(
+    String prayerKey,
+    String name,
+    String time,
+    bool isNext,
+  ) {
     // Clean time string "05:30 (BST)" -> "05:30"
     final cleanTime = time.replaceAll(RegExp(r'\s*\(.*\)'), '').trim();
 
@@ -315,6 +359,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Column(
         children: [
+          _getPrayerIcon(prayerKey),
+          const SizedBox(height: 8),
           Text(
             name,
             style: TextStyle(

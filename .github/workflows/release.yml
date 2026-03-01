@@ -1,0 +1,60 @@
+name: Build & Release APK
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: # Allows manual trigger for testing
+
+jobs:
+  build:
+    name: Build & Upload APK
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Important for uploading to release
+      discussions: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Get Release URL
+        id: get_release
+        run: |
+          if [ "${{ github.event_name }}" == "release" ]; then
+            echo "upload_url=${{ github.event.release.upload_url }}" >> $GITHUB_OUTPUT
+          else
+            echo "upload_url=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload APK to Release Asset
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/flutter-apk/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Test Release Artifact (Optional)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk

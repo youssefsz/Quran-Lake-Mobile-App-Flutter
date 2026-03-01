@@ -1,9 +1,10 @@
 name: Build & Release APK
 
 on:
-  release:
-    types: [published]
-  workflow_dispatch: # Allows manual trigger for testing
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -35,20 +36,12 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Get Release URL
-        id: get_release
-        run: |
-          if [ "${{ github.event_name }}" == "release" ]; then
-            echo "upload_url=${{ github.event.release.upload_url }}" >> $GITHUB_OUTPUT
-          else
-            echo "upload_url=" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Upload APK to Release Asset
-        if: github.event_name == 'release'
+      - name: Create & Upload to Release
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

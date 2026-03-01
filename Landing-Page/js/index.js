@@ -90,7 +90,7 @@
         setTimeout(() => {
             // Trigger download
             const link = document.createElement('a');
-            link.href = 'apk/QuranLake.apk';
+            link.href = 'https://github.com/youssefsz/Quran-Lake-Mobile-App-Flutter/releases/latest/download/QuranLake.apk';
             link.download = 'QuranLake.apk';
             document.body.appendChild(link);
             link.click();

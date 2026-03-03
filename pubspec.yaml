@@ -56,6 +56,12 @@ dependencies:
   flutter_native_splash: ^2.4.7
   in_app_review: ^2.0.11
   alarm: ^5.2.1
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.9.4
+  workmanager: ^0.9.0
+  http: ^1.2.2
+  flutter_background_service: ^5.0.5
+  flutter_background_service_android: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +91,7 @@ flutter:
     - lib/l10n/ar/
     - assets/icons/
     - assets/logo/
+    - assets/audio/
 
   fonts:
     - family: Outfit

@@ -5,6 +5,19 @@
   "haptics": "Haptic Feedback",
   "haptics_subtitle": "Light tap feedback",
   "preferences_section": "Preferences",
+  "adhan_section": "Adhan (Call to Prayer)",
+  "adhan_enabled": "Enable Adhan",
+  "adhan_enabled_subtitle": "Play adhan at prayer times",
+  "adhan_prayers_enabled": "{count} prayers enabled",
+  "adhan_countdown_info": " • Countdown notifications enabled",
+  "select_prayers": "Select Prayers",
+  "select_prayers_subtitle": "Choose which prayers to play adhan",
+  "fajr": "Fajr",
+  "sunrise": "Sunrise",
+  "dhuhr": "Dhuhr",
+  "asr": "Asr",
+  "maghrib": "Maghrib",
+  "isha": "Isha",
   "support_section": "Support",
   "support_feedback": "Support & Feedback",
   "support_feedback_subtitle": "Email us anytime",
@@ -18,5 +31,7 @@
   "about_subtitle": "Learn more about Quran Lake",
   "app_version": "App Version",
   "app_version_subtitle": "Current build",
-  "done": "Done"
+  "done": "Done",
+  "adhan_voice": "Adhan Voice",
+  "adhan_voice_subtitle": "Choose adhan voice"
 }

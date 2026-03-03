@@ -1,0 +1,29 @@
+{
+  "adhans": [
+    {
+      "id": "adhan-v1",
+      "name": "Voice 1",
+      "path": "assets/audio/adhan-v1.mp3"
+    },
+    {
+      "id": "adhan-v2",
+      "name": "Voice 2",
+      "path": "assets/audio/adhan-v2.mp3"
+    },
+    {
+      "id": "adhan-v3",
+      "name": "Voice 3",
+      "path": "assets/audio/adhan-v3.mp3"
+    },
+    {
+      "id": "adhan-v4",
+      "name": "Voice 4",
+      "path": "assets/audio/adhan-v4.mp3"
+    },
+    {
+        "id": "adhan-v5",
+        "name": "Voice 5",
+        "path": "assets/audio/adhan-v5.mp3"
+      }
+  ]
+}

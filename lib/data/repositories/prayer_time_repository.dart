@@ -3,6 +3,7 @@ import 'package:quran_lake/data/api/dio_client.dart';
 import 'package:quran_lake/data/local_db/database_helper.dart';
 import 'package:quran_lake/data/models/prayer_time.dart';
 import 'package:quran_lake/data/services/location_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PrayerTimeRepository {
   final DioClient _dioClient;
@@ -29,6 +30,11 @@ class PrayerTimeRepository {
 
     // 2. Get Location
     final position = await _locationService.determinePosition();
+    
+    // Cache location for background service
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('last_latitude', position.latitude);
+    await prefs.setDouble('last_longitude', position.longitude);
 
     // 3. Fetch from Aladhan API
     // https://api.aladhan.com/v1/timings/19-02-2026?latitude=51.508515&longitude=-0.1254872&method=2

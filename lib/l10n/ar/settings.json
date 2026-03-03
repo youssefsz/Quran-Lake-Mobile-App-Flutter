@@ -5,6 +5,19 @@
   "haptics": "الاهتزاز",
   "haptics_subtitle": "اهتزاز خفيف عند اللمس",
   "preferences_section": "التفضيلات",
+  "adhan_section": "الأذان",
+  "adhan_enabled": "تفعيل الأذان",
+  "adhan_enabled_subtitle": "تشغيل الأذان في أوقات الصلاة",
+  "adhan_prayers_enabled": "تم تفعيل {count} صلاة",
+  "adhan_countdown_info": " • إشعارات العد التنازلي مفعلة",
+  "select_prayers": "اختر الصلوات",
+  "select_prayers_subtitle": "اختر الصلوات التي تريد تشغيل الأذان لها",
+  "fajr": "الفجر",
+  "sunrise": "الشروق",
+  "dhuhr": "الظهر",
+  "asr": "العصر",
+  "maghrib": "المغرب",
+  "isha": "العشاء",
   "support_section": "الدعم",
   "support_feedback": "الدعم والملاحظات",
   "support_feedback_subtitle": "راسلنا عبر البريد",
@@ -18,5 +31,7 @@
   "about_subtitle": "تعرف على قرآن ليك",
   "app_version": "إصدار التطبيق",
   "app_version_subtitle": "الإصدار الحالي",
-  "done": "تم"
+  "done": "تم",
+  "adhan_voice": "صوت الأذان",
+  "adhan_voice_subtitle": "اختر صوت الأذان"
 }

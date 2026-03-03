@@ -6,6 +6,7 @@ import '../../core/theme/app_typography.dart';
 import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/prayer_provider.dart';
+import '../../providers/adhan_provider.dart';
 import '../widgets/glass_app_bar.dart';
 import '../widgets/app_error_widget.dart';
 
@@ -131,9 +132,17 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () {
+            onPressed: () async {
               context.read<HapticProvider>().lightImpact();
-              context.read<PrayerProvider>().fetchPrayerTimes();
+              final prayerProvider = context.read<PrayerProvider>();
+              final adhanProvider = context.read<AdhanProvider>();
+              await prayerProvider.fetchPrayerTimes();
+              // Schedule adhan alarms when prayer times are refreshed
+              if (prayerProvider.prayerTime != null && adhanProvider.isEnabled) {
+                await adhanProvider.scheduleAdhanAlarms(
+                  prayerProvider.prayerTime!,
+                );
+              }
             },
           ),
         ],

@@ -8,6 +8,49 @@
   "support_section": "الدعم",
   "support_feedback": "الدعم والملاحظات",
   "support_feedback_subtitle": "راسلنا عبر البريد",
+  "feedback": {
+    "sheet_title": "الدعم والملاحظات",
+    "cancel": "إلغاء",
+    "email_launch_error": "تعذر فتح تطبيق البريد الإلكتروني. يرجى المحاولة مرة أخرى.",
+    "topics": {
+      "bug_report": {
+        "title": "الإبلاغ عن خلل",
+        "subtitle": "هناك شيء لا يعمل أو لا يتصرف بالشكل الصحيح."
+      },
+      "content_issue": {
+        "title": "مشكلة في المحتوى",
+        "subtitle": "أبلغ عن مشكلة في نص القرآن أو القراء أو أي محتوى آخر."
+      },
+      "feature_suggestion": {
+        "title": "اقتراح ميزة",
+        "subtitle": "اقترح ميزة جديدة أو تحسينًا للتطبيق."
+      },
+      "technical_support": {
+        "title": "الدعم الفني",
+        "subtitle": "احصل على مساعدة في الصوت أو مواقيت الصلاة أو الموقع أو إعداد التطبيق."
+      },
+      "general_feedback": {
+        "title": "ملاحظات عامة",
+        "subtitle": "شارك أي ملاحظات أخرى مع فريق قرآن ليك."
+      }
+    },
+    "email": {
+      "subject": "دعم قرآن ليك - {topic}",
+      "greeting": "مرحبًا فريق دعم قرآن ليك،",
+      "request_type": "نوع الطلب",
+      "app": "التطبيق",
+      "app_version": "إصدار التطبيق",
+      "build_number": "رقم البناء",
+      "platform": "المنصة",
+      "os_version": "إصدار نظام التشغيل",
+      "device_manufacturer": "الشركة المصنعة للجهاز",
+      "device_model": "طراز الجهاز",
+      "app_language": "لغة التطبيق",
+      "language_name": "العربية",
+      "message": "الرسالة",
+      "unavailable": "غير متوفر"
+    }
+  },
   "legal_section": "القانوني",
   "terms": "شروط الخدمة",
   "terms_subtitle": "اطّلع على الشروط",

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -7,15 +9,26 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/widgets/app_surface.dart';
+import '../../data/models/support_feedback.dart';
 import '../../data/services/app_review_service.dart';
+import '../../data/services/support_diagnostics_service.dart';
+import '../../data/services/support_email_service.dart';
 import '../../providers/haptic_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../widgets/glass_app_bar.dart';
+import '../widgets/support_feedback_sheet.dart';
 import 'privacy_policy_screen.dart';
 import 'terms_of_service_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  final SupportDiagnosticsProvider? supportDiagnosticsProvider;
+  final SupportEmailService? supportEmailService;
+
+  const SettingsScreen({
+    super.key,
+    this.supportDiagnosticsProvider,
+    this.supportEmailService,
+  });
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -37,8 +50,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Map<String, dynamic> _translations = {};
   String? _lastLocaleCode;
   String? _appVersion;
+  late final SupportDiagnosticsProvider _supportDiagnosticsProvider;
+  late final SupportEmailService _supportEmailService;
+  Timer? _feedbackLoadingTimer;
+  bool _isFeedbackFlowActive = false;
+  bool _showFeedbackLoading = false;
 
-  static const String _supportEmail = 'dhibi.ywsf@gmail.com';
   static const String _aboutUrl = 'https://youssef.tn/quranlake/';
   static const List<_LanguageOption> _languageOptions = [
     _LanguageOption(locale: Locale('en'), label: 'English', flag: '🇬🇧'),
@@ -48,11 +65,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
+    _supportDiagnosticsProvider =
+        widget.supportDiagnosticsProvider ?? DeviceSupportDiagnosticsProvider();
+    _supportEmailService =
+        widget.supportEmailService ?? const SupportEmailService();
     final localeProvider = context.read<LocaleProvider>();
     _translations = localeProvider.getCachedTranslations('settings');
     _lastLocaleCode = localeProvider.locale.languageCode;
     _loadTranslations();
     _loadAppVersion();
+  }
+
+  @override
+  void dispose() {
+    _feedbackLoadingTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -89,13 +116,70 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
-  Future<void> _openEmail() async {
-    final uri = Uri(
-      scheme: 'mailto',
-      path: _supportEmail,
-      queryParameters: {'subject': 'Quran Lake Support'},
-    );
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  Future<void> _handleSupportFeedback(
+    HapticProvider hapticProvider,
+    Locale locale,
+  ) async {
+    if (_isFeedbackFlowActive) return;
+    _isFeedbackFlowActive = true;
+
+    try {
+      await hapticProvider.lightImpact();
+      if (!mounted) return;
+
+      final translations = SupportFeedbackTranslations(_translations);
+      final topic = await showSupportFeedbackSheet(
+        context: context,
+        translations: translations,
+      );
+      if (topic == null || !mounted) return;
+
+      await hapticProvider.lightImpact();
+      _feedbackLoadingTimer?.cancel();
+      _feedbackLoadingTimer = Timer(const Duration(milliseconds: 300), () {
+        if (mounted) {
+          setState(() => _showFeedbackLoading = true);
+        }
+      });
+
+      final diagnostics = await _supportDiagnosticsProvider.collect(locale);
+      final draft = _supportEmailService.createDraft(
+        topic: topic,
+        diagnostics: diagnostics,
+        translations: translations,
+      );
+      final result = await _supportEmailService.send(draft);
+
+      if (result != SupportEmailResult.sent && mounted) {
+        _showSupportEmailError();
+      }
+    } catch (_) {
+      if (mounted) {
+        _showSupportEmailError();
+      }
+    } finally {
+      _feedbackLoadingTimer?.cancel();
+      _feedbackLoadingTimer = null;
+      _isFeedbackFlowActive = false;
+      if (mounted && _showFeedbackLoading) {
+        setState(() => _showFeedbackLoading = false);
+      }
+    }
+  }
+
+  void _showSupportEmailError() {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            SupportFeedbackTranslations(_translations).text(
+              'feedback.email_launch_error',
+              'Could not open an email app. Please try again.',
+            ),
+          ),
+        ),
+      );
   }
 
   Widget _buildSectionTitle(String title) {
@@ -366,11 +450,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle:
                     _translations['support_feedback_subtitle'] ??
                     'Email us anytime',
-                showChevron: true,
-                onTap: () {
-                  hapticProvider.lightImpact();
-                  _openEmail();
-                },
+                trailing: _showFeedbackLoading
+                    ? const SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : null,
+                showChevron: !_showFeedbackLoading,
+                onTap: _isFeedbackFlowActive
+                    ? null
+                    : () => _handleSupportFeedback(
+                        hapticProvider,
+                        localeProvider.locale,
+                      ),
               ),
               _buildRow(
                 icon: Icons.star_outline,

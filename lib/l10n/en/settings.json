@@ -8,6 +8,49 @@
   "support_section": "Support",
   "support_feedback": "Support & Feedback",
   "support_feedback_subtitle": "Email us anytime",
+  "feedback": {
+    "sheet_title": "Support & Feedback",
+    "cancel": "Cancel",
+    "email_launch_error": "Could not open an email app. Please try again.",
+    "topics": {
+      "bug_report": {
+        "title": "Bug Report",
+        "subtitle": "Something is broken or not behaving correctly."
+      },
+      "content_issue": {
+        "title": "Content Issue",
+        "subtitle": "Report an issue with Quran text, reciters, or other content."
+      },
+      "feature_suggestion": {
+        "title": "Feature Suggestion",
+        "subtitle": "Suggest a new feature or improvement."
+      },
+      "technical_support": {
+        "title": "Technical Support",
+        "subtitle": "Get help with audio, prayer times, location, or app setup."
+      },
+      "general_feedback": {
+        "title": "General Feedback",
+        "subtitle": "Share anything else with the Quran Lake team."
+      }
+    },
+    "email": {
+      "subject": "Quran Lake Support - {topic}",
+      "greeting": "Hi Quran Lake Support,",
+      "request_type": "Request Type",
+      "app": "App",
+      "app_version": "App Version",
+      "build_number": "Build Number",
+      "platform": "Platform",
+      "os_version": "OS Version",
+      "device_manufacturer": "Device Manufacturer",
+      "device_model": "Device Model",
+      "app_language": "App Language",
+      "language_name": "English",
+      "message": "Message",
+      "unavailable": "Unavailable"
+    }
+  },
   "legal_section": "Legal",
   "terms": "Terms of Service",
   "terms_subtitle": "Read the terms",
